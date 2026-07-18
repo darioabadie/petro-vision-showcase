@@ -34,7 +34,7 @@ function OperatorDetail() {
   const { op } = Route.useLoaderData();
 
   // Serie real por operadora (últimos 36 meses del histórico oficial)
-  const opSeries = (op.serie ?? []).slice(-36).map((p) => ({
+  const opSeries = (op.serie ?? []).slice(-36).map((p: { month: string; oil: number }) => ({
     month: p.month,
     prod: p.oil,
   }));
