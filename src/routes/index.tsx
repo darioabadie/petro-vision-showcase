@@ -22,8 +22,12 @@ import {
   declineByCohort,
   contradictions,
   CUTOFF,
+  kpis,
+  ARENA_PRELIMINAR,
+  cohort2025Peak,
+  cohort2026Peak,
 } from "@/lib/mock-data";
-import { ArrowUpRight, Download, TrendingUp, Zap } from "lucide-react";
+import { ArrowUpRight, Download, TrendingUp, Mail, Info, CalendarClock, LineChart as LineChartIcon } from "lucide-react";
 
 export const Route = createFileRoute("/")({
   head: () => ({
