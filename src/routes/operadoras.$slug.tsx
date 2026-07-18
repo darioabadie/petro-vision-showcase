@@ -139,7 +139,7 @@ function OperatorDetail() {
               <h2 className="text-lg font-display font-semibold mt-1">Áreas operadas</h2>
             </div>
             <ul className="space-y-2">
-              {op.areas.map((a) => (
+              {op.areas.map((a: string) => (
                 <li key={a} className="flex items-center justify-between border border-border rounded-md px-3 py-2 hover:border-primary/50 transition-colors">
                   <span className="text-sm inline-flex items-center gap-2">
                     <Building2 className="h-3.5 w-3.5 text-muted-foreground" />
