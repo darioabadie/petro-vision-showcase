@@ -2,8 +2,8 @@ import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { AppShell, PageHeader, Stat } from "@/components/app-shell";
 import { areas, events, declineByCohort } from "@/lib/mock-data";
 import {
-  Bar,
-  BarChart,
+  Area,
+  AreaChart,
   CartesianGrid,
   Line,
   LineChart,
@@ -30,13 +30,9 @@ export const Route = createFileRoute("/areas/$slug")({
 
 function AreaDetail() {
   const { area } = Route.useLoaderData();
-
-  const monthly = Array.from({ length: 12 }, (_, i) => ({
-    m: `M${i + 1}`,
-    wells: 3 + Math.round(Math.sin(i / 2) * 3 + i * 0.6),
-  }));
-
+  const series = (area.serie ?? []).slice(-48);
   const areaEvents = events.filter((e) => e.entitySlug === area.slug);
+
 
   return (
     <AppShell>
