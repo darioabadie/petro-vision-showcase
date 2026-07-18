@@ -80,33 +80,40 @@ function OverviewPage() {
         {/* Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           <Stat
-            label="Producción oil NC"
-            value={last.oil.toString()}
+            label="Producción oil (VM)"
+            value={kpis.oil_kbbld.toFixed(1)}
             unit="kbbl/d"
-            delta={`+${deltaOilMoM}% MoM`}
-            hint={`YoY +${deltaOilYoY}%`}
+            delta={`${kpis.oil_mom_pct >= 0 ? "+" : ""}${kpis.oil_mom_pct}% MoM`}
+            hint={`YoY +${kpis.oil_yoy_pct}%`}
           />
           <Stat
-            label="Producción gas NC"
-            value={last.gas.toString()}
+            label="Producción gas (VM)"
+            value={kpis.gas_mmm3d.toFixed(1)}
             unit="MMm³/d"
-            delta="+0.8% MoM"
-            hint="Plan Gas.Ar activo"
+            delta={`${kpis.gas_mom_pct >= 0 ? "+" : ""}${kpis.gas_mom_pct}% MoM`}
+            hint={`YoY +${kpis.gas_yoy_pct}%`}
           />
           <Stat
-            label="Pozos conectados 2025"
-            value="1.284"
-            delta="+18% YoY"
-            hint="vs. 1.088 acum. 2024"
+            label="Pozos conectados YTD"
+            value={kpis.pozos_conectados_ytd.toString()}
+            delta={`+${kpis.pozos_ytd_yoy_pct}% YoY`}
+            hint={`vs. ${kpis.pozos_conectados_ytd_prev} en mismo período 2025`}
           />
           <Stat
-            label="Arena bombeada (Oct)"
-            value="284k"
+            label={`Arena bombeada (${kpis.arena_mes})`}
+            value={`${Math.round(kpis.arena_tn / 1000)}k`}
             unit="tn"
-            delta="+11.4% MoM"
-            hint="Intensidad récord"
+            delta={ARENA_PRELIMINAR ? "Dato preliminar" : `+${kpis.arena_mom_pct}% MoM`}
+            hint="Rezago de carga Adjunto IV"
           />
         </div>
+        {ARENA_PRELIMINAR && (
+          <div className="flex items-start gap-2 text-[11px] text-muted-foreground border border-border/60 rounded-md px-3 py-2 bg-muted/20">
+            <Info className="h-3.5 w-3.5 mt-0.5 text-primary shrink-0" />
+            El pico de arena de {kpis.arena_mes} refleja rezago de carga del Adjunto IV
+            (abril subreportado). Recomendamos leerlo con 1 mes de rezago.
+          </div>
+        )}
 
         {/* Production chart */}
         <div className="panel p-5">
