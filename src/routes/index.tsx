@@ -22,8 +22,12 @@ import {
   declineByCohort,
   contradictions,
   CUTOFF,
+  kpis,
+  ARENA_PRELIMINAR,
+  cohort2025Peak,
+  cohort2026Peak,
 } from "@/lib/mock-data";
-import { ArrowUpRight, Download, TrendingUp, Zap } from "lucide-react";
+import { ArrowUpRight, Download, TrendingUp, Mail, Info, CalendarClock, LineChart as LineChartIcon } from "lucide-react";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -76,33 +80,40 @@ function OverviewPage() {
         {/* Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           <Stat
-            label="Producción oil NC"
-            value={last.oil.toString()}
+            label="Producción oil (VM)"
+            value={kpis.oil_kbbld.toFixed(1)}
             unit="kbbl/d"
-            delta={`+${deltaOilMoM}% MoM`}
-            hint={`YoY +${deltaOilYoY}%`}
+            delta={`${kpis.oil_mom_pct >= 0 ? "+" : ""}${kpis.oil_mom_pct}% MoM`}
+            hint={`YoY +${kpis.oil_yoy_pct}%`}
           />
           <Stat
-            label="Producción gas NC"
-            value={last.gas.toString()}
+            label="Producción gas (VM)"
+            value={kpis.gas_mmm3d.toFixed(1)}
             unit="MMm³/d"
-            delta="+0.8% MoM"
-            hint="Plan Gas.Ar activo"
+            delta={`${kpis.gas_mom_pct >= 0 ? "+" : ""}${kpis.gas_mom_pct}% MoM`}
+            hint={`YoY +${kpis.gas_yoy_pct}%`}
           />
           <Stat
-            label="Pozos conectados 2025"
-            value="1.284"
-            delta="+18% YoY"
-            hint="vs. 1.088 acum. 2024"
+            label="Pozos conectados YTD"
+            value={kpis.pozos_conectados_ytd.toString()}
+            delta={`+${kpis.pozos_ytd_yoy_pct}% YoY`}
+            hint={`vs. ${kpis.pozos_conectados_ytd_prev} en mismo período 2025`}
           />
           <Stat
-            label="Arena bombeada (Oct)"
-            value="284k"
+            label={`Arena bombeada (${kpis.arena_mes})`}
+            value={`${Math.round(kpis.arena_tn / 1000)}k`}
             unit="tn"
-            delta="+11.4% MoM"
-            hint="Intensidad récord"
+            delta={ARENA_PRELIMINAR ? "Dato preliminar" : `+${kpis.arena_mom_pct}% MoM`}
+            hint="Rezago de carga Adjunto IV"
           />
         </div>
+        {ARENA_PRELIMINAR && (
+          <div className="flex items-start gap-2 text-[11px] text-muted-foreground border border-border/60 rounded-md px-3 py-2 bg-muted/20">
+            <Info className="h-3.5 w-3.5 mt-0.5 text-primary shrink-0" />
+            El pico de arena de {kpis.arena_mes} refleja rezago de carga del Adjunto IV
+            (abril subreportado). Recomendamos leerlo con 1 mes de rezago.
+          </div>
+        )}
 
         {/* Production chart */}
         <div className="panel p-5">
@@ -232,7 +243,7 @@ function OverviewPage() {
                   Curva de declinación por año de puesta en marcha
                 </h2>
                 <p className="text-xs text-muted-foreground mt-1 flex items-center gap-1">
-                  <TrendingUp className="h-3 w-3 text-primary" /> Cohorte 2025 rinde ~12% más que 2024
+                  <TrendingUp className="h-3 w-3 text-primary" /> Cohorte 2026 pica ~{Math.round(cohort2026Peak)} bbl/d — {Math.round(((cohort2026Peak - cohort2025Peak) / cohort2025Peak) * 100)}% arriba de la 2025
                 </p>
               </div>
             </div>
@@ -245,7 +256,7 @@ function OverviewPage() {
                     tick={{ fill: "var(--color-muted-foreground)", fontSize: 11 }}
                     tickLine={false}
                     axisLine={{ stroke: "var(--color-border)" }}
-                    label={{ value: "Meses desde IP", position: "insideBottom", offset: -2, fill: "var(--color-muted-foreground)", fontSize: 10 }}
+                    label={{ value: "Meses desde IP oil", position: "insideBottom", offset: -2, fill: "var(--color-muted-foreground)", fontSize: 10 }}
                   />
                   <YAxis
                     tick={{ fill: "var(--color-muted-foreground)", fontSize: 11 }}
@@ -254,17 +265,19 @@ function OverviewPage() {
                   />
                   <Tooltip content={<ChartTooltip unit="bbl/d" />} />
                   <Legend wrapperStyle={{ fontSize: 11, color: "var(--color-muted-foreground)" }} />
-                  <Line type="monotone" dataKey="2022" stroke="var(--color-chart-4)" dot={false} strokeWidth={1.5} />
-                  <Line type="monotone" dataKey="2023" stroke="var(--color-chart-3)" dot={false} strokeWidth={1.5} />
+                  <Line type="monotone" dataKey="2022" stroke="var(--color-chart-4)" dot={false} strokeWidth={1} strokeOpacity={0.6} />
+                  <Line type="monotone" dataKey="2023" stroke="var(--color-chart-3)" dot={false} strokeWidth={1.2} />
                   <Line type="monotone" dataKey="2024" stroke="var(--color-chart-2)" dot={false} strokeWidth={1.5} />
-                  <Line type="monotone" dataKey="2025" stroke="var(--color-primary)" dot={false} strokeWidth={2.5} />
+                  <Line type="monotone" dataKey="2025" stroke="var(--color-chart-1)" dot={false} strokeWidth={2} />
+                  <Line type="monotone" dataKey="2026" stroke="var(--color-primary)" dot={false} strokeWidth={2.8} />
                 </LineChart>
               </ResponsiveContainer>
             </div>
           </div>
         </div>
 
-        {/* Events + contradictions */}
+
+        {/* Events + guidance tracker — capa editorial en construcción */}
         <div className="grid lg:grid-cols-3 gap-6">
           <div className="panel p-5 lg:col-span-2">
             <div className="flex items-start justify-between mb-4">
@@ -276,113 +289,118 @@ function OverviewPage() {
               </div>
               <Link to="/eventos" className="text-xs text-primary hover:underline">Ver todos →</Link>
             </div>
-            <ul className="divide-y divide-border">
-              {events.slice(0, 6).map((e) => (
-                <li key={e.date + e.title} className="py-3 flex gap-3 items-start">
-                  <div className="w-24 shrink-0 text-xs num text-muted-foreground pt-0.5">
-                    {e.date}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex flex-wrap items-center gap-2">
-                      <span className="text-[10px] uppercase tracking-wider px-1.5 py-0.5 rounded border border-border text-muted-foreground">
-                        {e.category}
-                      </span>
-                      {e.entitySlug && (
-                        <Link
-                          to={e.entityType === "operator" ? "/operadoras/$slug" : "/areas/$slug"}
-                          params={{ slug: e.entitySlug }}
-                          className="text-xs text-primary hover:underline"
-                        >
-                          {e.entity}
-                        </Link>
-                      )}
-                      {!e.entitySlug && (
-                        <span className="text-xs text-muted-foreground">{e.entity}</span>
-                      )}
+            {events.length === 0 ? (
+              <EmptyEditorial
+                icon={CalendarClock}
+                title="Capa editorial en construcción"
+                copy="La ingesta automatizada de Boletines Oficiales, CNV, SEC y prensa está siendo curada. Los KPIs y series ya son 100% datos oficiales; los eventos aparecen a partir de la próxima corrida."
+              />
+            ) : (
+              <ul className="divide-y divide-border">
+                {events.slice(0, 6).map((e) => (
+                  <li key={e.date + e.title} className="py-3 flex gap-3 items-start">
+                    <div className="w-24 shrink-0 text-xs num text-muted-foreground pt-0.5">{e.date}</div>
+                    <div className="flex-1 min-w-0">
+                      <div className="text-sm">{e.title}</div>
+                      <div className="text-[11px] text-muted-foreground mt-1">Fuente: {e.source}</div>
                     </div>
-                    <div className="text-sm mt-1">{e.title}</div>
-                    <div className="text-[11px] text-muted-foreground mt-1">
-                      Fuente: {e.source}
-                    </div>
-                  </div>
-                </li>
-              ))}
-            </ul>
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
 
           <div className="panel p-5">
             <div className="flex items-start justify-between mb-4">
               <div>
                 <div className="text-[11px] uppercase tracking-widest text-primary font-medium">
-                  Anunciado vs. ejecutado
+                  Guidance vs. ejecutado
                 </div>
-                <h2 className="text-lg font-display font-semibold mt-1">Contradicciones</h2>
+                <h2 className="text-lg font-display font-semibold mt-1">Guidance tracker</h2>
               </div>
               <Link to="/contradicciones" className="text-xs text-primary hover:underline">
                 Ver →
               </Link>
             </div>
-            <ul className="space-y-3">
-              {contradictions.slice(0, 4).map((c) => (
-                <li key={c.operator + c.metric} className="border border-border rounded-md p-3">
-                  <div className="flex items-center justify-between">
-                    <Link
-                      to="/operadoras/$slug"
-                      params={{ slug: c.operatorSlug }}
-                      className="text-sm font-medium hover:text-primary"
-                    >
-                      {c.operator}
-                    </Link>
-                    <span
-                      className={`num text-xs ${c.delta < 0 ? "text-destructive" : "text-primary"}`}
-                    >
-                      {c.delta > 0 ? "+" : ""}
-                      {c.delta}%
-                    </span>
-                  </div>
-                  <div className="text-[11px] text-muted-foreground mt-0.5">
-                    {c.metric} · {c.period}
-                  </div>
-                  <div className="text-xs mt-1.5 flex justify-between">
-                    <span className="text-muted-foreground">Anunciado</span>
-                    <span className="num">{c.announced}</span>
-                  </div>
-                  <div className="text-xs flex justify-between">
-                    <span className="text-muted-foreground">Ejecutado</span>
-                    <span className="num">{c.actual}</span>
-                  </div>
-                </li>
-              ))}
-            </ul>
+            {contradictions.length === 0 ? (
+              <EmptyEditorial
+                icon={LineChartIcon}
+                title="Próxima publicación trimestral"
+                copy="Cruzamos el guidance público de cada operadora contra el reporte al Capítulo IV. El primer informe se emite con el cierre de Q2 2026."
+              />
+            ) : (
+              <ul className="space-y-3">
+                {contradictions.slice(0, 4).map((c) => (
+                  <li key={c.operator + c.metric} className="border border-border rounded-md p-3">
+                    <div className="flex items-center justify-between">
+                      <Link
+                        to="/operadoras/$slug"
+                        params={{ slug: c.operatorSlug }}
+                        className="text-sm font-medium hover:text-primary"
+                      >
+                        {c.operator}
+                      </Link>
+                      <span className={`num text-xs ${c.delta < 0 ? "text-destructive" : "text-primary"}`}>
+                        {c.delta > 0 ? "+" : ""}{c.delta}%
+                      </span>
+                    </div>
+                    <div className="text-[11px] text-muted-foreground mt-0.5">
+                      {c.metric} · {c.period}
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
         </div>
 
-        {/* CTA */}
+        {/* CTA — newsletter primario, Pro como lista de espera */}
         <div className="panel p-6 flex flex-wrap items-center justify-between gap-4">
           <div className="flex items-start gap-3">
             <div className="h-10 w-10 rounded-md bg-primary/15 border border-primary/30 grid place-items-center">
-              <Zap className="h-5 w-5 text-primary" />
+              <Mail className="h-5 w-5 text-primary" />
             </div>
             <div>
               <div className="font-display font-semibold text-lg">
-                ¿Necesitás export CSV, API o alertas por operadora?
+                Un mail al mes con el estado real de Vaca Muerta
               </div>
               <div className="text-sm text-muted-foreground">
-                PetroData Pro — desde US$100/mes por asiento. Enterprise disponible.
+                4-5 visualizaciones nuevas y lectura de 3 minutos, disparadas con cada actualización del Capítulo IV.
               </div>
             </div>
           </div>
-          <Link
-            to="/pro"
-            className="h-10 px-5 rounded-md bg-primary text-primary-foreground text-sm font-medium inline-flex items-center gap-1.5 hover:opacity-90"
-          >
-            Ver planes <ArrowUpRight className="h-4 w-4" />
-          </Link>
+          <div className="flex gap-2">
+            <Link
+              to="/pro"
+              className="h-10 px-4 rounded-md border border-primary/40 text-primary text-sm font-medium inline-flex items-center gap-1.5 hover:bg-primary/10"
+            >
+              Lista de espera Pro
+            </Link>
+            <Link
+              to="/newsletter"
+              className="h-10 px-5 rounded-md bg-primary text-primary-foreground text-sm font-medium inline-flex items-center gap-1.5 hover:opacity-90"
+            >
+              Suscribirme <ArrowUpRight className="h-4 w-4" />
+            </Link>
+          </div>
         </div>
       </div>
     </AppShell>
   );
 }
+
+function EmptyEditorial({ icon: Icon, title, copy }: { icon: any; title: string; copy: string }) {
+  return (
+    <div className="border border-dashed border-border rounded-md p-6 flex flex-col items-start gap-2 bg-muted/10">
+      <div className="h-8 w-8 rounded-md bg-primary/10 border border-primary/30 grid place-items-center">
+        <Icon className="h-4 w-4 text-primary" />
+      </div>
+      <div className="text-sm font-medium">{title}</div>
+      <p className="text-xs text-muted-foreground leading-relaxed max-w-md">{copy}</p>
+    </div>
+  );
+}
+
 
 function LegendDot({ color, label }: { color: string; label: string }) {
   return (

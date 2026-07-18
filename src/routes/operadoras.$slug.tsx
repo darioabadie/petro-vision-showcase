@@ -33,14 +33,15 @@ export const Route = createFileRoute("/operadoras/$slug")({
 function OperatorDetail() {
   const { op } = Route.useLoaderData();
 
-  // Serie ficticia por operadora (derivada del total)
-  const opSeries = productionSeries.map((p, i) => ({
+  // Serie real por operadora (últimos 36 meses del histórico oficial)
+  const opSeries = (op.serie ?? []).slice(-36).map((p: { month: string; oil: number }) => ({
     month: p.month,
-    prod: Math.round(op.productionOilKbbld * (0.6 + (i / productionSeries.length) * 0.7)),
+    prod: p.oil,
   }));
 
   const opEvents = events.filter((e) => e.entitySlug === op.slug);
   const opContradictions = contradictions.filter((c) => c.operatorSlug === op.slug);
+
 
   return (
     <AppShell>
@@ -139,15 +140,24 @@ function OperatorDetail() {
               <h2 className="text-lg font-display font-semibold mt-1">Áreas operadas</h2>
             </div>
             <ul className="space-y-2">
-              {op.areas.map((a: string) => (
-                <li key={a} className="flex items-center justify-between border border-border rounded-md px-3 py-2 hover:border-primary/50 transition-colors">
-                  <span className="text-sm inline-flex items-center gap-2">
-                    <Building2 className="h-3.5 w-3.5 text-muted-foreground" />
-                    {a}
-                  </span>
-                  <span className="text-xs text-muted-foreground">Ver ficha →</span>
-                </li>
-              ))}
+              {op.areas.map((a: string, i: number) => {
+                const slug = op.areaSlugs[i];
+                return (
+                  <li key={a}>
+                    <Link
+                      to="/areas/$slug"
+                      params={{ slug }}
+                      className="flex items-center justify-between border border-border rounded-md px-3 py-2 hover:border-primary/50 transition-colors"
+                    >
+                      <span className="text-sm inline-flex items-center gap-2">
+                        <Building2 className="h-3.5 w-3.5 text-muted-foreground" />
+                        {a}
+                      </span>
+                      <span className="text-xs text-muted-foreground">Ver ficha →</span>
+                    </Link>
+                  </li>
+                );
+              })}
             </ul>
           </div>
 

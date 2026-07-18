@@ -4,21 +4,23 @@ import {
   Building2,
   MapPinned,
   CalendarClock,
-  AlertTriangle,
+  LineChart as LineChartIcon,
   BookOpen,
   Mail,
   Sparkles,
   Search,
   Database,
+  FlaskConical,
 } from "lucide-react";
-import { LAST_UPDATE } from "@/lib/mock-data";
+import { LAST_UPDATE, CUTOFF } from "@/lib/mock-data";
 
 const nav = [
   { to: "/", label: "Overview", icon: LayoutDashboard },
   { to: "/operadoras", label: "Operadoras", icon: Building2 },
   { to: "/areas", label: "Áreas", icon: MapPinned },
   { to: "/eventos", label: "Eventos", icon: CalendarClock },
-  { to: "/contradicciones", label: "Contradicciones", icon: AlertTriangle },
+  { to: "/contradicciones", label: "Guidance tracker", icon: LineChartIcon },
+  { to: "/metodologia", label: "Metodología", icon: FlaskConical },
   { to: "/wiki", label: "Wiki & Glosario", icon: BookOpen },
   { to: "/newsletter", label: "Newsletter", icon: Mail },
 ];
@@ -104,13 +106,19 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               <span className="h-1.5 w-1.5 rounded-full bg-primary shadow-[0_0_8px_var(--color-primary)]" />
               Pipeline OK
             </span>
-            <span className="font-mono">2025-10 · Cap. IV</span>
+            <span className="font-mono">2026-05 · Cap. IV</span>
           </div>
           <Link
             to="/pro"
+            className="hidden md:inline-flex items-center gap-1.5 rounded-md border border-primary/40 text-primary px-3 h-9 text-sm font-medium hover:bg-primary/10"
+          >
+            Lista de espera Pro
+          </Link>
+          <Link
+            to="/newsletter"
             className="hidden sm:inline-flex items-center gap-1.5 rounded-md bg-primary text-primary-foreground px-3 h-9 text-sm font-medium hover:opacity-90"
           >
-            <Sparkles className="h-3.5 w-3.5" /> Solicitar demo
+            <Mail className="h-3.5 w-3.5" /> Suscribirme
           </Link>
         </header>
 

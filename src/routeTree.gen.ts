@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as WikiRouteImport } from './routes/wiki'
 import { Route as ProRouteImport } from './routes/pro'
 import { Route as NewsletterRouteImport } from './routes/newsletter'
+import { Route as MetodologiaRouteImport } from './routes/metodologia'
 import { Route as EventosRouteImport } from './routes/eventos'
 import { Route as ContradiccionesRouteImport } from './routes/contradicciones'
 import { Route as IndexRouteImport } from './routes/index'
@@ -33,6 +34,11 @@ const ProRoute = ProRouteImport.update({
 const NewsletterRoute = NewsletterRouteImport.update({
   id: '/newsletter',
   path: '/newsletter',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MetodologiaRoute = MetodologiaRouteImport.update({
+  id: '/metodologia',
+  path: '/metodologia',
   getParentRoute: () => rootRouteImport,
 } as any)
 const EventosRoute = EventosRouteImport.update({
@@ -75,6 +81,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/contradicciones': typeof ContradiccionesRoute
   '/eventos': typeof EventosRoute
+  '/metodologia': typeof MetodologiaRoute
   '/newsletter': typeof NewsletterRoute
   '/pro': typeof ProRoute
   '/wiki': typeof WikiRoute
@@ -87,6 +94,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/contradicciones': typeof ContradiccionesRoute
   '/eventos': typeof EventosRoute
+  '/metodologia': typeof MetodologiaRoute
   '/newsletter': typeof NewsletterRoute
   '/pro': typeof ProRoute
   '/wiki': typeof WikiRoute
@@ -100,6 +108,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/contradicciones': typeof ContradiccionesRoute
   '/eventos': typeof EventosRoute
+  '/metodologia': typeof MetodologiaRoute
   '/newsletter': typeof NewsletterRoute
   '/pro': typeof ProRoute
   '/wiki': typeof WikiRoute
@@ -114,6 +123,7 @@ export interface FileRouteTypes {
     | '/'
     | '/contradicciones'
     | '/eventos'
+    | '/metodologia'
     | '/newsletter'
     | '/pro'
     | '/wiki'
@@ -126,6 +136,7 @@ export interface FileRouteTypes {
     | '/'
     | '/contradicciones'
     | '/eventos'
+    | '/metodologia'
     | '/newsletter'
     | '/pro'
     | '/wiki'
@@ -138,6 +149,7 @@ export interface FileRouteTypes {
     | '/'
     | '/contradicciones'
     | '/eventos'
+    | '/metodologia'
     | '/newsletter'
     | '/pro'
     | '/wiki'
@@ -151,6 +163,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ContradiccionesRoute: typeof ContradiccionesRoute
   EventosRoute: typeof EventosRoute
+  MetodologiaRoute: typeof MetodologiaRoute
   NewsletterRoute: typeof NewsletterRoute
   ProRoute: typeof ProRoute
   WikiRoute: typeof WikiRoute
@@ -181,6 +194,13 @@ declare module '@tanstack/react-router' {
       path: '/newsletter'
       fullPath: '/newsletter'
       preLoaderRoute: typeof NewsletterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/metodologia': {
+      id: '/metodologia'
+      path: '/metodologia'
+      fullPath: '/metodologia'
+      preLoaderRoute: typeof MetodologiaRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/eventos': {
@@ -239,6 +259,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ContradiccionesRoute: ContradiccionesRoute,
   EventosRoute: EventosRoute,
+  MetodologiaRoute: MetodologiaRoute,
   NewsletterRoute: NewsletterRoute,
   ProRoute: ProRoute,
   WikiRoute: WikiRoute,
