@@ -243,7 +243,7 @@ function OverviewPage() {
                   Curva de declinación por año de puesta en marcha
                 </h2>
                 <p className="text-xs text-muted-foreground mt-1 flex items-center gap-1">
-                  <TrendingUp className="h-3 w-3 text-primary" /> Cohorte 2025 rinde ~12% más que 2024
+                  <TrendingUp className="h-3 w-3 text-primary" /> Cohorte 2026 pica ~{Math.round(cohort2026Peak)} bbl/d — {Math.round(((cohort2026Peak - cohort2025Peak) / cohort2025Peak) * 100)}% arriba de la 2025
                 </p>
               </div>
             </div>
@@ -256,7 +256,7 @@ function OverviewPage() {
                     tick={{ fill: "var(--color-muted-foreground)", fontSize: 11 }}
                     tickLine={false}
                     axisLine={{ stroke: "var(--color-border)" }}
-                    label={{ value: "Meses desde IP", position: "insideBottom", offset: -2, fill: "var(--color-muted-foreground)", fontSize: 10 }}
+                    label={{ value: "Meses desde IP oil", position: "insideBottom", offset: -2, fill: "var(--color-muted-foreground)", fontSize: 10 }}
                   />
                   <YAxis
                     tick={{ fill: "var(--color-muted-foreground)", fontSize: 11 }}
@@ -265,15 +265,17 @@ function OverviewPage() {
                   />
                   <Tooltip content={<ChartTooltip unit="bbl/d" />} />
                   <Legend wrapperStyle={{ fontSize: 11, color: "var(--color-muted-foreground)" }} />
-                  <Line type="monotone" dataKey="2022" stroke="var(--color-chart-4)" dot={false} strokeWidth={1.5} />
-                  <Line type="monotone" dataKey="2023" stroke="var(--color-chart-3)" dot={false} strokeWidth={1.5} />
+                  <Line type="monotone" dataKey="2022" stroke="var(--color-chart-4)" dot={false} strokeWidth={1} strokeOpacity={0.6} />
+                  <Line type="monotone" dataKey="2023" stroke="var(--color-chart-3)" dot={false} strokeWidth={1.2} />
                   <Line type="monotone" dataKey="2024" stroke="var(--color-chart-2)" dot={false} strokeWidth={1.5} />
-                  <Line type="monotone" dataKey="2025" stroke="var(--color-primary)" dot={false} strokeWidth={2.5} />
+                  <Line type="monotone" dataKey="2025" stroke="var(--color-chart-1)" dot={false} strokeWidth={2} />
+                  <Line type="monotone" dataKey="2026" stroke="var(--color-primary)" dot={false} strokeWidth={2.8} />
                 </LineChart>
               </ResponsiveContainer>
             </div>
           </div>
         </div>
+
 
         {/* Events + contradictions */}
         <div className="grid lg:grid-cols-3 gap-6">
