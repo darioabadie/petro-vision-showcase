@@ -9,38 +9,194 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as WikiRouteImport } from './routes/wiki'
+import { Route as ProRouteImport } from './routes/pro'
+import { Route as NewsletterRouteImport } from './routes/newsletter'
+import { Route as EventosRouteImport } from './routes/eventos'
+import { Route as ContradiccionesRouteImport } from './routes/contradicciones'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as OperadorasIndexRouteImport } from './routes/operadoras.index'
+import { Route as AreasIndexRouteImport } from './routes/areas.index'
+import { Route as OperadorasSlugRouteImport } from './routes/operadoras.$slug'
+import { Route as AreasSlugRouteImport } from './routes/areas.$slug'
 
+const WikiRoute = WikiRouteImport.update({
+  id: '/wiki',
+  path: '/wiki',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProRoute = ProRouteImport.update({
+  id: '/pro',
+  path: '/pro',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NewsletterRoute = NewsletterRouteImport.update({
+  id: '/newsletter',
+  path: '/newsletter',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EventosRoute = EventosRouteImport.update({
+  id: '/eventos',
+  path: '/eventos',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContradiccionesRoute = ContradiccionesRouteImport.update({
+  id: '/contradicciones',
+  path: '/contradicciones',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const OperadorasIndexRoute = OperadorasIndexRouteImport.update({
+  id: '/operadoras/',
+  path: '/operadoras/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AreasIndexRoute = AreasIndexRouteImport.update({
+  id: '/areas/',
+  path: '/areas/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OperadorasSlugRoute = OperadorasSlugRouteImport.update({
+  id: '/operadoras/$slug',
+  path: '/operadoras/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AreasSlugRoute = AreasSlugRouteImport.update({
+  id: '/areas/$slug',
+  path: '/areas/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/contradicciones': typeof ContradiccionesRoute
+  '/eventos': typeof EventosRoute
+  '/newsletter': typeof NewsletterRoute
+  '/pro': typeof ProRoute
+  '/wiki': typeof WikiRoute
+  '/areas/$slug': typeof AreasSlugRoute
+  '/operadoras/$slug': typeof OperadorasSlugRoute
+  '/areas/': typeof AreasIndexRoute
+  '/operadoras/': typeof OperadorasIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/contradicciones': typeof ContradiccionesRoute
+  '/eventos': typeof EventosRoute
+  '/newsletter': typeof NewsletterRoute
+  '/pro': typeof ProRoute
+  '/wiki': typeof WikiRoute
+  '/areas/$slug': typeof AreasSlugRoute
+  '/operadoras/$slug': typeof OperadorasSlugRoute
+  '/areas': typeof AreasIndexRoute
+  '/operadoras': typeof OperadorasIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/contradicciones': typeof ContradiccionesRoute
+  '/eventos': typeof EventosRoute
+  '/newsletter': typeof NewsletterRoute
+  '/pro': typeof ProRoute
+  '/wiki': typeof WikiRoute
+  '/areas/$slug': typeof AreasSlugRoute
+  '/operadoras/$slug': typeof OperadorasSlugRoute
+  '/areas/': typeof AreasIndexRoute
+  '/operadoras/': typeof OperadorasIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/contradicciones'
+    | '/eventos'
+    | '/newsletter'
+    | '/pro'
+    | '/wiki'
+    | '/areas/$slug'
+    | '/operadoras/$slug'
+    | '/areas/'
+    | '/operadoras/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/contradicciones'
+    | '/eventos'
+    | '/newsletter'
+    | '/pro'
+    | '/wiki'
+    | '/areas/$slug'
+    | '/operadoras/$slug'
+    | '/areas'
+    | '/operadoras'
+  id:
+    | '__root__'
+    | '/'
+    | '/contradicciones'
+    | '/eventos'
+    | '/newsletter'
+    | '/pro'
+    | '/wiki'
+    | '/areas/$slug'
+    | '/operadoras/$slug'
+    | '/areas/'
+    | '/operadoras/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ContradiccionesRoute: typeof ContradiccionesRoute
+  EventosRoute: typeof EventosRoute
+  NewsletterRoute: typeof NewsletterRoute
+  ProRoute: typeof ProRoute
+  WikiRoute: typeof WikiRoute
+  AreasSlugRoute: typeof AreasSlugRoute
+  OperadorasSlugRoute: typeof OperadorasSlugRoute
+  AreasIndexRoute: typeof AreasIndexRoute
+  OperadorasIndexRoute: typeof OperadorasIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/wiki': {
+      id: '/wiki'
+      path: '/wiki'
+      fullPath: '/wiki'
+      preLoaderRoute: typeof WikiRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/pro': {
+      id: '/pro'
+      path: '/pro'
+      fullPath: '/pro'
+      preLoaderRoute: typeof ProRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/newsletter': {
+      id: '/newsletter'
+      path: '/newsletter'
+      fullPath: '/newsletter'
+      preLoaderRoute: typeof NewsletterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/eventos': {
+      id: '/eventos'
+      path: '/eventos'
+      fullPath: '/eventos'
+      preLoaderRoute: typeof EventosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contradicciones': {
+      id: '/contradicciones'
+      path: '/contradicciones'
+      fullPath: '/contradicciones'
+      preLoaderRoute: typeof ContradiccionesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,11 +204,48 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/operadoras/': {
+      id: '/operadoras/'
+      path: '/operadoras'
+      fullPath: '/operadoras/'
+      preLoaderRoute: typeof OperadorasIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/areas/': {
+      id: '/areas/'
+      path: '/areas'
+      fullPath: '/areas/'
+      preLoaderRoute: typeof AreasIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/operadoras/$slug': {
+      id: '/operadoras/$slug'
+      path: '/operadoras/$slug'
+      fullPath: '/operadoras/$slug'
+      preLoaderRoute: typeof OperadorasSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/areas/$slug': {
+      id: '/areas/$slug'
+      path: '/areas/$slug'
+      fullPath: '/areas/$slug'
+      preLoaderRoute: typeof AreasSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ContradiccionesRoute: ContradiccionesRoute,
+  EventosRoute: EventosRoute,
+  NewsletterRoute: NewsletterRoute,
+  ProRoute: ProRoute,
+  WikiRoute: WikiRoute,
+  AreasSlugRoute: AreasSlugRoute,
+  OperadorasSlugRoute: OperadorasSlugRoute,
+  AreasIndexRoute: AreasIndexRoute,
+  OperadorasIndexRoute: OperadorasIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
