@@ -73,24 +73,29 @@ function AreaDetail() {
           <div className="panel p-5">
             <div className="mb-4">
               <div className="text-[11px] uppercase tracking-widest text-primary font-medium">
-                Altas de pozos
+                Serie histórica
               </div>
-              <h2 className="text-lg font-display font-semibold mt-1">Nuevos pozos por mes (2025)</h2>
+              <h2 className="text-lg font-display font-semibold mt-1">Producción del área</h2>
             </div>
             <div className="h-64">
               <ResponsiveContainer>
-                <BarChart data={monthly} margin={{ left: -10, right: 12 }}>
+                <AreaChart data={series} margin={{ left: -10, right: 12 }}>
+                  <defs>
+                    <linearGradient id="areaOil" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="var(--color-primary)" stopOpacity={0.5} />
+                      <stop offset="100%" stopColor="var(--color-primary)" stopOpacity={0} />
+                    </linearGradient>
+                  </defs>
                   <CartesianGrid stroke="var(--color-border)" strokeDasharray="2 4" vertical={false} />
-                  <XAxis dataKey="m" tick={{ fill: "var(--color-muted-foreground)", fontSize: 11 }} axisLine={{ stroke: "var(--color-border)" }} tickLine={false} />
+                  <XAxis dataKey="month" tick={{ fill: "var(--color-muted-foreground)", fontSize: 11 }} axisLine={{ stroke: "var(--color-border)" }} tickLine={false} interval={5} />
                   <YAxis tick={{ fill: "var(--color-muted-foreground)", fontSize: 11 }} axisLine={{ stroke: "var(--color-border)" }} tickLine={false} />
-                  <Tooltip
-                    contentStyle={{ background: "var(--color-popover)", border: "1px solid var(--color-border)", borderRadius: 6, fontSize: 12 }}
-                  />
-                  <Bar dataKey="wells" fill="var(--color-primary)" radius={[3, 3, 0, 0]} />
-                </BarChart>
+                  <Tooltip contentStyle={{ background: "var(--color-popover)", border: "1px solid var(--color-border)", borderRadius: 6, fontSize: 12 }} />
+                  <Area type="monotone" dataKey="oil" stroke="var(--color-primary)" strokeWidth={2} fill="url(#areaOil)" name="Oil (kbbl/d)" />
+                </AreaChart>
               </ResponsiveContainer>
             </div>
           </div>
+
 
           <div className="panel p-5">
             <div className="mb-4">
