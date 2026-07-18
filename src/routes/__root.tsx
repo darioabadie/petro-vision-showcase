@@ -77,21 +77,25 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "PetroData — Inteligencia de datos de Vaca Muerta" },
+      { title: "PetroData · Overview — Estado de Vaca Muerta" },
       {
         name: "description",
         content:
-          "Plataforma de BI sobre el oil & gas argentino: producción, operadoras, áreas, eventos y contradicciones sobre datos públicos de la Secretaría de Energía.",
+          "Dashboard mensual: producción no convencional, ranking de operadoras, curvas de declinación por cohorte, últimos eventos y contradicciones.",
       },
       { name: "author", content: "PetroData" },
-      { property: "og:title", content: "PetroData — Inteligencia sobre Vaca Muerta" },
+      { property: "og:title", content: "PetroData · Overview — Estado de Vaca Muerta" },
       {
         property: "og:description",
         content:
-          "BI self-service + wiki de contexto sobre Vaca Muerta. Datos del Capítulo IV / Adjunto IV, con timelines y contradicciones anunciado vs. ejecutado.",
+          "Dashboard mensual: producción no convencional, ranking de operadoras, curvas de declinación por cohorte, últimos eventos y contradicciones.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "PetroData · Overview — Estado de Vaca Muerta" },
+      { name: "twitter:description", content: "Dashboard mensual: producción no convencional, ranking de operadoras, curvas de declinación por cohorte, últimos eventos y contradicciones." },
+      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/9af33efa-f786-4c6e-ae48-cc831824203b" },
+      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/9af33efa-f786-4c6e-ae48-cc831824203b" },
     ],
     links: [
       {
