@@ -21,6 +21,7 @@ import {
   declineByCohort,
   ducsDemo,
   CUTOFF,
+  META_GENERADO,
   kpis,
   ARENA_PRELIMINAR,
   cohort2025Peak,
@@ -35,7 +36,7 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Dashboard mensual: producción no convencional, ranking de operadoras, curvas de declinación por cohorte, últimos eventos y contradicciones.",
+          "Dashboard mensual: producción no convencional, ranking de operadoras, etapas de fractura y curvas de declinación por cohorte. 100% datos oficiales de la Secretaría de Energía.",
       },
     ],
   }),
@@ -59,7 +60,7 @@ function OverviewPage() {
       <PageHeader
         eyebrow={CUTOFF}
         title="Estado de Vaca Muerta"
-        description="Overview mensual generado desde Capítulo IV. Todas las métricas son server-side sobre el datastore público. Última corrida del pipeline: hace 6 horas."
+        description={`Overview mensual generado desde Capítulo IV. Todas las métricas son server-side sobre el datastore público. Última corrida del pipeline: ${META_GENERADO.replace("T", " ")} ART.`}
         right={
           <Link
             to="/newsletter"

@@ -109,7 +109,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           <div>
             © 2026 PetroData · Datos: Secretaría de Energía de la Nación (Capítulo IV / Adjunto IV)
           </div>
-          <div className="font-mono">MVP demo · Todos los números son ilustrativos</div>
+          <div className="font-mono">Datos oficiales SE · corte 2026-05 · preliminares, sujetos a rectificación</div>
         </footer>
       </div>
     </div>
