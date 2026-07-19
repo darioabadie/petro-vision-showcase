@@ -408,6 +408,102 @@ function EmptyEditorial({ icon: Icon, title, copy }: { icon: any; title: string;
   );
 }
 
+function DucsPanel() {
+  const { isPro } = usePlan();
+  const visibleRows = isPro ? ducsDemo : ducsDemo.slice(0, 3);
+  const hiddenCount = ducsDemo.length - visibleRows.length;
+
+  return (
+    <div className="panel p-5 relative">
+      <div className="flex flex-wrap items-start justify-between gap-3 mb-4">
+        <div>
+          <div className="text-[11px] uppercase tracking-widest text-primary font-medium inline-flex items-center gap-2">
+            Inventario DUCs <ProPill />
+          </div>
+          <h2 className="text-lg font-display font-semibold mt-1 inline-flex items-center gap-2">
+            <Drill className="h-4 w-4 text-primary" /> Pozos perforados sin completar
+          </h2>
+          <p className="text-xs text-muted-foreground mt-1">
+            Buffer de producción por operadora. YTD 2026 vs. mismo período 2025.
+          </p>
+        </div>
+        <ProActionButton icon={Download}>Exportar tabla</ProActionButton>
+      </div>
+
+      <div className="overflow-hidden rounded-md border border-border">
+        <table className="w-full text-sm">
+          <thead className="bg-muted/40 text-[11px] uppercase tracking-wider text-muted-foreground">
+            <tr>
+              <th className="text-left px-4 py-2.5 font-medium">Operadora</th>
+              <th className="text-left px-4 py-2.5 font-medium hidden md:table-cell">Área</th>
+              <th className="text-right px-4 py-2.5 font-medium hidden sm:table-cell">Perf. YTD</th>
+              <th className="text-right px-4 py-2.5 font-medium hidden sm:table-cell">Compl. YTD</th>
+              <th className="text-right px-4 py-2.5 font-medium">DUCs</th>
+              <th className="text-right px-4 py-2.5 font-medium hidden md:table-cell">Δ YoY</th>
+              <th className="text-right px-4 py-2.5 font-medium">Buffer</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-border">
+            {visibleRows.map((r) => (
+              <tr key={r.operatorSlug + r.area} className="hover:bg-muted/30">
+                <td className="px-4 py-2.5">
+                  <Link
+                    to="/operadoras/$slug"
+                    params={{ slug: r.operatorSlug }}
+                    className="font-medium hover:text-primary"
+                  >
+                    {r.operator}
+                  </Link>
+                </td>
+                <td className="px-4 py-2.5 hidden md:table-cell text-muted-foreground">{r.area}</td>
+                <td className="px-4 py-2.5 num text-right hidden sm:table-cell">{r.drilledYtd}</td>
+                <td className="px-4 py-2.5 num text-right hidden sm:table-cell">{r.completedYtd}</td>
+                <td className="px-4 py-2.5 num text-right font-semibold">{r.ducs}</td>
+                <td className={`px-4 py-2.5 num text-right hidden md:table-cell ${r.ducsDeltaYoY < 0 ? "text-primary" : r.ducsDeltaYoY > 0 ? "text-destructive" : "text-muted-foreground"}`}>
+                  {r.ducsDeltaYoY > 0 ? "+" : ""}{r.ducsDeltaYoY}%
+                </td>
+                <td className="px-4 py-2.5 num text-right">{r.invBuffer.toFixed(1)} m</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+
+        {!isPro && hiddenCount > 0 && (
+          <div className="relative">
+            <div className="pointer-events-none select-none blur-[3px] opacity-60" aria-hidden>
+              <table className="w-full text-sm">
+                <tbody className="divide-y divide-border">
+                  {ducsDemo.slice(3).map((r) => (
+                    <tr key={"blur-" + r.operatorSlug + r.area}>
+                      <td className="px-4 py-2.5">{r.operator}</td>
+                      <td className="px-4 py-2.5 hidden md:table-cell">{r.area}</td>
+                      <td className="px-4 py-2.5 num text-right hidden sm:table-cell">{r.drilledYtd}</td>
+                      <td className="px-4 py-2.5 num text-right hidden sm:table-cell">{r.completedYtd}</td>
+                      <td className="px-4 py-2.5 num text-right font-semibold">{r.ducs}</td>
+                      <td className="px-4 py-2.5 num text-right hidden md:table-cell">
+                        {r.ducsDeltaYoY > 0 ? "+" : ""}{r.ducsDeltaYoY}%
+                      </td>
+                      <td className="px-4 py-2.5 num text-right">{r.invBuffer.toFixed(1)} m</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <div className="absolute inset-x-0 top-0 h-full flex items-center justify-center bg-gradient-to-b from-transparent via-background/60 to-background">
+              <div className="text-center">
+                <div className="text-xs text-muted-foreground">
+                  {hiddenCount} operadoras más disponibles en <span className="text-primary font-medium">PetroData Pro</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+
 
 function LegendDot({ color, label }: { color: string; label: string }) {
   return (
