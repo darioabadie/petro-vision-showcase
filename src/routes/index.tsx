@@ -15,19 +15,24 @@ import {
   YAxis,
 } from "recharts";
 import { AppShell, PageHeader, Stat } from "@/components/app-shell";
+import { GatedModule } from "@/components/gated-module";
+import { ProActionButton, ProPill } from "@/components/pro-pill";
+import { usePlan } from "@/lib/plan-context";
 import {
   productionSeries,
   operators,
   events,
   declineByCohort,
   contradictions,
+  proGuidanceDemo,
+  ducsDemo,
   CUTOFF,
   kpis,
   ARENA_PRELIMINAR,
   cohort2025Peak,
   cohort2026Peak,
 } from "@/lib/mock-data";
-import { ArrowUpRight, Download, TrendingUp, Mail, Info, CalendarClock, LineChart as LineChartIcon } from "lucide-react";
+import { ArrowUpRight, Download, TrendingUp, TrendingDown, Mail, Info, CalendarClock, LineChart as LineChartIcon, History, Drill } from "lucide-react";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -63,9 +68,8 @@ function OverviewPage() {
         description="Overview mensual generado desde Capítulo IV. Todas las métricas son server-side sobre el datastore público. Última corrida del pipeline: hace 6 horas."
         right={
           <div className="flex gap-2">
-            <button className="h-9 px-3 rounded-md border border-border text-sm inline-flex items-center gap-1.5 hover:bg-muted">
-              <Download className="h-3.5 w-3.5" /> CSV
-            </button>
+            <ProActionButton icon={Download}>Exportar CSV</ProActionButton>
+            <ProActionButton icon={History}>Histórico completo</ProActionButton>
             <Link
               to="/newsletter"
               className="h-9 px-3 rounded-md bg-primary text-primary-foreground text-sm inline-flex items-center gap-1.5 hover:opacity-90"
