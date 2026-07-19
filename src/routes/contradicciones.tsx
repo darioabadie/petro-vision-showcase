@@ -1,7 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { AppShell, PageHeader } from "@/components/app-shell";
-import { contradictions } from "@/lib/mock-data";
-import { LineChart, TrendingDown, TrendingUp, Mail } from "lucide-react";
+import { proGuidanceDemo } from "@/lib/mock-data";
+import { LineChart, TrendingDown, TrendingUp, Download } from "lucide-react";
+import { GatedModule } from "@/components/gated-module";
+import { ProActionButton, ProPill } from "@/components/pro-pill";
+import { usePlan } from "@/lib/plan-context";
 
 export const Route = createFileRoute("/contradicciones")({
   head: () => ({
@@ -14,12 +17,17 @@ export const Route = createFileRoute("/contradicciones")({
 });
 
 function Page() {
+  const { isPro } = usePlan();
+  const visible = isPro ? proGuidanceDemo : proGuidanceDemo.slice(0, 3);
+  const hidden = proGuidanceDemo.slice(3);
+
   return (
     <AppShell>
       <PageHeader
         eyebrow="Publicación trimestral · próximo cierre Q2 2026"
         title="Guidance tracker"
         description="Cruzamos el guidance público de cada operadora (earnings calls, hechos relevantes CNV, filings SEC) contra la producción y pozos conectados reportados al Capítulo IV. Tono de research, sin denuncia — casos positivos y negativos por igual."
+        right={<ProActionButton icon={Download}>Exportar informe</ProActionButton>}
       />
       <div className="p-6 space-y-6">
         <div className="panel p-6 border-l-4 border-l-primary">
@@ -33,69 +41,76 @@ function Page() {
                 corresponde al dato publicado en el Capítulo IV / Adjunto IV con
                 fecha de corte oficial. Δ = (ejecutado − anunciado) / anunciado.
                 Cobertura inicial: top 10 operadoras por producción. El tracker
-                mostrará por igual sobre y sub-ejecución.
+                muestra por igual sobre y sub-ejecución.
               </p>
             </div>
           </div>
         </div>
 
-        {contradictions.length === 0 ? (
-          <div className="panel p-10 flex flex-col items-center text-center gap-4">
-            <div className="h-14 w-14 rounded-md bg-primary/10 border border-primary/30 grid place-items-center">
-              <LineChart className="h-6 w-6 text-primary" />
-            </div>
-            <div>
-              <div className="font-display text-xl font-semibold">Sin publicaciones aún</div>
-              <p className="text-sm text-muted-foreground mt-2 max-w-lg">
-                La capa editorial del tracker está en construcción. Los KPIs y
-                series de la plataforma ya usan datos oficiales al corte 2026-05.
-                El primer informe trimestral se emite con el cierre de Q2 2026.
-              </p>
-            </div>
-            <Link
-              to="/newsletter"
-              className="mt-2 h-10 px-5 rounded-md bg-primary text-primary-foreground text-sm font-medium inline-flex items-center gap-1.5 hover:opacity-90"
-            >
-              <Mail className="h-4 w-4" /> Avisarme por email
-            </Link>
+        <div className="flex items-center justify-between">
+          <div className="text-xs text-muted-foreground">
+            Mostrando {visible.length} de {proGuidanceDemo.length} operadoras cubiertas
+            {!isPro && <> · <span className="text-primary">3 filas visibles en Free</span></>}
           </div>
-        ) : (
-          <div className="grid gap-4">
-            {contradictions.map((c) => {
-              const negative = c.delta < 0;
-              return (
-                <div key={c.operator + c.metric} className="panel p-5">
-                  <div className="flex flex-wrap items-start justify-between gap-4">
-                    <div>
-                      <Link to="/operadoras/$slug" params={{ slug: c.operatorSlug }} className="text-lg font-display font-semibold hover:text-primary">
-                        {c.operator}
-                      </Link>
-                      <div className="text-xs text-muted-foreground mt-0.5">
-                        {c.metric} · {c.period}
-                      </div>
-                    </div>
-                    <div className={`flex items-center gap-2 text-2xl num font-semibold ${negative ? "text-destructive" : "text-primary"}`}>
-                      {negative ? <TrendingDown className="h-5 w-5" /> : <TrendingUp className="h-5 w-5" />}
-                      {c.delta > 0 ? "+" : ""}{c.delta}%
-                    </div>
-                  </div>
-                  <div className="grid sm:grid-cols-2 gap-4 mt-4 pt-4 border-t border-border">
-                    <div>
-                      <div className="text-[10px] uppercase tracking-wider text-muted-foreground">Anunciado</div>
-                      <div className="num text-xl mt-1">{c.announced}</div>
-                    </div>
-                    <div>
-                      <div className="text-[10px] uppercase tracking-wider text-muted-foreground">Ejecutado (Cap. IV)</div>
-                      <div className="num text-xl mt-1">{c.actual}</div>
-                    </div>
-                  </div>
-                  <p className="text-sm text-muted-foreground mt-4 leading-relaxed">{c.narrative}</p>
-                </div>
-              );
-            })}
+          <div className="inline-flex items-center gap-2 text-xs text-muted-foreground">
+            <ProPill /> Cobertura completa en el plan Pro
           </div>
+        </div>
+
+        <div className="grid gap-4">
+          {visible.map((c) => (
+            <GuidanceCard key={c.operator + c.metric} c={c} />
+          ))}
+        </div>
+
+        {!isPro && hidden.length > 0 && (
+          <GatedModule
+            mode="peek"
+            peekHeight={220}
+            title={`${hidden.length} operadoras adicionales`}
+            copy="La cobertura completa del guidance tracker está disponible en el plan Pro, junto con exports y alertas por desvío."
+          >
+            <div className="grid gap-4">
+              {hidden.map((c) => (
+                <GuidanceCard key={c.operator + c.metric} c={c} />
+              ))}
+            </div>
+          </GatedModule>
         )}
       </div>
     </AppShell>
+  );
+}
+
+function GuidanceCard({ c }: { c: (typeof proGuidanceDemo)[number] }) {
+  const negative = c.delta < 0;
+  return (
+    <div className="panel p-5">
+      <div className="flex flex-wrap items-start justify-between gap-4">
+        <div>
+          <Link to="/operadoras/$slug" params={{ slug: c.operatorSlug }} className="text-lg font-display font-semibold hover:text-primary">
+            {c.operator}
+          </Link>
+          <div className="text-xs text-muted-foreground mt-0.5">
+            {c.metric} · {c.period}
+          </div>
+        </div>
+        <div className={`flex items-center gap-2 text-2xl num font-semibold ${negative ? "text-destructive" : "text-primary"}`}>
+          {negative ? <TrendingDown className="h-5 w-5" /> : <TrendingUp className="h-5 w-5" />}
+          {c.delta > 0 ? "+" : ""}{c.delta}%
+        </div>
+      </div>
+      <div className="grid sm:grid-cols-2 gap-4 mt-4 pt-4 border-t border-border">
+        <div>
+          <div className="text-[10px] uppercase tracking-wider text-muted-foreground">Anunciado</div>
+          <div className="num text-xl mt-1">{c.announced}</div>
+        </div>
+        <div>
+          <div className="text-[10px] uppercase tracking-wider text-muted-foreground">Ejecutado (Cap. IV)</div>
+          <div className="num text-xl mt-1">{c.actual}</div>
+        </div>
+      </div>
+      <p className="text-sm text-muted-foreground mt-4 leading-relaxed">{c.narrative}</p>
+    </div>
   );
 }

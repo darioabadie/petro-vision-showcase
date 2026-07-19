@@ -15,19 +15,24 @@ import {
   YAxis,
 } from "recharts";
 import { AppShell, PageHeader, Stat } from "@/components/app-shell";
+import { GatedModule } from "@/components/gated-module";
+import { ProActionButton, ProPill } from "@/components/pro-pill";
+import { usePlan } from "@/lib/plan-context";
 import {
   productionSeries,
   operators,
   events,
   declineByCohort,
   contradictions,
+  proGuidanceDemo,
+  ducsDemo,
   CUTOFF,
   kpis,
   ARENA_PRELIMINAR,
   cohort2025Peak,
   cohort2026Peak,
 } from "@/lib/mock-data";
-import { ArrowUpRight, Download, TrendingUp, Mail, Info, CalendarClock, LineChart as LineChartIcon } from "lucide-react";
+import { ArrowUpRight, Download, TrendingUp, TrendingDown, Mail, Info, CalendarClock, LineChart as LineChartIcon, History, Drill } from "lucide-react";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -63,9 +68,8 @@ function OverviewPage() {
         description="Overview mensual generado desde Capítulo IV. Todas las métricas son server-side sobre el datastore público. Última corrida del pipeline: hace 6 horas."
         right={
           <div className="flex gap-2">
-            <button className="h-9 px-3 rounded-md border border-border text-sm inline-flex items-center gap-1.5 hover:bg-muted">
-              <Download className="h-3.5 w-3.5" /> CSV
-            </button>
+            <ProActionButton icon={Download}>Exportar CSV</ProActionButton>
+            <ProActionButton icon={History}>Histórico completo</ProActionButton>
             <Link
               to="/newsletter"
               className="h-9 px-3 rounded-md bg-primary text-primary-foreground text-sm inline-flex items-center gap-1.5 hover:opacity-90"
@@ -310,7 +314,13 @@ function OverviewPage() {
             )}
           </div>
 
-          <div className="panel p-5">
+          <GatedModule
+            className="panel p-5"
+            mode="peek"
+            peekHeight={260}
+            title="Guidance tracker completo"
+            copy="Cruce trimestral guidance anunciado vs. ejecución Cap. IV, con narrativa y export. Disponible en el plan Pro."
+          >
             <div className="flex items-start justify-between mb-4">
               <div>
                 <div className="text-[11px] uppercase tracking-widest text-primary font-medium">
@@ -322,37 +332,34 @@ function OverviewPage() {
                 Ver →
               </Link>
             </div>
-            {contradictions.length === 0 ? (
-              <EmptyEditorial
-                icon={LineChartIcon}
-                title="Próxima publicación trimestral"
-                copy="Cruzamos el guidance público de cada operadora contra el reporte al Capítulo IV. El primer informe se emite con el cierre de Q2 2026."
-              />
-            ) : (
-              <ul className="space-y-3">
-                {contradictions.slice(0, 4).map((c) => (
-                  <li key={c.operator + c.metric} className="border border-border rounded-md p-3">
-                    <div className="flex items-center justify-between">
-                      <Link
-                        to="/operadoras/$slug"
-                        params={{ slug: c.operatorSlug }}
-                        className="text-sm font-medium hover:text-primary"
-                      >
-                        {c.operator}
-                      </Link>
-                      <span className={`num text-xs ${c.delta < 0 ? "text-destructive" : "text-primary"}`}>
-                        {c.delta > 0 ? "+" : ""}{c.delta}%
-                      </span>
-                    </div>
-                    <div className="text-[11px] text-muted-foreground mt-0.5">
-                      {c.metric} · {c.period}
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
+            <ul className="space-y-3">
+              {proGuidanceDemo.map((c) => (
+                <li key={c.operator + c.metric} className="border border-border rounded-md p-3">
+                  <div className="flex items-center justify-between">
+                    <Link
+                      to="/operadoras/$slug"
+                      params={{ slug: c.operatorSlug }}
+                      className="text-sm font-medium hover:text-primary"
+                    >
+                      {c.operator}
+                    </Link>
+                    <span className={`num text-xs inline-flex items-center gap-1 ${c.delta < 0 ? "text-destructive" : "text-primary"}`}>
+                      {c.delta < 0 ? <TrendingDown className="h-3 w-3" /> : <TrendingUp className="h-3 w-3" />}
+                      {c.delta > 0 ? "+" : ""}{c.delta}%
+                    </span>
+                  </div>
+                  <div className="text-[11px] text-muted-foreground mt-0.5">
+                    {c.metric} · {c.period}
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </GatedModule>
         </div>
+
+        {/* DUCs inventario — módulo Pro */}
+        <DucsPanel />
+
 
         {/* CTA — newsletter primario, Pro como lista de espera */}
         <div className="panel p-6 flex flex-wrap items-center justify-between gap-4">
@@ -400,6 +407,102 @@ function EmptyEditorial({ icon: Icon, title, copy }: { icon: any; title: string;
     </div>
   );
 }
+
+function DucsPanel() {
+  const { isPro } = usePlan();
+  const visibleRows = isPro ? ducsDemo : ducsDemo.slice(0, 3);
+  const hiddenCount = ducsDemo.length - visibleRows.length;
+
+  return (
+    <div className="panel p-5 relative">
+      <div className="flex flex-wrap items-start justify-between gap-3 mb-4">
+        <div>
+          <div className="text-[11px] uppercase tracking-widest text-primary font-medium inline-flex items-center gap-2">
+            Inventario DUCs <ProPill />
+          </div>
+          <h2 className="text-lg font-display font-semibold mt-1 inline-flex items-center gap-2">
+            <Drill className="h-4 w-4 text-primary" /> Pozos perforados sin completar
+          </h2>
+          <p className="text-xs text-muted-foreground mt-1">
+            Buffer de producción por operadora. YTD 2026 vs. mismo período 2025.
+          </p>
+        </div>
+        <ProActionButton icon={Download}>Exportar tabla</ProActionButton>
+      </div>
+
+      <div className="overflow-hidden rounded-md border border-border">
+        <table className="w-full text-sm">
+          <thead className="bg-muted/40 text-[11px] uppercase tracking-wider text-muted-foreground">
+            <tr>
+              <th className="text-left px-4 py-2.5 font-medium">Operadora</th>
+              <th className="text-left px-4 py-2.5 font-medium hidden md:table-cell">Área</th>
+              <th className="text-right px-4 py-2.5 font-medium hidden sm:table-cell">Perf. YTD</th>
+              <th className="text-right px-4 py-2.5 font-medium hidden sm:table-cell">Compl. YTD</th>
+              <th className="text-right px-4 py-2.5 font-medium">DUCs</th>
+              <th className="text-right px-4 py-2.5 font-medium hidden md:table-cell">Δ YoY</th>
+              <th className="text-right px-4 py-2.5 font-medium">Buffer</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-border">
+            {visibleRows.map((r) => (
+              <tr key={r.operatorSlug + r.area} className="hover:bg-muted/30">
+                <td className="px-4 py-2.5">
+                  <Link
+                    to="/operadoras/$slug"
+                    params={{ slug: r.operatorSlug }}
+                    className="font-medium hover:text-primary"
+                  >
+                    {r.operator}
+                  </Link>
+                </td>
+                <td className="px-4 py-2.5 hidden md:table-cell text-muted-foreground">{r.area}</td>
+                <td className="px-4 py-2.5 num text-right hidden sm:table-cell">{r.drilledYtd}</td>
+                <td className="px-4 py-2.5 num text-right hidden sm:table-cell">{r.completedYtd}</td>
+                <td className="px-4 py-2.5 num text-right font-semibold">{r.ducs}</td>
+                <td className={`px-4 py-2.5 num text-right hidden md:table-cell ${r.ducsDeltaYoY < 0 ? "text-primary" : r.ducsDeltaYoY > 0 ? "text-destructive" : "text-muted-foreground"}`}>
+                  {r.ducsDeltaYoY > 0 ? "+" : ""}{r.ducsDeltaYoY}%
+                </td>
+                <td className="px-4 py-2.5 num text-right">{r.invBuffer.toFixed(1)} m</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+
+        {!isPro && hiddenCount > 0 && (
+          <div className="relative">
+            <div className="pointer-events-none select-none blur-[3px] opacity-60" aria-hidden>
+              <table className="w-full text-sm">
+                <tbody className="divide-y divide-border">
+                  {ducsDemo.slice(3).map((r) => (
+                    <tr key={"blur-" + r.operatorSlug + r.area}>
+                      <td className="px-4 py-2.5">{r.operator}</td>
+                      <td className="px-4 py-2.5 hidden md:table-cell">{r.area}</td>
+                      <td className="px-4 py-2.5 num text-right hidden sm:table-cell">{r.drilledYtd}</td>
+                      <td className="px-4 py-2.5 num text-right hidden sm:table-cell">{r.completedYtd}</td>
+                      <td className="px-4 py-2.5 num text-right font-semibold">{r.ducs}</td>
+                      <td className="px-4 py-2.5 num text-right hidden md:table-cell">
+                        {r.ducsDeltaYoY > 0 ? "+" : ""}{r.ducsDeltaYoY}%
+                      </td>
+                      <td className="px-4 py-2.5 num text-right">{r.invBuffer.toFixed(1)} m</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <div className="absolute inset-x-0 top-0 h-full flex items-center justify-center bg-gradient-to-b from-transparent via-background/60 to-background">
+              <div className="text-center">
+                <div className="text-xs text-muted-foreground">
+                  {hiddenCount} operadoras más disponibles en <span className="text-primary font-medium">PetroData Pro</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 
 
 function LegendDot({ color, label }: { color: string; label: string }) {
