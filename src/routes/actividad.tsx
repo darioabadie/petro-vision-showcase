@@ -12,9 +12,6 @@ import {
   YAxis,
 } from "recharts";
 import { AppShell, PageHeader, Stat } from "@/components/app-shell";
-import { GatedModule } from "@/components/gated-module";
-import { ProActionButton, ProPill } from "@/components/pro-pill";
-import { usePlan } from "@/lib/plan-context";
 import {
   activitySeries,
   fracSpreadSeries,
@@ -23,7 +20,7 @@ import {
   ARENA_PRELIMINAR,
   CUTOFF,
 } from "@/lib/mock-data";
-import { Download, Drill, Info, TrendingDown, TrendingUp, Activity } from "lucide-react";
+import { Drill, Info, Activity } from "lucide-react";
 
 export const Route = createFileRoute("/actividad")({
   head: () => ({
@@ -51,10 +48,6 @@ const ratioSeries = activitySeries.map((r) => ({
 }));
 
 function ActividadPage() {
-  const { isPro } = usePlan();
-  const visibleRows = isPro ? ducsDemo : ducsDemo.slice(0, 3);
-  const hiddenCount = ducsDemo.length - visibleRows.length;
-
   const etapasMoM =
     prev.etapas > 0
       ? (((last.etapas - prev.etapas) / prev.etapas) * 100).toFixed(1)
@@ -81,7 +74,6 @@ function ActividadPage() {
         eyebrow={CUTOFF}
         title="Actividad & DUCs"
         description="Monitor de completación desde el Adjunto IV (SE). Etapas de fractura y pozos conectados actualizados con cada corrida del pipeline. Métrica insignia: el dato de etapas/día que hoy la prensa publica con fuentes privadas."
-        right={<ProActionButton icon={Download}>Exportar CSV</ProActionButton>}
       />
 
       <div className="p-6 space-y-6">
@@ -336,21 +328,18 @@ function ActividadPage() {
           </div>
         </div>
 
-        {/* DUCs inventario */}
-        <div className="panel p-5 relative">
-          <div className="flex flex-wrap items-start justify-between gap-3 mb-4">
-            <div>
-              <div className="text-[11px] uppercase tracking-widest text-primary font-medium inline-flex items-center gap-2">
-                A4 — Inventario DUCs <ProPill />
-              </div>
-              <h2 className="text-lg font-display font-semibold mt-1 inline-flex items-center gap-2">
-                <Drill className="h-4 w-4 text-primary" /> Pozos perforados sin completar
-              </h2>
-              <p className="text-xs text-muted-foreground mt-1">
-                Buffer de producción por operadora. YTD 2026 vs. mismo período 2025.
-              </p>
+        {/* Fracturados sin conectar — inventario */}
+        <div className="panel p-5">
+          <div className="mb-4">
+            <div className="text-[11px] uppercase tracking-widest text-primary font-medium">
+              A4 — Conexión pendiente
             </div>
-            <ProActionButton icon={Download}>Exportar tabla</ProActionButton>
+            <h2 className="text-lg font-display font-semibold mt-1 inline-flex items-center gap-2">
+              <Drill className="h-4 w-4 text-primary" /> Fracturados sin conectar
+            </h2>
+            <p className="text-xs text-muted-foreground mt-1">
+              Pozos con fecha_fin_fractura registrada y sin primera producción. YTD 2026 vs. mismo período 2025.
+            </p>
           </div>
 
           <div className="overflow-hidden rounded-md border border-border">
@@ -359,15 +348,15 @@ function ActividadPage() {
                 <tr>
                   <th className="text-left px-4 py-2.5 font-medium">Operadora</th>
                   <th className="text-left px-4 py-2.5 font-medium hidden md:table-cell">Área</th>
-                  <th className="text-right px-4 py-2.5 font-medium hidden sm:table-cell">Perf. YTD</th>
-                  <th className="text-right px-4 py-2.5 font-medium hidden sm:table-cell">Compl. YTD</th>
-                  <th className="text-right px-4 py-2.5 font-medium">DUCs</th>
+                  <th className="text-right px-4 py-2.5 font-medium hidden sm:table-cell">Fract. YTD</th>
+                  <th className="text-right px-4 py-2.5 font-medium hidden sm:table-cell">Conect. YTD</th>
+                  <th className="text-right px-4 py-2.5 font-medium">F.s.C.</th>
                   <th className="text-right px-4 py-2.5 font-medium hidden md:table-cell">Δ YoY</th>
                   <th className="text-right px-4 py-2.5 font-medium">Buffer</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">
-                {visibleRows.map((r) => (
+                {ducsDemo.map((r) => (
                   <tr key={r.operatorSlug + r.area} className="hover:bg-muted/30">
                     <td className="px-4 py-2.5">
                       <Link
@@ -392,38 +381,6 @@ function ActividadPage() {
                 ))}
               </tbody>
             </table>
-
-            {!isPro && hiddenCount > 0 && (
-              <div className="relative">
-                <div className="pointer-events-none select-none blur-[3px] opacity-60" aria-hidden>
-                  <table className="w-full text-sm">
-                    <tbody className="divide-y divide-border">
-                      {ducsDemo.slice(3).map((r) => (
-                        <tr key={"blur-" + r.operatorSlug}>
-                          <td className="px-4 py-2.5">{r.operator}</td>
-                          <td className="px-4 py-2.5 hidden md:table-cell">{r.area}</td>
-                          <td className="px-4 py-2.5 num text-right hidden sm:table-cell">{r.drilledYtd}</td>
-                          <td className="px-4 py-2.5 num text-right hidden sm:table-cell">{r.completedYtd}</td>
-                          <td className="px-4 py-2.5 num text-right font-semibold">{r.ducs}</td>
-                          <td className="px-4 py-2.5 num text-right hidden md:table-cell">
-                            {r.ducsDeltaYoY > 0 ? "+" : ""}{r.ducsDeltaYoY}%
-                          </td>
-                          <td className="px-4 py-2.5 num text-right">{r.invBuffer.toFixed(1)} m</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-                <div className="absolute inset-x-0 top-0 h-full flex items-center justify-center bg-gradient-to-b from-transparent via-background/60 to-background">
-                  <div className="text-center">
-                    <div className="text-xs text-muted-foreground">
-                      {hiddenCount} operadoras más en{" "}
-                      <span className="text-primary font-medium">PetroData Pro</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
           </div>
         </div>
 
@@ -437,9 +394,11 @@ function ActividadPage() {
             a partir del conteo de trabajos del Adjunto IV con fechas de inicio/fin solapadas en
             un mismo día. Se publica siempre como «estimado» porque el Adjunto IV no informa
             equipos directamente. El método equivalente al frac spread count de Primary Vision
-            (datos privados). <strong className="text-foreground">DUCs (A4):</strong> pozos con{" "}
+            (datos privados). <strong className="text-foreground">Conexión pendiente / FsC (A4):</strong> pozos con{" "}
             <code>fecha_fin_fractura</code> (F2) registrada y sin primera producción en el Padrón
-            (F1b). <code>invBuffer</code> = DUCs / conexiones recientes por mes.
+            (F1b). Se llama «fracturados sin conectar» porque el DUC clásico (drilled but uncompleted,
+            perforado sin fracturar) no es observable: el Adjunto IV no informa el tramo de
+            perforación. <code>invBuffer</code> = FsC / conexiones recientes por mes.
           </p>
         </div>
       </div>

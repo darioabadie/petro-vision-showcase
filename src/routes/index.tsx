@@ -15,8 +15,6 @@ import {
   YAxis,
 } from "recharts";
 import { AppShell, PageHeader, Stat } from "@/components/app-shell";
-import { ProActionButton, ProPill } from "@/components/pro-pill";
-import { usePlan } from "@/lib/plan-context";
 import {
   productionSeries,
   operators,
@@ -28,7 +26,7 @@ import {
   cohort2025Peak,
   cohort2026Peak,
 } from "@/lib/mock-data";
-import { ArrowUpRight, Download, TrendingUp, Mail, Info, History, Drill } from "lucide-react";
+import { ArrowUpRight, TrendingUp, Mail, Info, Drill } from "lucide-react";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -63,16 +61,12 @@ function OverviewPage() {
         title="Estado de Vaca Muerta"
         description="Overview mensual generado desde Capítulo IV. Todas las métricas son server-side sobre el datastore público. Última corrida del pipeline: hace 6 horas."
         right={
-          <div className="flex gap-2">
-            <ProActionButton icon={Download}>Exportar CSV</ProActionButton>
-            <ProActionButton icon={History}>Histórico completo</ProActionButton>
-            <Link
-              to="/newsletter"
-              className="h-9 px-3 rounded-md bg-primary text-primary-foreground text-sm inline-flex items-center gap-1.5 hover:opacity-90"
-            >
-              Newsletter <ArrowUpRight className="h-3.5 w-3.5" />
-            </Link>
-          </div>
+          <Link
+            to="/newsletter"
+            className="h-9 px-3 rounded-md bg-primary text-primary-foreground text-sm inline-flex items-center gap-1.5 hover:opacity-90"
+          >
+            Newsletter <ArrowUpRight className="h-3.5 w-3.5" />
+          </Link>
         }
       />
 
@@ -322,20 +316,12 @@ function OverviewPage() {
               </div>
             </div>
           </div>
-          <div className="flex gap-2">
-            <Link
-              to="/pro"
-              className="h-10 px-4 rounded-md border border-primary/40 text-primary text-sm font-medium inline-flex items-center gap-1.5 hover:bg-primary/10"
-            >
-              Lista de espera Pro
-            </Link>
-            <Link
-              to="/newsletter"
-              className="h-10 px-5 rounded-md bg-primary text-primary-foreground text-sm font-medium inline-flex items-center gap-1.5 hover:opacity-90"
-            >
-              Suscribirme <ArrowUpRight className="h-4 w-4" />
-            </Link>
-          </div>
+          <Link
+            to="/newsletter"
+            className="h-10 px-5 rounded-md bg-primary text-primary-foreground text-sm font-medium inline-flex items-center gap-1.5 hover:opacity-90"
+          >
+            Suscribirme <ArrowUpRight className="h-4 w-4" />
+          </Link>
         </div>
       </div>
     </AppShell>
@@ -343,25 +329,18 @@ function OverviewPage() {
 }
 
 function DucsPanel() {
-  const { isPro } = usePlan();
-  const visibleRows = isPro ? ducsDemo : ducsDemo.slice(0, 3);
-  const hiddenCount = ducsDemo.length - visibleRows.length;
-
   return (
-    <div className="panel p-5 relative">
-      <div className="flex flex-wrap items-start justify-between gap-3 mb-4">
-        <div>
-          <div className="text-[11px] uppercase tracking-widest text-primary font-medium inline-flex items-center gap-2">
-            Inventario DUCs <ProPill />
-          </div>
-          <h2 className="text-lg font-display font-semibold mt-1 inline-flex items-center gap-2">
-            <Drill className="h-4 w-4 text-primary" /> Pozos perforados sin completar
-          </h2>
-          <p className="text-xs text-muted-foreground mt-1">
-            Buffer de producción por operadora. YTD 2026 vs. mismo período 2025.
-          </p>
+    <div className="panel p-5">
+      <div className="mb-4">
+        <div className="text-[11px] uppercase tracking-widest text-primary font-medium">
+          Conexión pendiente
         </div>
-        <ProActionButton icon={Download}>Exportar tabla</ProActionButton>
+        <h2 className="text-lg font-display font-semibold mt-1 inline-flex items-center gap-2">
+          <Drill className="h-4 w-4 text-primary" /> Fracturados sin conectar
+        </h2>
+        <p className="text-xs text-muted-foreground mt-1">
+          Pozos con fecha_fin_fractura registrada y sin primera producción. YTD 2026 vs. mismo período 2025.
+        </p>
       </div>
 
       <div className="overflow-hidden rounded-md border border-border">
@@ -370,15 +349,15 @@ function DucsPanel() {
             <tr>
               <th className="text-left px-4 py-2.5 font-medium">Operadora</th>
               <th className="text-left px-4 py-2.5 font-medium hidden md:table-cell">Área</th>
-              <th className="text-right px-4 py-2.5 font-medium hidden sm:table-cell">Perf. YTD</th>
-              <th className="text-right px-4 py-2.5 font-medium hidden sm:table-cell">Compl. YTD</th>
-              <th className="text-right px-4 py-2.5 font-medium">DUCs</th>
+              <th className="text-right px-4 py-2.5 font-medium hidden sm:table-cell">Fract. YTD</th>
+              <th className="text-right px-4 py-2.5 font-medium hidden sm:table-cell">Conect. YTD</th>
+              <th className="text-right px-4 py-2.5 font-medium">F.s.C.</th>
               <th className="text-right px-4 py-2.5 font-medium hidden md:table-cell">Δ YoY</th>
               <th className="text-right px-4 py-2.5 font-medium">Buffer</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-border">
-            {visibleRows.map((r) => (
+            {ducsDemo.map((r) => (
               <tr key={r.operatorSlug + r.area} className="hover:bg-muted/30">
                 <td className="px-4 py-2.5">
                   <Link
@@ -401,37 +380,6 @@ function DucsPanel() {
             ))}
           </tbody>
         </table>
-
-        {!isPro && hiddenCount > 0 && (
-          <div className="relative">
-            <div className="pointer-events-none select-none blur-[3px] opacity-60" aria-hidden>
-              <table className="w-full text-sm">
-                <tbody className="divide-y divide-border">
-                  {ducsDemo.slice(3).map((r) => (
-                    <tr key={"blur-" + r.operatorSlug + r.area}>
-                      <td className="px-4 py-2.5">{r.operator}</td>
-                      <td className="px-4 py-2.5 hidden md:table-cell">{r.area}</td>
-                      <td className="px-4 py-2.5 num text-right hidden sm:table-cell">{r.drilledYtd}</td>
-                      <td className="px-4 py-2.5 num text-right hidden sm:table-cell">{r.completedYtd}</td>
-                      <td className="px-4 py-2.5 num text-right font-semibold">{r.ducs}</td>
-                      <td className="px-4 py-2.5 num text-right hidden md:table-cell">
-                        {r.ducsDeltaYoY > 0 ? "+" : ""}{r.ducsDeltaYoY}%
-                      </td>
-                      <td className="px-4 py-2.5 num text-right">{r.invBuffer.toFixed(1)} m</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-            <div className="absolute inset-x-0 top-0 h-full flex items-center justify-center bg-gradient-to-b from-transparent via-background/60 to-background">
-              <div className="text-center">
-                <div className="text-xs text-muted-foreground">
-                  {hiddenCount} operadoras más disponibles en <span className="text-primary font-medium">PetroData Pro</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );

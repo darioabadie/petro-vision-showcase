@@ -5,15 +5,12 @@ import {
   MapPinned,
   BookOpen,
   Mail,
-  Sparkles,
   Search,
   Database,
   FlaskConical,
   Activity,
 } from "lucide-react";
 import { LAST_UPDATE, META_GENERADO } from "@/lib/mock-data";
-import { PlanToggle } from "@/components/plan-toggle";
-import { usePlan } from "@/lib/plan-context";
 
 const nav = [
   { to: "/", label: "Overview", icon: LayoutDashboard },
@@ -71,17 +68,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         </nav>
 
         <div className="p-3 border-t border-sidebar-border">
-          <Link
-            to="/pro"
-            className="group flex items-center gap-2 rounded-md p-3 bg-primary/10 border border-primary/25 hover:bg-primary/15 transition-colors"
-          >
-            <Sparkles className="h-4 w-4 text-primary" />
-            <div className="flex-1">
-              <div className="text-sm font-medium text-foreground">PetroData Pro</div>
-              <div className="text-[11px] text-muted-foreground">Alertas, API, exports</div>
-            </div>
-          </Link>
-          <div className="mt-3 text-[10px] text-muted-foreground px-1 flex items-center justify-between">
+          <div className="text-[10px] text-muted-foreground px-1 flex items-center justify-between">
             <span>Última actualización</span>
             <span className="text-primary font-mono">{LAST_UPDATE}</span>
           </div>
@@ -108,8 +95,12 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             </span>
             <span className="font-mono">{META_GENERADO.replace("T", " ")} ART</span>
           </div>
-          <PlanToggle />
-          <PlanAwareCTAs />
+          <Link
+            to="/newsletter"
+            className="hidden sm:inline-flex items-center gap-1.5 rounded-md bg-primary text-primary-foreground px-3 h-9 text-sm font-medium hover:opacity-90"
+          >
+            <Mail className="h-3.5 w-3.5" /> Suscribirme
+          </Link>
         </header>
 
         <main className="flex-1 grid-bg">{children}</main>
@@ -122,33 +113,6 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         </footer>
       </div>
     </div>
-  );
-}
-
-function PlanAwareCTAs() {
-  const { isPro } = usePlan();
-  if (isPro) {
-    return (
-      <span className="hidden md:inline-flex items-center gap-1.5 rounded-md border border-primary/40 bg-primary/10 text-primary px-3 h-9 text-sm font-medium">
-        <Sparkles className="h-3.5 w-3.5" /> Demo Pro activa
-      </span>
-    );
-  }
-  return (
-    <>
-      <Link
-        to="/pro"
-        className="hidden md:inline-flex items-center gap-1.5 rounded-md border border-primary/40 text-primary px-3 h-9 text-sm font-medium hover:bg-primary/10"
-      >
-        Lista de espera Pro
-      </Link>
-      <Link
-        to="/newsletter"
-        className="hidden sm:inline-flex items-center gap-1.5 rounded-md bg-primary text-primary-foreground px-3 h-9 text-sm font-medium hover:opacity-90"
-      >
-        <Mail className="h-3.5 w-3.5" /> Suscribirme
-      </Link>
-    </>
   );
 }
 

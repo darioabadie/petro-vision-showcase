@@ -318,8 +318,7 @@ export type Contradiction = {
 export const contradictions: Contradiction[] = [];
 
 // ─────────────────────────────────────────────────────────────
-// Demo dataset PRO — ejemplos ilustrativos para el modo demo.
-// No mezclar con los KPIs oficiales: viven detrás del gate <GatedModule>.
+// Dataset guidance — ejemplos ilustrativos (sin uso activo en UI).
 // ─────────────────────────────────────────────────────────────
 export const proGuidanceDemo: Contradiction[] = [
   {
@@ -439,7 +438,8 @@ export const glossary = [
   { term: "RIGI", cat: "Regulatorio", def: "Régimen de Incentivo para Grandes Inversiones (Ley 27.742, 2024). Estabilidad fiscal por 30 años para proyectos >US$200M." },
   { term: "Plan Gas.Ar", cat: "Regulatorio", def: "Programa de estímulo al gas natural (2021→). Fija precios por volúmenes comprometidos por operadora." },
   { term: "CENCH", cat: "Regulatorio", def: "Comisión Especial de Negociación Colectiva de Hidrocarburos. Rige convenios laborales del sector." },
-  { term: "DUC", cat: "Técnico", def: "Drilled but Uncompleted. Pozo perforado sin fracturar, disponible como buffer de producción." },
+  { term: "DUC (clásico)", cat: "Técnico", def: "Drilled but Uncompleted. Pozo perforado pero sin fracturar hidráulicamente. No es observable en fuentes públicas: el Adjunto IV no informa el tramo de perforación. Es el estadio previo a lo que PetroData puede medir." },
+  { term: "Fracturado sin conectar (FsC)", cat: "Técnico", def: "Lo que PetroData publica como proxy del inventario DUC. Pozo con fecha_fin_fractura registrada en el Adjunto IV (F2) que aún no registra primera producción en el Padrón (F1b). Ya está fracturado pero no tiene producción reportada. invBuffer = FsC / conexiones recientes del mes." },
   { term: "Curva tipo", cat: "Técnico", def: "Perfil de producción esperado de un pozo estándar en un área, usado como benchmark de performance." },
   { term: "IP30 / IP90", cat: "Técnico", def: "Producción promedio del pozo en sus primeros 30 / 90 días. Métrica de calidad de completación." },
   { term: "Cohorte", cat: "Técnico", def: "Conjunto de pozos agrupados por año de primera producción de petróleo. Permite comparar productividad entre generaciones de completación." },
