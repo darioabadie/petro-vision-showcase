@@ -13,6 +13,8 @@ import {
   FlaskConical,
 } from "lucide-react";
 import { LAST_UPDATE, CUTOFF } from "@/lib/mock-data";
+import { PlanToggle } from "@/components/plan-toggle";
+import { usePlan } from "@/lib/plan-context";
 
 const nav = [
   { to: "/", label: "Overview", icon: LayoutDashboard },
@@ -108,18 +110,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             </span>
             <span className="font-mono">2026-05 · Cap. IV</span>
           </div>
-          <Link
-            to="/pro"
-            className="hidden md:inline-flex items-center gap-1.5 rounded-md border border-primary/40 text-primary px-3 h-9 text-sm font-medium hover:bg-primary/10"
-          >
-            Lista de espera Pro
-          </Link>
-          <Link
-            to="/newsletter"
-            className="hidden sm:inline-flex items-center gap-1.5 rounded-md bg-primary text-primary-foreground px-3 h-9 text-sm font-medium hover:opacity-90"
-          >
-            <Mail className="h-3.5 w-3.5" /> Suscribirme
-          </Link>
+          <PlanToggle />
+          <PlanAwareCTAs />
         </header>
 
         <main className="flex-1 grid-bg">{children}</main>
@@ -132,6 +124,33 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         </footer>
       </div>
     </div>
+  );
+}
+
+function PlanAwareCTAs() {
+  const { isPro } = usePlan();
+  if (isPro) {
+    return (
+      <span className="hidden md:inline-flex items-center gap-1.5 rounded-md border border-primary/40 bg-primary/10 text-primary px-3 h-9 text-sm font-medium">
+        <Sparkles className="h-3.5 w-3.5" /> Demo Pro activa
+      </span>
+    );
+  }
+  return (
+    <>
+      <Link
+        to="/pro"
+        className="hidden md:inline-flex items-center gap-1.5 rounded-md border border-primary/40 text-primary px-3 h-9 text-sm font-medium hover:bg-primary/10"
+      >
+        Lista de espera Pro
+      </Link>
+      <Link
+        to="/newsletter"
+        className="hidden sm:inline-flex items-center gap-1.5 rounded-md bg-primary text-primary-foreground px-3 h-9 text-sm font-medium hover:opacity-90"
+      >
+        <Mail className="h-3.5 w-3.5" /> Suscribirme
+      </Link>
+    </>
   );
 }
 
