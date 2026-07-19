@@ -11,7 +11,6 @@ import {
   Search,
   Database,
   FlaskConical,
-  Sparkles,
 } from "lucide-react";
 import { LAST_UPDATE, CUTOFF } from "@/lib/mock-data";
 import { PlanToggle } from "@/components/plan-toggle";
