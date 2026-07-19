@@ -1,6 +1,6 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { AppShell, PageHeader, Stat } from "@/components/app-shell";
-import { operators, events, contradictions } from "@/lib/mock-data";
+import { operators } from "@/lib/mock-data";
 import {
   Area,
   AreaChart,
@@ -40,10 +40,6 @@ function OperatorDetail() {
     oil: p.oil,
     gas: p.gas,
   }));
-
-  const opEvents = events.filter((e) => e.entitySlug === op.slug);
-  const opContradictions = contradictions.filter((c) => c.operatorSlug === op.slug);
-
 
   return (
     <AppShell>
@@ -149,87 +145,32 @@ function OperatorDetail() {
           </div>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-6">
-          <div className="panel p-5">
-            <div className="mb-4">
-              <div className="text-[11px] uppercase tracking-widest text-primary font-medium">Portafolio</div>
-              <h2 className="text-lg font-display font-semibold mt-1">Áreas operadas</h2>
-            </div>
-            <ul className="space-y-2">
-              {op.areas.map((a: string, i: number) => {
-                const slug = op.areaSlugs[i];
-                return (
-                  <li key={a}>
-                    <Link
-                      to="/areas/$slug"
-                      params={{ slug }}
-                      className="flex items-center justify-between border border-border rounded-md px-3 py-2 hover:border-primary/50 transition-colors"
-                    >
-                      <span className="text-sm inline-flex items-center gap-2">
-                        <Building2 className="h-3.5 w-3.5 text-muted-foreground" />
-                        {a}
-                      </span>
-                      <span className="text-xs text-muted-foreground">Ver ficha →</span>
-                    </Link>
-                  </li>
-                );
-              })}
-            </ul>
+        <div className="panel p-5">
+          <div className="mb-4">
+            <div className="text-[11px] uppercase tracking-widest text-primary font-medium">Portafolio</div>
+            <h2 className="text-lg font-display font-semibold mt-1">Áreas operadas</h2>
           </div>
-
-          <div className="panel p-5">
-            <div className="mb-4">
-              <div className="text-[11px] uppercase tracking-widest text-primary font-medium">Timeline</div>
-              <h2 className="text-lg font-display font-semibold mt-1">Eventos recientes</h2>
-            </div>
-            {opEvents.length === 0 && (
-              <div className="text-sm text-muted-foreground">Sin eventos registrados.</div>
-            )}
-            <ul className="relative space-y-4 border-l border-border ml-2">
-              {opEvents.map((e) => (
-                <li key={e.date + e.title} className="pl-5 relative">
-                  <span className="absolute -left-[5px] top-1.5 h-2.5 w-2.5 rounded-full bg-primary shadow-[0_0_8px_var(--color-primary)]" />
-                  <div className="text-xs num text-muted-foreground">{e.date}</div>
-                  <div className="text-sm mt-0.5">{e.title}</div>
-                  <div className="text-[11px] text-muted-foreground mt-0.5">
-                    {e.category} · Fuente: {e.source}
-                  </div>
+          <ul className="grid sm:grid-cols-2 gap-2">
+            {op.areas.map((a: string, i: number) => {
+              const slug = op.areaSlugs[i];
+              return (
+                <li key={a}>
+                  <Link
+                    to="/areas/$slug"
+                    params={{ slug }}
+                    className="flex items-center justify-between border border-border rounded-md px-3 py-2 hover:border-primary/50 transition-colors"
+                  >
+                    <span className="text-sm inline-flex items-center gap-2">
+                      <Building2 className="h-3.5 w-3.5 text-muted-foreground" />
+                      {a}
+                    </span>
+                    <span className="text-xs text-muted-foreground">Ver ficha →</span>
+                  </Link>
                 </li>
-              ))}
-            </ul>
-          </div>
+              );
+            })}
+          </ul>
         </div>
-
-        {opContradictions.length > 0 && (
-          <div className="panel p-5">
-            <div className="mb-4">
-              <div className="text-[11px] uppercase tracking-widest text-primary font-medium">
-                Guidance vs. ejecutado
-              </div>
-              <h2 className="text-lg font-display font-semibold mt-1">Contradicciones detectadas</h2>
-            </div>
-            <div className="space-y-3">
-              {opContradictions.map((c) => (
-                <div key={c.metric} className="border border-border rounded-md p-4">
-                  <div className="flex flex-wrap items-baseline justify-between gap-2">
-                    <div>
-                      <div className="text-sm font-medium">{c.metric}</div>
-                      <div className="text-[11px] text-muted-foreground">{c.period}</div>
-                    </div>
-                    <div className="flex items-center gap-4 text-xs">
-                      <div><span className="text-muted-foreground">Anunciado: </span><span className="num">{c.announced}</span></div>
-                      <div><span className="text-muted-foreground">Real: </span><span className="num">{c.actual}</span></div>
-                      <span className={`num text-sm font-semibold ${c.delta < 0 ? "text-destructive" : "text-primary"}`}>
-                        {c.delta > 0 ? "+" : ""}{c.delta}%
-                      </span>
-                    </div>
-                  </div>
-                  <p className="text-xs text-muted-foreground mt-3">{c.narrative}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
       </div>
     </AppShell>
   );

@@ -8,7 +8,7 @@ export const Route = createFileRoute("/eventos")({
   head: () => ({
     meta: [
       { title: "Eventos · PetroData" },
-      { name: "description", content: "Timeline curado: concesiones, farm-ins, M&A, sanciones, guidance y regulatorio del oil & gas argentino." },
+      { name: "description", content: "Timeline de eventos corporativos del oil & gas argentino — en el roadmap de PetroData." },
     ],
   }),
   component: EventsPage,
@@ -31,9 +31,9 @@ function EventsPage() {
   return (
     <AppShell>
       <PageHeader
-        eyebrow="Ingesta diaria · boletines + prensa"
+        eyebrow="En el roadmap · sin fecha"
         title="Timeline de eventos"
-        description="Extracción automatizada de Boletines Oficiales, CNV, SEC y prensa especializada, con curaduría humana. Cada evento cita su fuente."
+        description="El timeline de concesiones, farm-ins, M&A y regulatorio requiere ingesta de fuentes textuales (Boletines Oficiales, CNV, SEC, prensa). Está en el roadmap pero no tiene fecha de lanzamiento."
       />
       <div className="p-6 space-y-4">
         <div className="flex flex-wrap gap-2">
@@ -54,23 +54,23 @@ function EventsPage() {
 
         {filtered.length === 0 ? (
           <div className="panel p-10 flex flex-col items-center text-center gap-4">
-            <div className="h-14 w-14 rounded-md bg-primary/10 border border-primary/30 grid place-items-center">
-              <CalendarClock className="h-6 w-6 text-primary" />
+            <div className="h-14 w-14 rounded-md bg-muted border border-border grid place-items-center">
+              <CalendarClock className="h-6 w-6 text-muted-foreground" />
             </div>
             <div>
-              <div className="font-display text-xl font-semibold">Capa editorial en construcción</div>
+              <div className="font-display text-xl font-semibold">En el roadmap</div>
               <p className="text-sm text-muted-foreground mt-2 max-w-lg">
-                Los KPIs, series y fichas de esta plataforma usan datos oficiales
-                al corte 2026-05. La capa de eventos (Boletines, CNV, SEC, prensa)
-                se publica en la próxima corrida del pipeline editorial —
-                no mezclamos eventos inventados con KPIs reales.
+                La plataforma actual es 100% numérica: Capítulo IV y Adjunto IV de la
+                Secretaría de Energía. La capa de eventos corporativos (concesiones,
+                farm-ins, M&A, regulatorio) depende de ingesta de fuentes textuales
+                y está planificada para una fase posterior, sin fecha definida.
               </p>
             </div>
             <Link
               to="/newsletter"
               className="mt-2 h-10 px-5 rounded-md bg-primary text-primary-foreground text-sm font-medium inline-flex items-center gap-1.5 hover:opacity-90"
             >
-              <Mail className="h-4 w-4" /> Avisarme cuando esté online
+              <Mail className="h-4 w-4" /> Seguir novedades por newsletter
             </Link>
           </div>
         ) : (

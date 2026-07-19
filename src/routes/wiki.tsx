@@ -26,7 +26,7 @@ function Page() {
       <PageHeader
         eyebrow="Base de conocimiento"
         title="Wiki & Glosario"
-        description="Términos técnicos, regulatorios y comerciales del sector, en español argentino. Cada entrada linkea a las entidades donde aparece."
+        description="Términos técnicos, regulatorios y comerciales del sector, en español argentino."
       />
       <div className="p-6 space-y-6">
         <input

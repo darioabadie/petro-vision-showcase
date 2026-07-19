@@ -1,6 +1,6 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { AppShell, PageHeader, Stat } from "@/components/app-shell";
-import { areas, events, declineByCohort } from "@/lib/mock-data";
+import { areas, declineByCohort } from "@/lib/mock-data";
 import {
   Area,
   AreaChart,
@@ -31,8 +31,6 @@ export const Route = createFileRoute("/areas/$slug")({
 function AreaDetail() {
   const { area } = Route.useLoaderData();
   const series = (area.serie ?? []).slice(-48);
-  const areaEvents = events.filter((e) => e.entitySlug === area.slug);
-
 
   return (
     <AppShell>
@@ -119,27 +117,6 @@ function AreaDetail() {
           </div>
         </div>
 
-        {areaEvents.length > 0 && (
-          <div className="panel p-5">
-            <div className="mb-4">
-              <div className="text-[11px] uppercase tracking-widest text-primary font-medium">Timeline</div>
-              <h2 className="text-lg font-display font-semibold mt-1">Eventos del área</h2>
-            </div>
-            <ul className="divide-y divide-border">
-              {areaEvents.map((e) => (
-                <li key={e.date + e.title} className="py-3 flex gap-3 items-start">
-                  <div className="w-24 shrink-0 text-xs num text-muted-foreground pt-0.5">{e.date}</div>
-                  <div className="flex-1">
-                    <div className="text-sm">{e.title}</div>
-                    <div className="text-[11px] text-muted-foreground mt-0.5">
-                      {e.category} · Fuente: {e.source}
-                    </div>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
       </div>
     </AppShell>
   );

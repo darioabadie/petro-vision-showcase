@@ -9,6 +9,7 @@ import raw from "./petrodata.json";
 // ─────────────────────────────────────────────────────────────
 export const LAST_UPDATE = "Jun 2026";
 export const CUTOFF = "Datos al corte: 2026-05 · Capítulo IV";
+export const META_GENERADO: string = raw.meta.generado; // "2026-07-18T18:31"
 export const METHODOLOGY = raw.meta.metodologia;
 export const DATA_SOURCE = raw.meta.fuente;
 

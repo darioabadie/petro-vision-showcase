@@ -3,8 +3,6 @@ import {
   LayoutDashboard,
   Building2,
   MapPinned,
-  CalendarClock,
-  LineChart as LineChartIcon,
   BookOpen,
   Mail,
   Sparkles,
@@ -13,7 +11,7 @@ import {
   FlaskConical,
   Activity,
 } from "lucide-react";
-import { LAST_UPDATE, CUTOFF } from "@/lib/mock-data";
+import { LAST_UPDATE, META_GENERADO } from "@/lib/mock-data";
 import { PlanToggle } from "@/components/plan-toggle";
 import { usePlan } from "@/lib/plan-context";
 
@@ -22,8 +20,6 @@ const nav = [
   { to: "/actividad", label: "Actividad & DUCs", icon: Activity },
   { to: "/operadoras", label: "Operadoras", icon: Building2 },
   { to: "/areas", label: "Áreas", icon: MapPinned },
-  { to: "/eventos", label: "Eventos", icon: CalendarClock },
-  { to: "/contradicciones", label: "Guidance tracker", icon: LineChartIcon },
   { to: "/metodologia", label: "Metodología", icon: FlaskConical },
   { to: "/wiki", label: "Wiki & Glosario", icon: BookOpen },
   { to: "/newsletter", label: "Newsletter", icon: Mail },
@@ -110,7 +106,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               <span className="h-1.5 w-1.5 rounded-full bg-primary shadow-[0_0_8px_var(--color-primary)]" />
               Pipeline OK
             </span>
-            <span className="font-mono">2026-05 · Cap. IV</span>
+            <span className="font-mono">{META_GENERADO.replace("T", " ")} ART</span>
           </div>
           <PlanToggle />
           <PlanAwareCTAs />
@@ -120,7 +116,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
         <footer className="border-t border-border px-6 py-4 text-xs text-muted-foreground flex flex-wrap gap-4 justify-between">
           <div>
-            © 2025 PetroData · Datos: Secretaría de Energía de la Nación (Capítulo IV / Adjunto IV)
+            © 2026 PetroData · Datos: Secretaría de Energía de la Nación (Capítulo IV / Adjunto IV)
           </div>
           <div className="font-mono">MVP demo · Todos los números son ilustrativos</div>
         </footer>

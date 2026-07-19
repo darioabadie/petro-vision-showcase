@@ -15,16 +15,12 @@ import {
   YAxis,
 } from "recharts";
 import { AppShell, PageHeader, Stat } from "@/components/app-shell";
-import { GatedModule } from "@/components/gated-module";
 import { ProActionButton, ProPill } from "@/components/pro-pill";
 import { usePlan } from "@/lib/plan-context";
 import {
   productionSeries,
   operators,
-  events,
   declineByCohort,
-  contradictions,
-  proGuidanceDemo,
   ducsDemo,
   CUTOFF,
   kpis,
@@ -32,7 +28,7 @@ import {
   cohort2025Peak,
   cohort2026Peak,
 } from "@/lib/mock-data";
-import { ArrowUpRight, Download, TrendingUp, TrendingDown, Mail, Info, CalendarClock, LineChart as LineChartIcon, History, Drill } from "lucide-react";
+import { ArrowUpRight, Download, TrendingUp, Mail, Info, History, Drill } from "lucide-react";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -307,82 +303,6 @@ function OverviewPage() {
         </div>
 
 
-        {/* Events + guidance tracker — capa editorial en construcción */}
-        <div className="grid lg:grid-cols-3 gap-6">
-          <div className="panel p-5 lg:col-span-2">
-            <div className="flex items-start justify-between mb-4">
-              <div>
-                <div className="text-[11px] uppercase tracking-widest text-primary font-medium">
-                  Timeline
-                </div>
-                <h2 className="text-lg font-display font-semibold mt-1">Últimos eventos</h2>
-              </div>
-              <Link to="/eventos" className="text-xs text-primary hover:underline">Ver todos →</Link>
-            </div>
-            {events.length === 0 ? (
-              <EmptyEditorial
-                icon={CalendarClock}
-                title="Capa editorial en construcción"
-                copy="La ingesta automatizada de Boletines Oficiales, CNV, SEC y prensa está siendo curada. Los KPIs y series ya son 100% datos oficiales; los eventos aparecen a partir de la próxima corrida."
-              />
-            ) : (
-              <ul className="divide-y divide-border">
-                {events.slice(0, 6).map((e) => (
-                  <li key={e.date + e.title} className="py-3 flex gap-3 items-start">
-                    <div className="w-24 shrink-0 text-xs num text-muted-foreground pt-0.5">{e.date}</div>
-                    <div className="flex-1 min-w-0">
-                      <div className="text-sm">{e.title}</div>
-                      <div className="text-[11px] text-muted-foreground mt-1">Fuente: {e.source}</div>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
-
-          <GatedModule
-            className="panel p-5"
-            mode="peek"
-            peekHeight={260}
-            title="Guidance tracker completo"
-            copy="Cruce trimestral guidance anunciado vs. ejecución Cap. IV, con narrativa y export. Disponible en el plan Pro."
-          >
-            <div className="flex items-start justify-between mb-4">
-              <div>
-                <div className="text-[11px] uppercase tracking-widest text-primary font-medium">
-                  Guidance vs. ejecutado
-                </div>
-                <h2 className="text-lg font-display font-semibold mt-1">Guidance tracker</h2>
-              </div>
-              <Link to="/contradicciones" className="text-xs text-primary hover:underline">
-                Ver →
-              </Link>
-            </div>
-            <ul className="space-y-3">
-              {proGuidanceDemo.map((c) => (
-                <li key={c.operator + c.metric} className="border border-border rounded-md p-3">
-                  <div className="flex items-center justify-between">
-                    <Link
-                      to="/operadoras/$slug"
-                      params={{ slug: c.operatorSlug }}
-                      className="text-sm font-medium hover:text-primary"
-                    >
-                      {c.operator}
-                    </Link>
-                    <span className={`num text-xs inline-flex items-center gap-1 ${c.delta < 0 ? "text-destructive" : "text-primary"}`}>
-                      {c.delta < 0 ? <TrendingDown className="h-3 w-3" /> : <TrendingUp className="h-3 w-3" />}
-                      {c.delta > 0 ? "+" : ""}{c.delta}%
-                    </span>
-                  </div>
-                  <div className="text-[11px] text-muted-foreground mt-0.5">
-                    {c.metric} · {c.period}
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </GatedModule>
-        </div>
-
         {/* DUCs inventario — módulo Pro */}
         <DucsPanel />
 
@@ -419,18 +339,6 @@ function OverviewPage() {
         </div>
       </div>
     </AppShell>
-  );
-}
-
-function EmptyEditorial({ icon: Icon, title, copy }: { icon: any; title: string; copy: string }) {
-  return (
-    <div className="border border-dashed border-border rounded-md p-6 flex flex-col items-start gap-2 bg-muted/10">
-      <div className="h-8 w-8 rounded-md bg-primary/10 border border-primary/30 grid place-items-center">
-        <Icon className="h-4 w-4 text-primary" />
-      </div>
-      <div className="text-sm font-medium">{title}</div>
-      <p className="text-xs text-muted-foreground leading-relaxed max-w-md">{copy}</p>
-    </div>
   );
 }
 

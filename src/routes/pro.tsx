@@ -19,11 +19,11 @@ const plans = [
     period: "para siempre",
     tagline: "Observatorio público",
     features: [
-      "Overview mensual",
+      "Overview mensual de producción",
       "Fichas de operadoras y áreas",
-      "Timeline de eventos",
+      "Tablero Actividad & DUCs",
       "Newsletter mensual",
-      "Glosario",
+      "Wiki & Glosario",
     ],
     cta: "Ya lo estás usando",
     highlight: false,
@@ -35,10 +35,10 @@ const plans = [
     tagline: "Analistas y equipos de research",
     features: [
       "Todo lo anterior +",
-      "Alertas por operadora/área",
+      "Alertas numéricas (producción ±X% MoM, DUCs > N días, nueva fractura)",
       "Exports CSV ilimitados",
-      "Curvas de declinación por cohorte",
-      "Benchmarking Adjunto IV",
+      "Curvas de declinación por cohorte y área",
+      "Benchmarking Adjunto IV por área",
       "Reportes trimestrales completos",
       "Acceso al histórico completo",
     ],
@@ -53,7 +53,7 @@ const plans = [
     features: [
       "Todo lo de Pro +",
       "API programática",
-      "Series limpias + capa de eventos",
+      "Series limpias listas para informes propios",
       "SSO y usuarios ilimitados",
       "Onboarding dedicado",
       "SLA y soporte prioritario",
@@ -115,8 +115,8 @@ function Page() {
           <h2 className="font-display text-xl font-semibold">Preguntas frecuentes</h2>
           <div className="mt-4 grid md:grid-cols-2 gap-x-8 gap-y-5">
             {[
-              ["¿De dónde salen los datos?", "Del datastore público de la Secretaría de Energía (Capítulo IV, Adjunto IV, permisos y concesiones), boletines oficiales de Nación, Neuquén y Río Negro, más filings CNV y SEC."],
-              ["¿Cada cuánto se actualiza?", "Producción y completación se actualizan mensualmente al publicarse el Capítulo IV. Eventos y contradicciones se actualizan continuamente."],
+              ["¿De dónde salen los datos?", "100% Secretaría de Energía de la Nación: Capítulo IV (producción por pozo) y Adjunto IV (completación: etapas, arena, rama lateral). Dato oficial, público y verificable."],
+              ["¿Cada cuánto se actualiza?", "El Capítulo IV se publica mensualmente con ~1 mes de rezago. El pipeline corre automáticamente al detectar nuevos datos y actualiza todos los KPIs y series."],
               ["¿Sirve para consultoras?", "Sí — el plan Enterprise incluye API y series limpias listas para incorporar en informes propios."],
               ["¿Hay prueba gratis de Pro?", "14 días de trial completo, sin tarjeta."],
             ].map(([q, a]) => (

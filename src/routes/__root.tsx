@@ -78,23 +78,23 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "PetroData · Overview — Estado de Vaca Muerta" },
+      { title: "PetroData · Monitor de Vaca Muerta" },
       {
         name: "description",
         content:
-          "Dashboard mensual: producción no convencional, ranking de operadoras, curvas de declinación por cohorte, últimos eventos y contradicciones.",
+          "Observatorio de producción no convencional argentina: etapas de fractura, DUCs, curvas por cohorte y ranking de operadoras. 100% datos oficiales de la Secretaría de Energía.",
       },
       { name: "author", content: "PetroData" },
-      { property: "og:title", content: "PetroData · Overview — Estado de Vaca Muerta" },
+      { property: "og:title", content: "PetroData · Monitor de Vaca Muerta" },
       {
         property: "og:description",
         content:
-          "Dashboard mensual: producción no convencional, ranking de operadoras, curvas de declinación por cohorte, últimos eventos y contradicciones.",
+          "Observatorio de producción no convencional argentina: etapas de fractura, DUCs, curvas por cohorte y ranking de operadoras. 100% datos oficiales de la Secretaría de Energía.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "PetroData · Overview — Estado de Vaca Muerta" },
-      { name: "twitter:description", content: "Dashboard mensual: producción no convencional, ranking de operadoras, curvas de declinación por cohorte, últimos eventos y contradicciones." },
+      { name: "twitter:title", content: "PetroData · Monitor de Vaca Muerta" },
+      { name: "twitter:description", content: "Observatorio de producción no convencional argentina: etapas de fractura, DUCs, curvas por cohorte y ranking de operadoras. 100% datos oficiales de la Secretaría de Energía." },
       { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/9af33efa-f786-4c6e-ae48-cc831824203b" },
       { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/9af33efa-f786-4c6e-ae48-cc831824203b" },
     ],
