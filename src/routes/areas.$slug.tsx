@@ -1,5 +1,5 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { AppShell, PageHeader, Stat } from "@/components/app-shell";
+import { AppShell, PageHeader, Stat, HelpTooltip } from "@/components/app-shell";
 import { areas, declineByCohort } from "@/lib/mock-data";
 import {
   Area,
@@ -45,10 +45,31 @@ function AreaDetail() {
       />
       <div className="p-6 space-y-6">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-          <Stat label="Producción oil" value={area.productionOilKbbld.toFixed(1)} unit="kbbl/d" hint={`Corte: ${area.serie?.slice(-1)[0]?.month ?? "—"}`} />
-          <Stat label="Producción gas" value={area.productionGasMMm3d.toFixed(1)} unit="MMm³/d" />
-          <Stat label="Pozos activos" value={area.wellsActive.toString()} hint={`Operador: ${area.operator}`} />
-          <Stat label="Concesión hasta" value={area.concessionUntil} hint="Prorrogable" />
+          <Stat
+            label="Producción oil"
+            value={area.productionOilKbbld.toFixed(1)}
+            unit="kbbl/d"
+            hint={`Corte: ${area.serie?.slice(-1)[0]?.month ?? "—"}`}
+            tooltip="Producción de petróleo del área en el último mes completo. Suma de todos los pozos reportados al Capítulo IV."
+          />
+          <Stat
+            label="Producción gas"
+            value={area.productionGasMMm3d.toFixed(1)}
+            unit="MMm³/d"
+            tooltip="Producción de gas del área en el último mes completo en millones de m³/día."
+          />
+          <Stat
+            label="Pozos activos"
+            value={area.wellsActive.toString()}
+            hint={`Operador: ${area.operator}`}
+            tooltip="Pozos del área que reportaron volumen > 0 en el último mes del Capítulo IV."
+          />
+          <Stat
+            label="Concesión hasta"
+            value={area.concessionUntil}
+            hint="Prorrogable"
+            tooltip="Año de vencimiento de la concesión de explotación. Las prórrogas bajo RIGI pueden extender este plazo."
+          />
         </div>
 
         {area.avgStages > 0 && (
@@ -57,7 +78,10 @@ function AreaDetail() {
               <div className="text-[11px] uppercase tracking-widest text-primary font-medium">
                 Adjunto IV
               </div>
-              <h2 className="text-lg font-display font-semibold mt-1">Completación promedio</h2>
+              <h2 className="text-lg font-display font-semibold mt-1 inline-flex items-center gap-2">
+                Completación promedio
+                <HelpTooltip text="Etapas, arena y rama lateral promedio de los pozos fracturados en el área, según el Adjunto IV." />
+              </h2>
             </div>
             <div className="grid sm:grid-cols-3 gap-4">
               <BigMetric label="Etapas de fractura" value={area.avgStages.toString()} hint="Promedio por pozo horizontal" />
@@ -73,7 +97,10 @@ function AreaDetail() {
               <div className="text-[11px] uppercase tracking-widest text-primary font-medium">
                 Serie histórica
               </div>
-              <h2 className="text-lg font-display font-semibold mt-1">Producción del área</h2>
+              <h2 className="text-lg font-display font-semibold mt-1 inline-flex items-center gap-2">
+                Producción del área
+                <HelpTooltip text="Evolución mensual de la producción del área. La forma de la curva revela la fase del bloque: rampa, plateau o declinación." />
+              </h2>
             </div>
             <div className="h-64">
               <ResponsiveContainer>
@@ -100,7 +127,10 @@ function AreaDetail() {
               <div className="text-[11px] uppercase tracking-widest text-primary font-medium">
                 Curva tipo
               </div>
-              <h2 className="text-lg font-display font-semibold mt-1">Declinación por cohorte</h2>
+              <h2 className="text-lg font-display font-semibold mt-1 inline-flex items-center gap-2">
+                Declinación por cohorte
+                <HelpTooltip text="Curvas de declinación nacionales como referencia. Las cohortes por área están en el roadmap para bloques con >30 pozos por cohorte." />
+              </h2>
             </div>
             <div className="h-64">
               <ResponsiveContainer>

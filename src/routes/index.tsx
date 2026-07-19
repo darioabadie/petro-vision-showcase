@@ -14,7 +14,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { AppShell, PageHeader, Stat } from "@/components/app-shell";
+import { AppShell, PageHeader, Stat, HelpTooltip } from "@/components/app-shell";
 import {
   productionSeries,
   operators,
@@ -80,6 +80,7 @@ function OverviewPage() {
             unit="kbbl/d"
             delta={`${kpis.oil_mom_pct >= 0 ? "+" : ""}${kpis.oil_mom_pct}% MoM`}
             hint={`YoY +${kpis.oil_yoy_pct}%`}
+            tooltip="Producción de petróleo no convencional nacional en kbbl/d, al último mes completo del Capítulo IV."
           />
           <Stat
             label="Producción gas (VM)"
@@ -87,12 +88,14 @@ function OverviewPage() {
             unit="MMm³/d"
             delta={`${kpis.gas_mom_pct >= 0 ? "+" : ""}${kpis.gas_mom_pct}% MoM`}
             hint={`YoY +${kpis.gas_yoy_pct}%`}
+            tooltip="Producción de gas no convencional nacional en MM m³/d, al último mes completo del Capítulo IV."
           />
           <Stat
             label="Pozos conectados YTD"
             value={kpis.pozos_conectados_ytd.toString()}
             delta={`+${kpis.pozos_ytd_yoy_pct}% YoY`}
             hint={`vs. ${kpis.pozos_conectados_ytd_prev} en mismo período 2025`}
+            tooltip="Pozos que registraron su primera producción en lo que va del año, comparado con el mismo período del año anterior."
           />
           <Stat
             label={`Arena bombeada (${kpis.arena_mes})`}
@@ -100,6 +103,7 @@ function OverviewPage() {
             unit="tn"
             delta={ARENA_PRELIMINAR ? "Dato preliminar" : `${kpis.arena_mom_pct >= 0 ? "+" : ""}${kpis.arena_mom_pct}% MoM`}
             hint="Rezago de carga Adjunto IV"
+            tooltip="Toneladas de arena de fractura bombeadas en el mes, según el Adjunto IV. Dato preliminar con rezago de carga."
           />
         </div>
         {/* Stats — fila 2: completación (Adjunto IV) */}
@@ -109,23 +113,27 @@ function OverviewPage() {
             value={kpis.etapas_promedio.toFixed(1)}
             unit="etapas"
             hint="Adjunto IV · promedio nacional"
+            tooltip="Cantidad promedio de etapas de fractura por pozo horizontal terminado en el período."
           />
           <Stat
             label="Rama lateral prom."
             value={kpis.rama_promedio_m.toLocaleString()}
             unit="m"
             hint="Longitud horizontal"
+            tooltip="Longitud horizontal promedio (en metros) de los pozos fracturados en el período."
           />
           <Stat
             label="Arena importada"
             value={kpis.arena_pct_importada === 0 ? "0%" : `${kpis.arena_pct_importada}%`}
             hint={kpis.arena_pct_importada === 0 ? "100% arena nacional" : "del total bombeado"}
+            tooltip="Porcentaje de la arena bombeada que es importada. La industria migró a arena 100% nacional."
           />
           <Stat
             label="Ratio completación"
             value={kpis.pozos_conectados_ytd > 0 ? (Math.round(kpis.arena_tn / kpis.pozos_conectados_ytd / 5)).toLocaleString() : "—"}
             unit="tn/pozo"
             hint="Arena por pozo · estimado mensual"
+            tooltip="Arena promedio bombeada por pozo terminado en el mes, en toneladas."
           />
         </div>
         {ARENA_PRELIMINAR && (
@@ -143,8 +151,9 @@ function OverviewPage() {
               <div className="text-[11px] uppercase tracking-widest text-primary font-medium">
                 Serie mensual
               </div>
-              <h2 className="text-lg font-display font-semibold mt-1">
+              <h2 className="text-lg font-display font-semibold mt-1 inline-flex items-center gap-2">
                 Producción no convencional nacional
+                <HelpTooltip text="Evolución de la producción no convencional de petróleo y gas de los últimos 24 meses." />
               </h2>
               <p className="text-xs text-muted-foreground mt-1">
                 Últimos 24 meses · fuente: Cap. IV Sec. Energía
@@ -209,8 +218,9 @@ function OverviewPage() {
                 <div className="text-[11px] uppercase tracking-widest text-primary font-medium">
                   Ranking {kpis.corte}
                 </div>
-                <h2 className="text-lg font-display font-semibold mt-1">
+                <h2 className="text-lg font-display font-semibold mt-1 inline-flex items-center gap-2">
                   Producción oil por operadora
+                  <HelpTooltip text="Operadoras ordenadas por producción de petróleo no convencional del último mes, con su participación sobre el total." />
                 </h2>
               </div>
               <Link to="/operadoras" className="text-xs text-primary hover:underline">
@@ -260,8 +270,9 @@ function OverviewPage() {
                 <div className="text-[11px] uppercase tracking-widest text-primary font-medium">
                   Análisis por cohorte
                 </div>
-                <h2 className="text-lg font-display font-semibold mt-1">
+                <h2 className="text-lg font-display font-semibold mt-1 inline-flex items-center gap-2">
                   Curva de declinación por año de puesta en marcha
+                  <HelpTooltip text="Producción promedio por pozo según sus meses en producción, agrupando los pozos por año de puesta en marcha." />
                 </h2>
                 <p className="text-xs text-muted-foreground mt-1 flex items-center gap-1">
                   <TrendingUp className="h-3 w-3 text-primary" /> Cohorte 2026 pica ~{Math.round(cohort2026Peak)} bbl/d — {Math.round(((cohort2026Peak - cohort2025Peak) / cohort2025Peak) * 100)}% arriba de la 2025
@@ -338,6 +349,7 @@ function DucsPanel() {
         </div>
         <h2 className="text-lg font-display font-semibold mt-1 inline-flex items-center gap-2">
           <Drill className="h-4 w-4 text-primary" /> Fracturados sin conectar
+          <HelpTooltip text="Pozos con fractura terminada que aún no registraron primera producción. Inventario de conexión pendiente por operadora." />
         </h2>
         <p className="text-xs text-muted-foreground mt-1">
           Pozos con fecha_fin_fractura registrada y sin primera producción. YTD 2026 vs. mismo período 2025.

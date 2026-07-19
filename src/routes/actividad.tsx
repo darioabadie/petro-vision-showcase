@@ -11,7 +11,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { AppShell, PageHeader, Stat } from "@/components/app-shell";
+import { AppShell, PageHeader, Stat, HelpTooltip } from "@/components/app-shell";
 import {
   activitySeries,
   fracSpreadSeries,
@@ -86,24 +86,28 @@ function ActividadPage() {
             unit="etapas"
             delta={etapasMoM ? `${Number(etapasMoM) >= 0 ? "+" : ""}${etapasMoM}% MoM` : undefined}
             hint={etapasYoY ? `YoY ${Number(etapasYoY) >= 0 ? "+" : ""}${etapasYoY}%` : undefined}
+            tooltip="Etapas de fractura completadas en el mes según el Adjunto IV oficial. El indicador de actividad más citado del sector."
           />
           <Stat
             label={`Pozos conectados (${last.fecha})`}
             value={last.pozos_conectados.toString()}
             delta={pozosMoM ? `${Number(pozosMoM) >= 0 ? "+" : ""}${pozosMoM}% MoM` : undefined}
             hint={`YTD: ${kpis.pozos_conectados_ytd} vs. ${kpis.pozos_conectados_ytd_prev} (2025)`}
+            tooltip="Pozos que registraron su primera producción en el mes. Proxy oficial del ritmo de puesta en marcha."
           />
           <Stat
             label="Sets de fractura activos (est.)"
             value={lastSpread.spreads.toString()}
             delta={spreadMoM ? `${Number(spreadMoM) >= 0 ? "+" : ""}${spreadMoM}% MoM` : undefined}
             hint="Proxy frac spread count · metodología abajo"
+            tooltip="Equipos de fractura operando en simultáneo, estimados por solapamiento de fechas de trabajos en el Adjunto IV. Siempre «estimado»."
           />
           <Stat
             label="Etapas promedio / pozo"
             value={kpis.etapas_promedio.toFixed(1)}
             unit="etapas"
             hint={`Rama: ${kpis.rama_promedio_m.toLocaleString()} m · Adjunto IV`}
+            tooltip="Cantidad promedio de etapas de fractura por pozo horizontal terminado en el período."
           />
         </div>
 
@@ -121,8 +125,9 @@ function ActividadPage() {
               <div className="text-[11px] uppercase tracking-widest text-primary font-medium">
                 Métrica insignia — A2
               </div>
-              <h2 className="text-lg font-display font-semibold mt-1">
+              <h2 className="text-lg font-display font-semibold mt-1 inline-flex items-center gap-2">
                 Etapas de fractura por mes
+                <HelpTooltip text="Etapas de fractura completadas en el mes según el Adjunto IV oficial. El indicador de actividad más citado del sector." />
               </h2>
               <p className="text-xs text-muted-foreground mt-1">
                 Adjunto IV oficial · dato diario con ~1 mes de rezago
@@ -162,8 +167,9 @@ function ActividadPage() {
               <div className="text-[11px] uppercase tracking-widest text-primary font-medium">
                 A3 — Pozos conectados
               </div>
-              <h2 className="text-lg font-display font-semibold mt-1">
+              <h2 className="text-lg font-display font-semibold mt-1 inline-flex items-center gap-2">
                 Pozos con primera producción por mes
+                <HelpTooltip text="Pozos que registraron su primera producción en el mes. Proxy oficial del ritmo de puesta en marcha." />
               </h2>
               <p className="text-xs text-muted-foreground mt-1">
                 Padrón activo (F1b) · primer mes con producción oil &gt; 0
@@ -208,6 +214,7 @@ function ActividadPage() {
               </div>
               <h2 className="text-lg font-display font-semibold mt-1 inline-flex items-center gap-2">
                 <Activity className="h-4 w-4 text-primary" /> Sets de fractura activos
+                <HelpTooltip text="Equipos de fractura operando en simultáneo, estimados por solapamiento de fechas de trabajos en el Adjunto IV. Siempre «estimado»." />
               </h2>
               <p className="text-xs text-muted-foreground mt-1">
                 Proxy del frac spread count. Metodología: trabajos con fechas solapadas (F2). Publicado siempre como «estimado».
@@ -248,8 +255,9 @@ function ActividadPage() {
               <div className="text-[11px] uppercase tracking-widest text-primary font-medium">
                 B3 — Ratio actividad
               </div>
-              <h2 className="text-lg font-display font-semibold mt-1">
+              <h2 className="text-lg font-display font-semibold mt-1 inline-flex items-center gap-2">
                 Etapas por pozo conectado
+                <HelpTooltip text="Etapas de fractura del mes divididas por pozos conectados. Intensidad de completación versus puesta en marcha." />
               </h2>
               <p className="text-xs text-muted-foreground mt-1">
                 Eficiencia de completación agregada mensual. Sube si los pozos son más intensivos o si hay menos conexiones relativas.
@@ -293,8 +301,9 @@ function ActividadPage() {
             <div className="text-[11px] uppercase tracking-widest text-primary font-medium">
               A8 — Intensidad de completación
             </div>
-            <h2 className="text-lg font-display font-semibold mt-1">
+            <h2 className="text-lg font-display font-semibold mt-1 inline-flex items-center gap-2">
               Parámetros técnicos promedio nacional
+              <HelpTooltip text="Diseño de completación promedio del período: etapas, rama lateral, arena por pozo y origen de la arena." />
             </h2>
             <p className="text-xs text-muted-foreground mt-1">
               Adjunto IV · promedio de pozos horizontales NC al corte {kpis.corte}
@@ -336,6 +345,7 @@ function ActividadPage() {
             </div>
             <h2 className="text-lg font-display font-semibold mt-1 inline-flex items-center gap-2">
               <Drill className="h-4 w-4 text-primary" /> Fracturados sin conectar
+              <HelpTooltip text="Pozos con fractura terminada que aún no registraron primera producción. Inventario de conexión pendiente por operadora." />
             </h2>
             <p className="text-xs text-muted-foreground mt-1">
               Pozos con fecha_fin_fractura registrada y sin primera producción. YTD 2026 vs. mismo período 2025.

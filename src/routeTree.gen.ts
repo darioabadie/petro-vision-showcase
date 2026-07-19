@@ -14,6 +14,7 @@ import { Route as ProRouteImport } from './routes/pro'
 import { Route as NewsletterRouteImport } from './routes/newsletter'
 import { Route as MetodologiaRouteImport } from './routes/metodologia'
 import { Route as EventosRouteImport } from './routes/eventos'
+import { Route as DocumentacionRouteImport } from './routes/documentacion'
 import { Route as ContradiccionesRouteImport } from './routes/contradicciones'
 import { Route as ActividadRouteImport } from './routes/actividad'
 import { Route as IndexRouteImport } from './routes/index'
@@ -40,6 +41,11 @@ const NewsletterRoute = NewsletterRouteImport.update({
 const MetodologiaRoute = MetodologiaRouteImport.update({
   id: '/metodologia',
   path: '/metodologia',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DocumentacionRoute = DocumentacionRouteImport.update({
+  id: '/documentacion',
+  path: '/documentacion',
   getParentRoute: () => rootRouteImport,
 } as any)
 const EventosRoute = EventosRouteImport.update({
@@ -87,6 +93,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/actividad': typeof ActividadRoute
   '/contradicciones': typeof ContradiccionesRoute
+  '/documentacion': typeof DocumentacionRoute
   '/eventos': typeof EventosRoute
   '/metodologia': typeof MetodologiaRoute
   '/newsletter': typeof NewsletterRoute
@@ -101,6 +108,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/actividad': typeof ActividadRoute
   '/contradicciones': typeof ContradiccionesRoute
+  '/documentacion': typeof DocumentacionRoute
   '/eventos': typeof EventosRoute
   '/metodologia': typeof MetodologiaRoute
   '/newsletter': typeof NewsletterRoute
@@ -116,6 +124,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/actividad': typeof ActividadRoute
   '/contradicciones': typeof ContradiccionesRoute
+  '/documentacion': typeof DocumentacionRoute
   '/eventos': typeof EventosRoute
   '/metodologia': typeof MetodologiaRoute
   '/newsletter': typeof NewsletterRoute
@@ -132,6 +141,7 @@ export interface FileRouteTypes {
     | '/'
     | '/actividad'
     | '/contradicciones'
+    | '/documentacion'
     | '/eventos'
     | '/metodologia'
     | '/newsletter'
@@ -146,6 +156,7 @@ export interface FileRouteTypes {
     | '/'
     | '/actividad'
     | '/contradicciones'
+    | '/documentacion'
     | '/eventos'
     | '/metodologia'
     | '/newsletter'
@@ -160,6 +171,7 @@ export interface FileRouteTypes {
     | '/'
     | '/actividad'
     | '/contradicciones'
+    | '/documentacion'
     | '/eventos'
     | '/metodologia'
     | '/newsletter'
@@ -175,6 +187,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ActividadRoute: typeof ActividadRoute
   ContradiccionesRoute: typeof ContradiccionesRoute
+  DocumentacionRoute: typeof DocumentacionRoute
   EventosRoute: typeof EventosRoute
   MetodologiaRoute: typeof MetodologiaRoute
   NewsletterRoute: typeof NewsletterRoute
@@ -214,6 +227,13 @@ declare module '@tanstack/react-router' {
       path: '/metodologia'
       fullPath: '/metodologia'
       preLoaderRoute: typeof MetodologiaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/documentacion': {
+      id: '/documentacion'
+      path: '/documentacion'
+      fullPath: '/documentacion'
+      preLoaderRoute: typeof DocumentacionRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/eventos': {
@@ -279,6 +299,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ActividadRoute: ActividadRoute,
   ContradiccionesRoute: ContradiccionesRoute,
+  DocumentacionRoute: DocumentacionRoute,
   EventosRoute: EventosRoute,
   MetodologiaRoute: MetodologiaRoute,
   NewsletterRoute: NewsletterRoute,

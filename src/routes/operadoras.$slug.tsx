@@ -1,5 +1,5 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { AppShell, PageHeader, Stat } from "@/components/app-shell";
+import { AppShell, PageHeader, Stat, HelpTooltip } from "@/components/app-shell";
 import { operators } from "@/lib/mock-data";
 import {
   Area,
@@ -76,10 +76,26 @@ function OperatorDetail() {
             value={op.productionOilKbbld.toFixed(1)}
             unit="kbbl/d"
             delta={`${op.oilMomPct >= 0 ? "+" : ""}${op.oilMomPct}% MoM`}
+            tooltip="Producción de petróleo no convencional operado por la empresa en el último mes completo."
           />
-          <Stat label="Producción gas" value={op.productionGasMMm3d.toFixed(1)} unit="MMm³/d" />
-          <Stat label="Pozos activos" value={op.wellsActive.toString()} hint={`${op.ncShare}% no convencional`} />
-          <Stat label="Áreas operadas" value={op.areas.length.toString()} hint="Ver detalle abajo" />
+          <Stat
+            label="Producción gas"
+            value={op.productionGasMMm3d.toFixed(1)}
+            unit="MMm³/d"
+            tooltip="Producción de gas no convencional operado por la empresa en el último mes completo."
+          />
+          <Stat
+            label="Pozos activos"
+            value={op.wellsActive.toString()}
+            hint={`${op.ncShare}% no convencional`}
+            tooltip="Pozos que reportaron volumen > 0 en el último mes. No equivale a pozos totales existentes."
+          />
+          <Stat
+            label="Áreas operadas"
+            value={op.areas.length.toString()}
+            hint="Ver detalle abajo"
+            tooltip="Áreas donde la empresa reporta producción reciente como operadora en el Capítulo IV."
+          />
         </div>
 
         <div className="grid lg:grid-cols-3 gap-6">
@@ -89,8 +105,9 @@ function OperatorDetail() {
                 <div className="text-[11px] uppercase tracking-widest text-primary font-medium">
                   Producción histórica
                 </div>
-                <h2 className="text-lg font-display font-semibold mt-1">
+                <h2 className="text-lg font-display font-semibold mt-1 inline-flex items-center gap-2">
                   Oil y gas operado por {op.name}
+                  <HelpTooltip text="Evolución mensual de la producción operada de petróleo y gas (últimos 36 meses). Saltos discretos suelen corresponder a cesiones de áreas, no a producción física." />
                 </h2>
               </div>
               <div className="flex gap-4 text-xs">

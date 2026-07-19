@@ -9,14 +9,18 @@ import {
   Database,
   FlaskConical,
   Activity,
+  BookMarked,
+  Info,
 } from "lucide-react";
 import { LAST_UPDATE, META_GENERADO } from "@/lib/mock-data";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 const nav = [
   { to: "/", label: "Overview", icon: LayoutDashboard },
   { to: "/actividad", label: "Actividad & DUCs", icon: Activity },
   { to: "/operadoras", label: "Operadoras", icon: Building2 },
   { to: "/areas", label: "Áreas", icon: MapPinned },
+  { to: "/documentacion", label: "Guía de tableros", icon: BookMarked },
   { to: "/metodologia", label: "Metodología", icon: FlaskConical },
   { to: "/wiki", label: "Wiki & Glosario", icon: BookOpen },
   { to: "/newsletter", label: "Newsletter", icon: Mail },
@@ -153,17 +157,22 @@ export function Stat({
   delta,
   unit,
   hint,
+  tooltip,
 }: {
   label: string;
   value: string;
   delta?: string;
   unit?: string;
   hint?: string;
+  tooltip?: string;
 }) {
   const positive = delta?.startsWith("+");
   return (
     <div className="panel p-4">
-      <div className="text-[11px] uppercase tracking-wider text-muted-foreground">{label}</div>
+      <div className="text-[11px] uppercase tracking-wider text-muted-foreground flex items-center justify-between gap-1">
+        <span>{label}</span>
+        {tooltip && <HelpTooltip text={tooltip} />}
+      </div>
       <div className="mt-2 flex items-baseline gap-2">
         <div className="num text-2xl font-semibold">{value}</div>
         {unit && <div className="text-xs text-muted-foreground">{unit}</div>}
@@ -181,5 +190,27 @@ export function Stat({
         {hint && <div className="text-[11px] text-muted-foreground">{hint}</div>}
       </div>
     </div>
+  );
+}
+
+export function HelpTooltip({ text, side = "top" }: { text: string; side?: "top" | "bottom" | "left" | "right" }) {
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <button
+          type="button"
+          className="inline-flex shrink-0 text-muted-foreground/60 hover:text-muted-foreground transition-colors"
+          aria-label="Más información"
+        >
+          <Info className="h-3 w-3" />
+        </button>
+      </TooltipTrigger>
+      <TooltipContent
+        side={side}
+        className="max-w-72 whitespace-normal bg-popover text-popover-foreground border border-border shadow-lg text-xs leading-relaxed py-2 px-3"
+      >
+        {text}
+      </TooltipContent>
+    </Tooltip>
   );
 }
