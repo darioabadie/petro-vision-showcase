@@ -314,7 +314,13 @@ function OverviewPage() {
             )}
           </div>
 
-          <div className="panel p-5">
+          <GatedModule
+            className="panel p-5"
+            mode="peek"
+            peekHeight={260}
+            title="Guidance tracker completo"
+            copy="Cruce trimestral guidance anunciado vs. ejecución Cap. IV, con narrativa y export. Disponible en el plan Pro."
+          >
             <div className="flex items-start justify-between mb-4">
               <div>
                 <div className="text-[11px] uppercase tracking-widest text-primary font-medium">
@@ -326,37 +332,34 @@ function OverviewPage() {
                 Ver →
               </Link>
             </div>
-            {contradictions.length === 0 ? (
-              <EmptyEditorial
-                icon={LineChartIcon}
-                title="Próxima publicación trimestral"
-                copy="Cruzamos el guidance público de cada operadora contra el reporte al Capítulo IV. El primer informe se emite con el cierre de Q2 2026."
-              />
-            ) : (
-              <ul className="space-y-3">
-                {contradictions.slice(0, 4).map((c) => (
-                  <li key={c.operator + c.metric} className="border border-border rounded-md p-3">
-                    <div className="flex items-center justify-between">
-                      <Link
-                        to="/operadoras/$slug"
-                        params={{ slug: c.operatorSlug }}
-                        className="text-sm font-medium hover:text-primary"
-                      >
-                        {c.operator}
-                      </Link>
-                      <span className={`num text-xs ${c.delta < 0 ? "text-destructive" : "text-primary"}`}>
-                        {c.delta > 0 ? "+" : ""}{c.delta}%
-                      </span>
-                    </div>
-                    <div className="text-[11px] text-muted-foreground mt-0.5">
-                      {c.metric} · {c.period}
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
+            <ul className="space-y-3">
+              {proGuidanceDemo.map((c) => (
+                <li key={c.operator + c.metric} className="border border-border rounded-md p-3">
+                  <div className="flex items-center justify-between">
+                    <Link
+                      to="/operadoras/$slug"
+                      params={{ slug: c.operatorSlug }}
+                      className="text-sm font-medium hover:text-primary"
+                    >
+                      {c.operator}
+                    </Link>
+                    <span className={`num text-xs inline-flex items-center gap-1 ${c.delta < 0 ? "text-destructive" : "text-primary"}`}>
+                      {c.delta < 0 ? <TrendingDown className="h-3 w-3" /> : <TrendingUp className="h-3 w-3" />}
+                      {c.delta > 0 ? "+" : ""}{c.delta}%
+                    </span>
+                  </div>
+                  <div className="text-[11px] text-muted-foreground mt-0.5">
+                    {c.metric} · {c.period}
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </GatedModule>
         </div>
+
+        {/* DUCs inventario — módulo Pro */}
+        <DucsPanel />
+
 
         {/* CTA — newsletter primario, Pro como lista de espera */}
         <div className="panel p-6 flex flex-wrap items-center justify-between gap-4">
