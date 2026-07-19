@@ -11,6 +11,7 @@ import {
   Search,
   Database,
   FlaskConical,
+  Activity,
 } from "lucide-react";
 import { LAST_UPDATE, CUTOFF } from "@/lib/mock-data";
 import { PlanToggle } from "@/components/plan-toggle";
@@ -18,6 +19,7 @@ import { usePlan } from "@/lib/plan-context";
 
 const nav = [
   { to: "/", label: "Overview", icon: LayoutDashboard },
+  { to: "/actividad", label: "Actividad & DUCs", icon: Activity },
   { to: "/operadoras", label: "Operadoras", icon: Building2 },
   { to: "/areas", label: "Áreas", icon: MapPinned },
   { to: "/eventos", label: "Eventos", icon: CalendarClock },

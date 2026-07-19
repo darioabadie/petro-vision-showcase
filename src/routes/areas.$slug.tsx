@@ -47,8 +47,8 @@ function AreaDetail() {
       />
       <div className="p-6 space-y-6">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-          <Stat label="Producción oil" value={area.productionOilKbbld.toFixed(1)} unit="kbbl/d" delta="+2.4% MoM" />
-          <Stat label="Producción gas" value={area.productionGasMMm3d.toFixed(1)} unit="MMm³/d" delta="+0.9% MoM" />
+          <Stat label="Producción oil" value={area.productionOilKbbld.toFixed(1)} unit="kbbl/d" hint={`Corte: ${area.serie?.slice(-1)[0]?.month ?? "—"}`} />
+          <Stat label="Producción gas" value={area.productionGasMMm3d.toFixed(1)} unit="MMm³/d" />
           <Stat label="Pozos activos" value={area.wellsActive.toString()} hint={`Operador: ${area.operator}`} />
           <Stat label="Concesión hasta" value={area.concessionUntil} hint="Prorrogable" />
         </div>

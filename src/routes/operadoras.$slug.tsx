@@ -1,10 +1,11 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { AppShell, PageHeader, Stat } from "@/components/app-shell";
-import { operators, events, contradictions, productionSeries } from "@/lib/mock-data";
+import { operators, events, contradictions } from "@/lib/mock-data";
 import {
   Area,
   AreaChart,
   CartesianGrid,
+  Legend,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -34,9 +35,10 @@ function OperatorDetail() {
   const { op } = Route.useLoaderData();
 
   // Serie real por operadora (últimos 36 meses del histórico oficial)
-  const opSeries = (op.serie ?? []).slice(-36).map((p: { month: string; oil: number }) => ({
+  const opSeries = (op.serie ?? []).slice(-36).map((p: { month: string; oil: number; gas: number }) => ({
     month: p.month,
-    prod: p.oil,
+    oil: p.oil,
+    gas: p.gas,
   }));
 
   const opEvents = events.filter((e) => e.entitySlug === op.slug);
@@ -73,8 +75,13 @@ function OperatorDetail() {
         )}
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-          <Stat label="Producción oil" value={op.productionOilKbbld.toFixed(1)} unit="kbbl/d" delta="+3.2% MoM" />
-          <Stat label="Producción gas" value={op.productionGasMMm3d.toFixed(1)} unit="MMm³/d" delta="+1.1% MoM" />
+          <Stat
+            label="Producción oil"
+            value={op.productionOilKbbld.toFixed(1)}
+            unit="kbbl/d"
+            delta={`${op.oilMomPct >= 0 ? "+" : ""}${op.oilMomPct}% MoM`}
+          />
+          <Stat label="Producción gas" value={op.productionGasMMm3d.toFixed(1)} unit="MMm³/d" />
           <Stat label="Pozos activos" value={op.wellsActive.toString()} hint={`${op.ncShare}% no convencional`} />
           <Stat label="Áreas operadas" value={op.areas.length.toString()} hint="Ver detalle abajo" />
         </div>
@@ -87,8 +94,12 @@ function OperatorDetail() {
                   Producción histórica
                 </div>
                 <h2 className="text-lg font-display font-semibold mt-1">
-                  Oil operado por {op.name}
+                  Oil y gas operado por {op.name}
                 </h2>
+              </div>
+              <div className="flex gap-4 text-xs">
+                <LegendDot color="var(--color-primary)" label="Oil (kbbl/d)" />
+                <LegendDot color="var(--color-chart-2)" label="Gas (MMm³/d)" />
               </div>
             </div>
             <div className="h-64">
@@ -96,8 +107,12 @@ function OperatorDetail() {
                 <AreaChart data={opSeries} margin={{ left: -10, right: 12, top: 8 }}>
                   <defs>
                     <linearGradient id="opoil" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="var(--color-primary)" stopOpacity={0.5} />
+                      <stop offset="0%" stopColor="var(--color-primary)" stopOpacity={0.45} />
                       <stop offset="100%" stopColor="var(--color-primary)" stopOpacity={0} />
+                    </linearGradient>
+                    <linearGradient id="opgas" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="var(--color-chart-2)" stopOpacity={0.3} />
+                      <stop offset="100%" stopColor="var(--color-chart-2)" stopOpacity={0} />
                     </linearGradient>
                   </defs>
                   <CartesianGrid stroke="var(--color-border)" strokeDasharray="2 4" vertical={false} />
@@ -111,7 +126,8 @@ function OperatorDetail() {
                       fontSize: 12,
                     }}
                   />
-                  <Area type="monotone" dataKey="prod" stroke="var(--color-primary)" strokeWidth={2} fill="url(#opoil)" />
+                  <Area type="monotone" dataKey="oil" name="Oil (kbbl/d)" stroke="var(--color-primary)" strokeWidth={2} fill="url(#opoil)" />
+                  <Area type="monotone" dataKey="gas" name="Gas (MMm³/d)" stroke="var(--color-chart-2)" strokeWidth={1.5} fill="url(#opgas)" />
                 </AreaChart>
               </ResponsiveContainer>
             </div>
@@ -225,5 +241,14 @@ function Row({ label, children }: { label: string; children: React.ReactNode }) 
       <dt className="text-muted-foreground uppercase tracking-wider text-[10px]">{label}</dt>
       <dd>{children}</dd>
     </div>
+  );
+}
+
+function LegendDot({ color, label }: { color: string; label: string }) {
+  return (
+    <span className="inline-flex items-center gap-1.5 text-muted-foreground">
+      <span className="h-2 w-2 rounded-full" style={{ background: color }} />
+      {label}
+    </span>
   );
 }

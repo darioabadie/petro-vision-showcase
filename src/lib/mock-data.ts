@@ -119,6 +119,7 @@ export type Operator = {
   wellsActive: number;
   productionOilKbbld: number;
   productionGasMMm3d: number;
+  oilMomPct: number;
   ncShare: number;
   areas: string[];
   areaSlugs: string[];
@@ -147,6 +148,7 @@ export const operators: Operator[] = Object.entries(raw.operadoras).map(
       wellsActive: o.pozos_activos,
       productionOilKbbld: o.oil_kbbld,
       productionGasMMm3d: o.gas_mmm3d,
+      oilMomPct: o.oil_mom_pct ?? 0,
       ncShare: meta.ncShare ?? 60,
       areas: o.areas.map((a: any) => titleCase(a.nombre)),
       areaSlugs: o.areas.map((a: any) => a.slug),
@@ -170,6 +172,30 @@ export const operators: Operator[] = Object.entries(raw.operadoras).map(
 // ─────────────────────────────────────────────────────────────
 // Areas (fichas)
 // ─────────────────────────────────────────────────────────────
+
+// Datos Adjunto IV por área (mock con variación realista).
+// Bajada del Palo y Sierras Blancas tienen laterales más largos (shale oil premium),
+// Fortín de Piedra y El Mangrullo tienen ramas más cortas (shale gas histórico).
+const AREA_COMPLETACION: Record<string, { etapas: number; arena_tn: number; lateral_m: number }> = {
+  "bajada-del-palo-oeste":     { etapas: 74, arena_tn: 2750, lateral_m: 4250 },
+  "bajada-del-palo-este":      { etapas: 71, arena_tn: 2620, lateral_m: 4100 },
+  "sierras-blancas":           { etapas: 69, arena_tn: 2480, lateral_m: 3900 },
+  "cruz-de-lorena":            { etapas: 66, arena_tn: 2340, lateral_m: 3700 },
+  "bandurria-sur":             { etapas: 63, arena_tn: 2250, lateral_m: 3580 },
+  "la-amarga-chica":           { etapas: 60, arena_tn: 2100, lateral_m: 3350 },
+  "rincon-de-aranda":          { etapas: 64, arena_tn: 2200, lateral_m: 3480 },
+  "la-calera":                 { etapas: 57, arena_tn: 2050, lateral_m: 3280 },
+  "loma-campana-lll":          { etapas: 53, arena_tn: 1950, lateral_m: 3100 },
+  "loma-campana":              { etapas: 51, arena_tn: 1900, lateral_m: 3050 },
+  "lindero-atravesado":        { etapas: 55, arena_tn: 1980, lateral_m: 3200 },
+  "bajo-del-choique":          { etapas: 52, arena_tn: 1920, lateral_m: 3080 },
+  "sierra-chata":              { etapas: 48, arena_tn: 1780, lateral_m: 2950 },
+  "fortin-de-piedra":          { etapas: 46, arena_tn: 1700, lateral_m: 2880 },
+  "aguada-pichana-este":       { etapas: 44, arena_tn: 1620, lateral_m: 2820 },
+  "el-mangrullo":              { etapas: 42, arena_tn: 1580, lateral_m: 2750 },
+  "loma-jarillosa-este":       { etapas: 50, arena_tn: 1850, lateral_m: 3020 },
+};
+
 export type Area = {
   slug: string;
   name: string;
@@ -212,10 +238,10 @@ export const areas: Area[] = Object.entries(raw.areas).map(
       wellsActive: a.pozos_activos,
       productionOilKbbld: a.oil_kbbld,
       productionGasMMm3d: a.gas_mmm3d,
-      // Adjunto IV: promedio nacional del kpi como fallback por área
-      avgStages: kpis.etapas_promedio ? Math.round(kpis.etapas_promedio) : 0,
-      avgProppantTn: 2100,
-      avgLateralM: kpis.rama_promedio_m ?? 0,
+      // Adjunto IV: datos por área con fallback al promedio nacional
+      avgStages: AREA_COMPLETACION[slug]?.etapas ?? (kpis.etapas_promedio ? Math.round(kpis.etapas_promedio) : 0),
+      avgProppantTn: AREA_COMPLETACION[slug]?.arena_tn ?? 2100,
+      avgLateralM: AREA_COMPLETACION[slug]?.lateral_m ?? (kpis.rama_promedio_m ?? 0),
       concessionUntil: pickConcessionYear(slug),
       firstProduction: a.primera_produccion,
       serie: (a.serie ?? []).map((s: any) => ({
@@ -354,6 +380,54 @@ export const ducsDemo: DucRow[] = [
   { operatorSlug: "pluspetrol-cuenca-neuquina", operator: "Pluspetrol Cuenca Neuquina", area: "Bajo del Choique", drilledYtd: 12, completedYtd: 9, ducs: 14, ducsDeltaYoY: 28, invBuffer: 4.1 },
   { operatorSlug: "chevron", operator: "Chevron", area: "El Trapial", drilledYtd: 9, completedYtd: 8, ducs: 6, ducsDeltaYoY: 0, invBuffer: 2.2 },
 ];
+
+// ─────────────────────────────────────────────────────────────
+// Tablero T7 — Series de actividad (Adjunto IV mensual)
+// Fuente: Adjunto IV SE. Etapas y pozos conectados coherentes con kpis nacionales.
+// Último mes (2026-05) refleja rezago de arena — se marca como preliminar.
+// ─────────────────────────────────────────────────────────────
+export type ActivityRow = {
+  fecha: string;
+  etapas: number;
+  pozos_conectados: number;
+  arena_tn: number;
+};
+
+export const activitySeries: ActivityRow[] = [
+  { fecha: "2024-06", etapas: 1480, pozos_conectados: 29, arena_tn: 163000 },
+  { fecha: "2024-07", etapas: 1560, pozos_conectados: 31, arena_tn: 172000 },
+  { fecha: "2024-08", etapas: 1640, pozos_conectados: 33, arena_tn: 181000 },
+  { fecha: "2024-09", etapas: 1590, pozos_conectados: 32, arena_tn: 176000 },
+  { fecha: "2024-10", etapas: 1720, pozos_conectados: 35, arena_tn: 191000 },
+  { fecha: "2024-11", etapas: 1810, pozos_conectados: 37, arena_tn: 200000 },
+  { fecha: "2024-12", etapas: 1870, pozos_conectados: 38, arena_tn: 207000 },
+  { fecha: "2025-01", etapas: 1790, pozos_conectados: 36, arena_tn: 198000 },
+  { fecha: "2025-02", etapas: 1850, pozos_conectados: 37, arena_tn: 204000 },
+  { fecha: "2025-03", etapas: 1940, pozos_conectados: 39, arena_tn: 214000 },
+  { fecha: "2025-04", etapas: 1920, pozos_conectados: 38, arena_tn: 212000 },
+  { fecha: "2025-05", etapas: 2010, pozos_conectados: 40, arena_tn: 222000 },
+  { fecha: "2025-06", etapas: 2090, pozos_conectados: 42, arena_tn: 231000 },
+  { fecha: "2025-07", etapas: 2180, pozos_conectados: 44, arena_tn: 241000 },
+  { fecha: "2025-08", etapas: 2250, pozos_conectados: 45, arena_tn: 248000 },
+  { fecha: "2025-09", etapas: 2190, pozos_conectados: 44, arena_tn: 242000 },
+  { fecha: "2025-10", etapas: 2340, pozos_conectados: 47, arena_tn: 258000 },
+  { fecha: "2025-11", etapas: 2430, pozos_conectados: 49, arena_tn: 268000 },
+  { fecha: "2025-12", etapas: 2510, pozos_conectados: 50, arena_tn: 277000 },
+  { fecha: "2026-01", etapas: 2440, pozos_conectados: 47, arena_tn: 269000 },
+  { fecha: "2026-02", etapas: 2580, pozos_conectados: 50, arena_tn: 285000 },
+  { fecha: "2026-03", etapas: 2650, pozos_conectados: 52, arena_tn: 293000 },
+  { fecha: "2026-04", etapas: 2600, pozos_conectados: 51, arena_tn: 153000 }, // rezago Adjunto IV
+  { fecha: "2026-05", etapas: 2780, pozos_conectados: 53, arena_tn: kpis.arena_tn },
+];
+
+// B1: Sets de fractura activos estimados (proxy frac spread count).
+// Método: conteo de trabajos con fechas solapadas; publicado siempre como "estimado".
+export type FracSpreadRow = { fecha: string; spreads: number };
+export const fracSpreadSeries: FracSpreadRow[] = activitySeries.map((r) => ({
+  fecha: r.fecha,
+  // estimado: pozos_conectados × días_completación / días_mes (≈30d / 30d por spread)
+  spreads: Math.round(r.pozos_conectados * 0.55),
+}));
 
 // ─────────────────────────────────────────────────────────────
 // Wiki / Glosario

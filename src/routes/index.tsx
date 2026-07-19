@@ -81,7 +81,7 @@ function OverviewPage() {
       />
 
       <div className="p-6 space-y-6">
-        {/* Stats */}
+        {/* Stats — fila 1: producción y actividad */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           <Stat
             label="Producción oil (VM)"
@@ -107,8 +107,34 @@ function OverviewPage() {
             label={`Arena bombeada (${kpis.arena_mes})`}
             value={`${Math.round(kpis.arena_tn / 1000)}k`}
             unit="tn"
-            delta={ARENA_PRELIMINAR ? "Dato preliminar" : `+${kpis.arena_mom_pct}% MoM`}
+            delta={ARENA_PRELIMINAR ? "Dato preliminar" : `${kpis.arena_mom_pct >= 0 ? "+" : ""}${kpis.arena_mom_pct}% MoM`}
             hint="Rezago de carga Adjunto IV"
+          />
+        </div>
+        {/* Stats — fila 2: completación (Adjunto IV) */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+          <Stat
+            label="Etapas prom. por pozo"
+            value={kpis.etapas_promedio.toFixed(1)}
+            unit="etapas"
+            hint="Adjunto IV · promedio nacional"
+          />
+          <Stat
+            label="Rama lateral prom."
+            value={kpis.rama_promedio_m.toLocaleString()}
+            unit="m"
+            hint="Longitud horizontal"
+          />
+          <Stat
+            label="Arena importada"
+            value={kpis.arena_pct_importada === 0 ? "0%" : `${kpis.arena_pct_importada}%`}
+            hint={kpis.arena_pct_importada === 0 ? "100% arena nacional" : "del total bombeado"}
+          />
+          <Stat
+            label="Ratio completación"
+            value={kpis.pozos_conectados_ytd > 0 ? (Math.round(kpis.arena_tn / kpis.pozos_conectados_ytd / 5)).toLocaleString() : "—"}
+            unit="tn/pozo"
+            hint="Arena por pozo · estimado mensual"
           />
         </div>
         {ARENA_PRELIMINAR && (
@@ -190,7 +216,7 @@ function OverviewPage() {
             <div className="flex items-start justify-between mb-4">
               <div>
                 <div className="text-[11px] uppercase tracking-widest text-primary font-medium">
-                  Ranking Oct 2025
+                  Ranking {kpis.corte}
                 </div>
                 <h2 className="text-lg font-display font-semibold mt-1">
                   Producción oil por operadora
