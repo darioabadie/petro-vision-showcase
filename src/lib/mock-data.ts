@@ -291,6 +291,71 @@ export type Contradiction = {
 export const contradictions: Contradiction[] = [];
 
 // ─────────────────────────────────────────────────────────────
+// Demo dataset PRO — ejemplos ilustrativos para el modo demo.
+// No mezclar con los KPIs oficiales: viven detrás del gate <GatedModule>.
+// ─────────────────────────────────────────────────────────────
+export const proGuidanceDemo: Contradiction[] = [
+  {
+    operator: "YPF", operatorSlug: "ypf", period: "Q1 2026",
+    metric: "Producción shale oil operado", announced: "310 kbbl/d", actual: "298 kbbl/d",
+    delta: -3.9,
+    narrative: "Earnings call feb-2026: guidance de 310 kbbl/d para Q1. Cap. IV promedia 298. Diferencia consistente con demoras de conexión en La Amarga Chica.",
+  },
+  {
+    operator: "Vista Energy", operatorSlug: "vista-energy", period: "Q1 2026",
+    metric: "Pozos conectados", announced: "18", actual: "19",
+    delta: 5.6,
+    narrative: "Pipeline de completación adelantado una semana. Ejecución por encima del guidance corporativo publicado en el 20-F.",
+  },
+  {
+    operator: "Tecpetrol", operatorSlug: "tecpetrol", period: "Q1 2026",
+    metric: "Gas Fortín de Piedra", announced: "22 MMm³/d", actual: "22.7 MMm³/d",
+    delta: 3.2,
+    narrative: "Ejecución por encima del piso comprometido con Plan Gas.Ar. Sin desvíos operativos relevantes.",
+  },
+  {
+    operator: "Pluspetrol", operatorSlug: "pluspetrol", period: "Q1 2026",
+    metric: "Producción oil consolidada", announced: "78 kbbl/d", actual: "71 kbbl/d",
+    delta: -9.0,
+    narrative: "Integración de activos ExxonMobil aún genera brecha vs. guidance de investor day. Reporte trimestral atribuye la diferencia a workovers en La Calera.",
+  },
+  {
+    operator: "Pan American Energy", operatorSlug: "pan-american-energy", period: "Q1 2026",
+    metric: "Producción shale oil", announced: "42 kbbl/d", actual: "40 kbbl/d",
+    delta: -4.8,
+    narrative: "Guidance corporativo apuntaba a rampa más agresiva en Lindero Atravesado. Cap. IV muestra plateau anticipado.",
+  },
+  {
+    operator: "Shell Argentina", operatorSlug: "shell-argentina", period: "Q1 2026",
+    metric: "Producción operada", announced: "48 kbbl/d", actual: "51 kbbl/d",
+    delta: 6.3,
+    narrative: "Sierras Blancas + Bajada de Añelo por encima del guidance. Mejor performance por pozo de la cohorte 2025.",
+  },
+];
+
+export type DucRow = {
+  operatorSlug: string;
+  operator: string;
+  area: string;
+  drilledYtd: number;
+  completedYtd: number;
+  ducs: number;
+  ducsDeltaYoY: number;
+  invBuffer: number; // meses de buffer inventario
+};
+
+export const ducsDemo: DucRow[] = [
+  { operatorSlug: "ypf", operator: "YPF", area: "Loma Campana", drilledYtd: 62, completedYtd: 54, ducs: 41, ducsDeltaYoY: 18, invBuffer: 4.2 },
+  { operatorSlug: "vista-energy", operator: "Vista Energy", area: "Bajada del Palo Oeste", drilledYtd: 34, completedYtd: 30, ducs: 12, ducsDeltaYoY: -8, invBuffer: 1.9 },
+  { operatorSlug: "tecpetrol", operator: "Tecpetrol", area: "Fortín de Piedra", drilledYtd: 28, completedYtd: 24, ducs: 19, ducsDeltaYoY: 12, invBuffer: 3.4 },
+  { operatorSlug: "pluspetrol", operator: "Pluspetrol", area: "La Calera", drilledYtd: 22, completedYtd: 15, ducs: 24, ducsDeltaYoY: 42, invBuffer: 5.6 },
+  { operatorSlug: "shell-argentina", operator: "Shell Argentina", area: "Sierras Blancas", drilledYtd: 18, completedYtd: 17, ducs: 8, ducsDeltaYoY: -22, invBuffer: 1.4 },
+  { operatorSlug: "pan-american-energy", operator: "Pan American Energy", area: "Lindero Atravesado", drilledYtd: 14, completedYtd: 12, ducs: 11, ducsDeltaYoY: 6, invBuffer: 2.8 },
+  { operatorSlug: "pluspetrol-cuenca-neuquina", operator: "Pluspetrol Cuenca Neuquina", area: "Bajo del Choique", drilledYtd: 12, completedYtd: 9, ducs: 14, ducsDeltaYoY: 28, invBuffer: 4.1 },
+  { operatorSlug: "chevron", operator: "Chevron", area: "El Trapial", drilledYtd: 9, completedYtd: 8, ducs: 6, ducsDeltaYoY: 0, invBuffer: 2.2 },
+];
+
+// ─────────────────────────────────────────────────────────────
 // Wiki / Glosario
 // ─────────────────────────────────────────────────────────────
 export const glossary = [
