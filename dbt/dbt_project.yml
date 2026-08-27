@@ -1,0 +1,32 @@
+name: 'pvm'
+version: '1.0.0'
+config-version: 2
+profile: 'pvm'
+model-paths: ['models']
+seed-paths: ['seeds']
+test-paths: ['tests']
+macro-paths: ['macros']
+target-path: 'target'
+clean-targets: ['target']
+vars:
+  pvm_cutoff: '2026-07-31'
+  pvm_min_year: 2006
+
+models:
+  pvm:
+    +materialized: table
+    staging:
+      +materialized: view
+    core:
+      +materialized: table
+    marts:
+      +materialized: table
+
+seeds:
+  pvm:
+    seed_operator_aliases:
+      +column_types:
+        operator_raw: String
+        operator_canonical: String
+        review_status: String
+        notes: String

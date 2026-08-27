@@ -1,0 +1,641 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://pulsovacamuerta.ar/contracts/app-data.schema.json",
+  "title": "ObservatoryData",
+  "description": "Contrato del payload public/data/releases/<id>/app-data.json. Debe reflejar ObservatoryData en src/lib/contract.ts.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "release",
+    "site",
+    "filter_options",
+    "home",
+    "explorer",
+    "operators",
+    "cohorts",
+    "completions",
+    "map",
+    "quality",
+    "downloads",
+    "methodology",
+    "release_history"
+  ],
+  "properties": {
+    "schema_version": { "type": "string", "pattern": "^1\\.\\d+$" },
+    "release": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "release_id",
+        "status",
+        "is_mock",
+        "data_cutoff",
+        "generated_at",
+        "last_complete_period",
+        "pipeline_commit"
+      ],
+      "properties": {
+        "release_id": { "type": "string", "minLength": 1 },
+        "status": { "enum": ["mock", "complete", "warning"] },
+        "is_mock": { "type": "boolean" },
+        "data_cutoff": { "type": "string", "format": "date" },
+        "generated_at": { "type": "string", "format": "date-time" },
+        "last_complete_period": { "type": "string", "format": "date" },
+        "pipeline_commit": { "type": "string" },
+        "warning": { "type": ["string", "null"] }
+      }
+    },
+    "site": {
+      "type": "object",
+      "required": [
+        "name",
+        "tagline",
+        "locale",
+        "default_scope",
+        "methodology_url",
+        "source_label",
+        "repository_url"
+      ],
+      "properties": {
+        "name": { "type": "string" },
+        "tagline": { "type": "string" },
+        "locale": { "type": "string" },
+        "default_scope": { "type": "string" },
+        "methodology_url": { "type": "string" },
+        "source_label": { "type": "string" },
+        "repository_url": { "type": "string" }
+      }
+    },
+    "filter_options": {
+      "type": "object",
+      "required": [
+        "periods",
+        "products",
+        "resource_types",
+        "resource_subtypes",
+        "operators",
+        "provinces",
+        "basins",
+        "areas",
+        "fields",
+        "formations"
+      ],
+      "properties": {
+        "periods": { "type": "array", "items": { "type": "string", "format": "date" } },
+        "products": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "label", "unit"],
+            "properties": {
+              "id": { "type": "string" },
+              "label": { "type": "string" },
+              "unit": { "type": "string" }
+            }
+          }
+        },
+        "resource_types": { "type": "array", "items": { "type": "string" } },
+        "resource_subtypes": { "type": "array", "items": { "type": "string" } },
+        "operators": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["slug", "label"],
+            "properties": {
+              "slug": { "type": "string" },
+              "label": { "type": "string" }
+            }
+          }
+        },
+        "provinces": { "type": "array", "items": { "type": "string" } },
+        "basins": { "type": "array", "items": { "type": "string" } },
+        "areas": { "type": "array", "items": { "type": "string" } },
+        "fields": { "type": "array", "items": { "type": "string" } },
+        "formations": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "home": {
+      "type": "object",
+      "required": ["kpis", "production_history", "operator_contributions", "insights"],
+      "properties": {
+        "kpis": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "label", "value"],
+            "properties": {
+              "id": { "type": "string" },
+              "label": { "type": "string" },
+              "value": { "type": "number" },
+              "display_value": { "type": ["string", "null"] },
+              "unit": { "type": ["string", "null"] },
+              "change_mom_pct": { "type": ["number", "null"] },
+              "change_yoy_pct": { "type": ["number", "null"] },
+              "status": { "type": ["string", "null"] },
+              "definition_id": { "type": ["string", "null"] }
+            }
+          }
+        },
+        "production_history": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "period",
+              "oil_m3",
+              "gas_thousand_m3",
+              "water_m3",
+              "oil_conventional_m3",
+              "oil_nonconventional_m3",
+              "gas_conventional_thousand_m3",
+              "gas_nonconventional_thousand_m3",
+              "productive_wells"
+            ],
+            "properties": {
+              "period": { "type": "string", "format": "date" },
+              "oil_m3": { "type": "number" },
+              "gas_thousand_m3": { "type": "number" },
+              "water_m3": { "type": "number" },
+              "oil_conventional_m3": { "type": "number" },
+              "oil_nonconventional_m3": { "type": "number" },
+              "gas_conventional_thousand_m3": { "type": "number" },
+              "gas_nonconventional_thousand_m3": { "type": "number" },
+              "productive_wells": { "type": "number" },
+              "is_complete": { "type": ["boolean", "null"] }
+            }
+          }
+        },
+        "operator_contributions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["operator_slug", "operator_name", "delta_oil_m3", "share_of_change_pct"],
+            "properties": {
+              "operator_slug": { "type": "string" },
+              "operator_name": { "type": "string" },
+              "delta_oil_m3": { "type": "number" },
+              "share_of_change_pct": { "type": "number" }
+            }
+          }
+        },
+        "insights": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "title", "body"],
+            "properties": {
+              "id": { "type": "string" },
+              "title": { "type": "string" },
+              "body": { "type": "string" },
+              "tone": { "type": ["string", "null"] }
+            }
+          }
+        }
+      }
+    },
+    "explorer": {
+      "type": "object",
+      "required": ["default_state", "rows"],
+      "properties": {
+        "default_state": {
+          "type": "object",
+          "properties": {
+            "product": { "type": ["string", "null"] },
+            "metric": { "type": ["string", "null"] },
+            "start_period": { "type": ["string", "null"], "format": "date" },
+            "end_period": { "type": ["string", "null"], "format": "date" },
+            "compare_by": { "type": ["string", "null"] }
+          }
+        },
+        "rows": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "period",
+              "operator_slug",
+              "operator_name",
+              "province",
+              "basin",
+              "area",
+              "field",
+              "formation",
+              "resource_type",
+              "resource_subtype",
+              "oil_m3",
+              "gas_thousand_m3",
+              "water_m3",
+              "productive_wells",
+              "is_complete"
+            ],
+            "properties": {
+              "period": { "type": "string", "format": "date" },
+              "operator_slug": { "type": "string" },
+              "operator_name": { "type": "string" },
+              "province": { "type": "string" },
+              "basin": { "type": "string" },
+              "area": { "type": "string" },
+              "field": { "type": "string" },
+              "formation": { "type": "string" },
+              "resource_type": { "type": "string" },
+              "resource_subtype": { "type": "string" },
+              "oil_m3": { "type": "number" },
+              "gas_thousand_m3": { "type": "number" },
+              "water_m3": { "type": "number" },
+              "productive_wells": { "type": "number" },
+              "is_complete": { "type": "boolean" }
+            }
+          }
+        }
+      }
+    },
+    "operators": {
+      "type": "object",
+      "required": ["rankings", "profiles"],
+      "properties": {
+        "rankings": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["rank", "slug", "name", "oil_m3", "gas_thousand_m3", "share_oil_pct", "productive_wells"],
+            "properties": {
+              "rank": { "type": "integer" },
+              "slug": { "type": "string" },
+              "name": { "type": "string" },
+              "oil_m3": { "type": "number" },
+              "gas_thousand_m3": { "type": "number" },
+              "share_oil_pct": { "type": "number" },
+              "change_mom_pct": { "type": ["number", "null"] },
+              "change_yoy_pct": { "type": ["number", "null"] },
+              "productive_wells": { "type": "number" }
+            }
+          }
+        },
+        "profiles": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["slug", "name", "area_mix", "resource_mix", "new_productive_wells", "cohort_ids"],
+            "properties": {
+              "slug": { "type": "string" },
+              "name": { "type": "string" },
+              "alias_note": { "type": ["string", "null"] },
+              "area_mix": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["label", "oil_m3", "share_pct"],
+                  "properties": {
+                    "label": { "type": "string" },
+                    "oil_m3": { "type": "number" },
+                    "share_pct": { "type": "number" }
+                  }
+                }
+              },
+              "resource_mix": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["label", "value_pct"],
+                  "properties": {
+                    "label": { "type": "string" },
+                    "value_pct": { "type": "number" }
+                  }
+                }
+              },
+              "new_productive_wells": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["period", "count"],
+                  "properties": {
+                    "period": { "type": "string", "format": "date" },
+                    "count": { "type": "integer" }
+                  }
+                }
+              },
+              "cohort_ids": { "type": "array", "items": { "type": "string" } }
+            }
+          }
+        }
+      }
+    },
+    "cohorts": {
+      "type": "object",
+      "required": ["minimum_sample_size", "default_metric", "curves", "cumulative_summary"],
+      "properties": {
+        "minimum_sample_size": { "type": "number" },
+        "default_metric": { "type": "string" },
+        "curves": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "label", "cohort_start", "sample_size", "metric", "unit", "points"],
+            "properties": {
+              "id": { "type": "string" },
+              "label": { "type": "string" },
+              "operator_slug": { "type": ["string", "null"] },
+              "area": { "type": ["string", "null"] },
+              "formation": { "type": ["string", "null"] },
+              "cohort_start": { "type": "string", "format": "date" },
+              "sample_size": { "type": "integer" },
+              "metric": { "type": "string" },
+              "unit": { "type": "string" },
+              "points": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["well_age_month", "median"],
+                  "properties": {
+                    "well_age_month": { "type": "integer" },
+                    "p25": { "type": ["number", "null"] },
+                    "median": { "type": "number" },
+                    "p75": { "type": ["number", "null"] },
+                    "mean": { "type": ["number", "null"] },
+                    "well_count": { "type": "integer" }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "cumulative_summary": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["cohort_id", "unit", "n_3", "n_6", "n_12"],
+            "properties": {
+              "cohort_id": { "type": "string" },
+              "cum_3": { "type": ["number", "null"] },
+              "cum_6": { "type": ["number", "null"] },
+              "cum_12": { "type": ["number", "null"] },
+              "unit": { "type": "string" },
+              "n_3": { "type": "integer" },
+              "n_6": { "type": "integer" },
+              "n_12": { "type": "integer" }
+            }
+          }
+        }
+      }
+    },
+    "completions": {
+      "type": "object",
+      "required": ["coverage", "bucket_stats", "scatter", "disclaimer"],
+      "properties": {
+        "coverage": {
+          "type": "object",
+          "required": [
+            "production_wells",
+            "wells_with_fracture_record",
+            "matched_wells",
+            "match_rate_pct",
+            "valid_horizontal_length_pct",
+            "valid_stage_count_pct",
+            "eligible_for_normalization"
+          ],
+          "properties": {
+            "production_wells": { "type": "number" },
+            "wells_with_fracture_record": { "type": "number" },
+            "matched_wells": { "type": "number" },
+            "match_rate_pct": { "type": "number" },
+            "valid_horizontal_length_pct": { "type": "number" },
+            "valid_stage_count_pct": { "type": "number" },
+            "eligible_for_normalization": { "type": "number" }
+          }
+        },
+        "bucket_stats": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["dimension", "bucket", "well_count"],
+            "properties": {
+              "dimension": { "type": "string" },
+              "bucket": { "type": "string" },
+              "well_count": { "type": "integer" },
+              "p25_cum_oil_6m_m3": { "type": ["number", "null"] },
+              "median_cum_oil_6m_m3": { "type": ["number", "null"] },
+              "p75_cum_oil_6m_m3": { "type": ["number", "null"] }
+            }
+          }
+        },
+        "scatter": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["well_id", "operator_slug", "area", "horizontal_length_m", "stage_count", "cum_oil_6m_m3"],
+            "properties": {
+              "well_id": { "type": "string" },
+              "operator_slug": { "type": "string" },
+              "area": { "type": "string" },
+              "horizontal_length_m": { "type": "number" },
+              "stage_count": { "type": "integer" },
+              "sand_tonnes": { "type": ["number", "null"] },
+              "water_m3": { "type": ["number", "null"] },
+              "cum_oil_6m_m3": { "type": "number" },
+              "oil_per_1000m_m3": { "type": ["number", "null"] }
+            }
+          }
+        },
+        "disclaimer": { "type": "string" }
+      }
+    },
+    "map": {
+      "type": "object",
+      "required": ["initial_view", "color_modes", "wells_geojson", "trajectories_geojson"],
+      "properties": {
+        "initial_view": {
+          "type": "object",
+          "required": ["longitude", "latitude", "zoom"],
+          "properties": {
+            "longitude": { "type": "number" },
+            "latitude": { "type": "number" },
+            "zoom": { "type": "number" }
+          }
+        },
+        "color_modes": { "type": "array", "items": { "type": "string" } },
+        "wells_geojson": {
+          "type": "object",
+          "required": ["type", "features"],
+          "properties": {
+            "type": { "const": "FeatureCollection" },
+            "features": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["type", "geometry", "properties"],
+                "properties": {
+                  "type": { "const": "Feature" },
+                  "geometry": {
+                    "oneOf": [
+                      { "type": "object", "required": ["type", "coordinates"], "properties": { "type": { "const": "Point" }, "coordinates": { "type": "array", "items": { "type": "number" } } }, "additionalProperties": false },
+                      { "type": "object", "required": ["type", "coordinates"], "properties": { "type": { "const": "LineString" }, "coordinates": { "type": "array", "items": { "type": "array", "items": { "type": "number" } } } }, "additionalProperties": false }
+                    ]
+                  },
+                  "properties": { "type": ["object", "null"] }
+                }
+              }
+            }
+          }
+        },
+        "trajectories_geojson": { "type": "object", "required": ["type", "features"], "properties": { "type": { "const": "FeatureCollection" }, "features": { "type": "array", "items": { "type": "object" } } } }
+      }
+    },
+    "quality": {
+      "type": "object",
+      "required": ["overall", "sources", "checks", "join_coverage", "reconciliation", "revisions"],
+      "properties": {
+        "overall": {
+          "type": "object",
+          "required": ["status", "score_pct", "critical_tests_failed", "warnings", "last_successful_run", "rows_processed"],
+          "properties": {
+            "status": { "type": "string" },
+            "score_pct": { "type": "number" },
+            "critical_tests_failed": { "type": "integer" },
+            "warnings": { "type": "integer" },
+            "last_successful_run": { "type": "string" },
+            "rows_processed": { "type": "number" }
+          }
+        },
+        "sources": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["source_id", "name", "status", "source_last_modified", "retrieved_at", "row_count", "checksum_short", "revision_detected"],
+            "properties": {
+              "source_id": { "type": "string" },
+              "name": { "type": "string" },
+              "status": { "type": "string" },
+              "source_last_modified": { "type": "string" },
+              "retrieved_at": { "type": "string" },
+              "row_count": { "type": "integer" },
+              "checksum_short": { "type": "string" },
+              "revision_detected": { "type": "boolean" }
+            }
+          }
+        },
+        "checks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["check_id", "label", "severity", "status", "affected_rows"],
+            "properties": {
+              "check_id": { "type": "string" },
+              "label": { "type": "string" },
+              "severity": { "type": "string" },
+              "status": { "type": "string" },
+              "affected_rows": { "type": "integer" }
+            }
+          }
+        },
+        "join_coverage": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["relationship", "matched", "total", "coverage_pct"],
+            "properties": {
+              "relationship": { "type": "string" },
+              "matched": { "type": "integer" },
+              "total": { "type": "integer" },
+              "coverage_pct": { "type": "number" }
+            }
+          }
+        },
+        "reconciliation": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["period", "product", "well_aggregate", "control_series", "unit", "difference_pct"],
+            "properties": {
+              "period": { "type": "string" },
+              "product": { "type": "string" },
+              "well_aggregate": { "type": "number" },
+              "control_series": { "type": "number" },
+              "unit": { "type": "string" },
+              "difference_pct": { "type": "number" }
+            }
+          }
+        },
+        "revisions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["source_id", "detected_at", "affected_period_start", "affected_period_end", "changed_rows"],
+            "properties": {
+              "source_id": { "type": "string" },
+              "detected_at": { "type": "string" },
+              "affected_period_start": { "type": "string" },
+              "affected_period_end": { "type": "string" },
+              "changed_rows": { "type": "integer" }
+            }
+          }
+        }
+      }
+    },
+    "downloads": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "title", "description", "format", "url", "size_bytes", "updated_at"],
+        "properties": {
+          "id": { "type": "string" },
+          "title": { "type": "string" },
+          "description": { "type": "string" },
+          "format": { "type": "string" },
+          "url": { "type": "string" },
+          "size_bytes": { "type": "integer" },
+          "updated_at": { "type": "string" }
+        }
+      }
+    },
+    "methodology": {
+      "type": "object",
+      "required": ["definitions", "sources", "caveats"],
+      "properties": {
+        "definitions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "term", "definition"],
+            "properties": {
+              "id": { "type": "string" },
+              "term": { "type": "string" },
+              "definition": { "type": "string" }
+            }
+          }
+        },
+        "sources": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["source_id", "name", "publisher", "url", "license"],
+            "properties": {
+              "source_id": { "type": "string" },
+              "name": { "type": "string" },
+              "publisher": { "type": "string" },
+              "url": { "type": "string" },
+              "license": { "type": "string" }
+            }
+          }
+        },
+        "caveats": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "release_history": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["release_id", "data_cutoff", "published_at", "status", "is_current"],
+        "properties": {
+          "release_id": { "type": "string" },
+          "data_cutoff": { "type": "string" },
+          "published_at": { "type": "string" },
+          "status": { "enum": ["mock", "complete", "warning"] },
+          "is_current": { "type": "boolean" }
+        }
+      }
+    }
+  }
+}
