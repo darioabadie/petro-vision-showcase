@@ -237,9 +237,20 @@ function buildMapStyle(
     sources: {
       base: {
         type: "raster" as const,
-        tiles: ["https://basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png"],
+        tiles: [
+          "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}",
+        ],
         tileSize: 256,
-        attribution: "© OpenStreetMap © CARTO",
+        attribution: "© Esri, OpenStreetMap contributors",
+        maxzoom: 19,
+      },
+      labels: {
+        type: "raster" as const,
+        tiles: [
+          "https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}",
+        ],
+        tileSize: 256,
+        attribution: "© Esri",
         maxzoom: 19,
       },
       trajectories: {
@@ -256,6 +267,14 @@ function buildMapStyle(
         id: "base",
         type: "raster" as const,
         source: "base",
+        paint: {
+          "raster-opacity": 0.9,
+        },
+      },
+      {
+        id: "labels",
+        type: "raster" as const,
+        source: "labels",
         paint: {},
       },
       {

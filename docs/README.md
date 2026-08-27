@@ -24,6 +24,7 @@ Las muestras provienen de recursos oficiales consultados el 27 de agosto de 2026
 
 ### Notas de implementación
 
+- **Basemap del mapa**: se usa **Esri World Dark Gray Canvas** (`World_Dark_Gray_Base`) + la capa de referencia `World_Boundaries_and_Places` para los labels. Es gratuito, sin API key y sin marca de agua; el CARTO `dark_all` original requiere API/registro y/o embebe su logotipo.
 - **Recharts**: los primitivos del gráfico (`XAxis`, `YAxis`, `Legend`, `Line`, etc.) deben ir siempre dentro del chart wrapper (`<LineChart>`, `<ComposedChart>`, `<BarChart>`, …). Un fragmento directo bajo `<ResponsiveContainer>` rompe el contexto interno y lanza `Invariant failed` en el cliente (bug detectado y corregido en `/pozos-y-cohortes`).
 - **MapLibre** no interpreta colores `oklch()` en los `paint` del style spec. Para el mapa hay que usar la paleta hex `PALETTE_HEX` / `SERIES_COLORS_HEX` de `src/lib/palette.ts`.
 - El contrato se valida con `schema_version` mayor (`isCompatibleSchemaVersion`); versiones mayores lanzan el estado `schema-incompatible`.
