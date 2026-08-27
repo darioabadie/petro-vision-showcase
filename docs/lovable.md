@@ -121,21 +121,21 @@ La estética debe transmitir energía, territorio, información pública y rigor
 
 ### Paleta
 
-| Uso | Color |
-|---|---|
-| Fondo principal | `#F7F4EE` |
+| Uso                 | Color     |
+| ------------------- | --------- |
+| Fondo principal     | `#F7F4EE` |
 | Superficie/tarjetas | `#FFFFFF` |
-| Texto principal | `#122429` |
-| Texto secundario | `#59686B` |
-| Marca/acciones | `#0D5963` |
-| Petróleo | `#B7791F` |
-| Gas | `#147D92` |
-| Agua | `#477DB3` |
-| No convencional | `#6E56CF` |
-| Convencional | `#9AA3A5` |
-| Variación positiva | `#247A4D` |
-| Variación negativa | `#B3453F` |
-| Advertencia | `#C47A16` |
+| Texto principal     | `#122429` |
+| Texto secundario    | `#59686B` |
+| Marca/acciones      | `#0D5963` |
+| Petróleo            | `#B7791F` |
+| Gas                 | `#147D92` |
+| Agua                | `#477DB3` |
+| No convencional     | `#6E56CF` |
+| Convencional        | `#9AA3A5` |
+| Variación positiva  | `#247A4D` |
+| Variación negativa  | `#B3453F` |
+| Advertencia         | `#C47A16` |
 
 Usar colores semánticos de forma consistente. Nunca depender solo del color: agregar etiqueta, símbolo o patrón.
 
@@ -610,14 +610,26 @@ El archivo completo de referencia es [`app-data.json`](../web/public/data/releas
     "operator_contributions": [],
     "insights": []
   },
-  "explorer": {"default_state": {}, "rows": []},
-  "operators": {"rankings": [], "profiles": []},
-  "cohorts": {"minimum_sample_size": 10, "default_metric": "oil_monthly_m3", "curves": [], "cumulative_summary": []},
-  "completions": {"coverage": {}, "bucket_stats": [], "scatter": [], "disclaimer": ""},
-  "map": {"initial_view": {}, "color_modes": [], "wells_geojson": {}, "trajectories_geojson": {}},
-  "quality": {"overall": {}, "sources": [], "checks": [], "join_coverage": [], "reconciliation": [], "revisions": []},
+  "explorer": { "default_state": {}, "rows": [] },
+  "operators": { "rankings": [], "profiles": [] },
+  "cohorts": {
+    "minimum_sample_size": 10,
+    "default_metric": "oil_monthly_m3",
+    "curves": [],
+    "cumulative_summary": []
+  },
+  "completions": { "coverage": {}, "bucket_stats": [], "scatter": [], "disclaimer": "" },
+  "map": { "initial_view": {}, "color_modes": [], "wells_geojson": {}, "trajectories_geojson": {} },
+  "quality": {
+    "overall": {},
+    "sources": [],
+    "checks": [],
+    "join_coverage": [],
+    "reconciliation": [],
+    "revisions": []
+  },
   "downloads": [],
-  "methodology": {"definitions": [], "sources": [], "caveats": []},
+  "methodology": { "definitions": [], "sources": [], "caveats": [] },
   "release_history": []
 }
 ```
@@ -636,20 +648,20 @@ El archivo completo de referencia es [`app-data.json`](../web/public/data/releas
 
 ## 21. Correspondencia entre JSON y vistas
 
-| Sección JSON | Consumidor principal |
-|---|---|
-| `release`, `site` | Shell, banners, footer, SEO |
-| `filter_options` | Todos los filtros |
-| `home` | Resumen mensual |
-| `explorer` | Explorador y evolución de operadores |
-| `operators` | Ranking y perfiles |
-| `cohorts` | Cohortes y mini curvas de operador |
-| `completions` | Fracturas y productividad |
-| `map` | Mapa y alternativa tabular |
-| `quality` | Calidad, frescura y reconciliación |
-| `downloads` | Centro de descargas |
-| `methodology` | Definiciones, fuentes y tooltips |
-| `release_history` | Archivo de períodos |
+| Sección JSON      | Consumidor principal                 |
+| ----------------- | ------------------------------------ |
+| `release`, `site` | Shell, banners, footer, SEO          |
+| `filter_options`  | Todos los filtros                    |
+| `home`            | Resumen mensual                      |
+| `explorer`        | Explorador y evolución de operadores |
+| `operators`       | Ranking y perfiles                   |
+| `cohorts`         | Cohortes y mini curvas de operador   |
+| `completions`     | Fracturas y productividad            |
+| `map`             | Mapa y alternativa tabular           |
+| `quality`         | Calidad, frescura y reconciliación   |
+| `downloads`       | Centro de descargas                  |
+| `methodology`     | Definiciones, fuentes y tooltips     |
+| `release_history` | Archivo de períodos                  |
 
 ## 22. Criterios de aceptación de la maqueta
 
@@ -672,6 +684,8 @@ La primera versión se considera terminada cuando:
 15. La experiencia es usable en 360 px, 768 px y 1.440 px.
 16. Lighthouse no reporta errores críticos de accesibilidad.
 17. No se creó Supabase, backend, autenticación ni dependencia de ClickHouse en runtime.
+
+> **Estado 27-08-2026:** la maqueta implementada cumple los criterios 1-11, 13 (sin clustering), 14, 15 y 17. Pendientes: 12 (tablas alternativas en el home) y 16 (Lighthouse). Ver `docs/README.md` para el estado del proyecto y próximos pasos (pipeline + cutover).
 
 ## 23. Orden recomendado de construcción en Lovable
 

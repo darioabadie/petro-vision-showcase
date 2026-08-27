@@ -14,6 +14,19 @@ Documentación y muestras para un observatorio abierto de producción y producti
 
 Esta entrega define el producto y el modelo. El **sitio público (frontend "Pulso Vaca Muerta")** está implementado como maqueta sobre el contrato de datos mock (`/data/latest.json` + `app-data.json`); la ingesta automática con ClickHouse/dbt y el pipeline real quedan para la siguiente fase (ver cutover en `docs/lovable.md` §24).
 
+## Estado del proyecto — 27 de agosto de 2026
+
+La **fase frontend (maqueta) está cerrada por ahora**:
+
+- Verificado: `npm run typecheck` ✅, 21 tests unitarios (vitest) ✅, `bun run build` ✅, smoke test en navegador real (Playwright) sobre las 12 rutas con **0 errores de consola** ✅.
+- Publicado en Lovable desde el branch `main` (sincronización bidireccional por GitHub).
+
+Queda documentada como deuda para la siguiente etapa:
+
+1. **Pipeline real + cutover** (`docs/lovable.md` §24): generar releases con el exporter y probar la app contra una carpeta con `is_mock=false` (el banner desaparece sin recompilar).
+2. **Pulido opcional**: tabla alternativa en los gráficos del home, clustering del mapa, QA responsive a 360/768/1440 px y Lighthouse.
+3. `@tanstack/react-table` instalado pero **no usado** (las tablas actuales son shadcn/HTML simples); conservar solo si se adopta en el explorador.
+
 Las muestras provienen de recursos oficiales consultados el 27 de agosto de 2026. Los archivos completos se descargaron temporalmente para perfilar su estructura y no se incorporaron al repositorio.
 
 ## Frontend (maqueta)

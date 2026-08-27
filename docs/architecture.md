@@ -1,8 +1,8 @@
 # Arquitectura — Pulso Vaca Muerta
 
-**Versión:** 0.1  
+**Versión:** 0.2  
 **Fecha:** 27 de agosto de 2026  
-**Estado:** Arquitectura propuesta para el MVP
+**Estado:** Frontend implementado como maqueta (fase cerrada); pipeline propuesto (pendiente)
 
 ## 1. Resumen
 
@@ -17,6 +17,8 @@ Pulso Vaca Muerta separará completamente el procesamiento de datos de la aplica
 No habrá conexión pública con ClickHouse, backend de consultas, base de datos cloud ni procesamiento en tiempo real.
 
 La frontera entre ambos mundos será un **release mensual de datos estáticos, versionado, validado e inmutable**.
+
+> **Estado actual (27-08-2026):** la capa de frontend está implementada como **maqueta** sobre el contrato mock (`/data/latest.json` + `app-data.json`) y publicada en Lovable. El pipeline, ClickHouse, dbt y el exporter siguen pendientes (ver `./README.md` y `lovable.md` §24 para el cutover).
 
 ## 2. Diagrama general
 
@@ -313,16 +315,16 @@ Reglas:
 
 El navegador no consultará el fact mensual completo. Los datasets se diseñarán según cada vista.
 
-| Vista | Artefacto | Estrategia |
-|---|---|---|
-| Home | `kpis.json`, `monthly-production.json` | Pequeños y cargados al inicio. |
-| Explorador | Agregados por dimensión | Particionados por producto/año si crecen. |
-| Operadores | `operator-rankings.json` y archivos por operador | Lazy loading. |
-| Cohortes | `cohort-curves.json` | Percentiles y conteos ya calculados. |
-| Fracturas | `completion-productivity.json` | Buckets y cobertura, sin filas raw. |
-| Calidad | `data-quality.json` | Conteos, reglas y estado. |
-| Mapa | GeoJSON simplificado | Clustering, partición y carga progresiva. |
-| Descargas | CSV agregados | Reutilización pública y periodística. |
+| Vista      | Artefacto                                        | Estrategia                                                                                                     |
+| ---------- | ------------------------------------------------ | -------------------------------------------------------------------------------------------------------------- |
+| Home       | `kpis.json`, `monthly-production.json`           | Pequeños y cargados al inicio.                                                                                 |
+| Explorador | Agregados por dimensión                          | Particionados por producto/año si crecen.                                                                      |
+| Operadores | `operator-rankings.json` y archivos por operador | Lazy loading.                                                                                                  |
+| Cohortes   | `cohort-curves.json`                             | Percentiles y conteos ya calculados.                                                                           |
+| Fracturas  | `completion-productivity.json`                   | Buckets y cobertura, sin filas raw.                                                                            |
+| Calidad    | `data-quality.json`                              | Conteos, reglas y estado.                                                                                      |
+| Mapa       | GeoJSON simplificado                             | Popup, modos de color y tabla alternativa (implementado). Clustering, partición y carga progresiva pendientes. |
+| Descargas  | CSV agregados                                    | Reutilización pública y periodística.                                                                          |
 
 Los archivos grandes podrán particionarse:
 
@@ -335,29 +337,29 @@ operator-production/
 
 ## 10. Capa de visualización en Lovable
 
-### Stack propuesto
+### Stack implementado (maqueta)
 
-- React y TypeScript, generados y mantenidos mediante Lovable.
-- ECharts o Recharts para series, composiciones y rankings.
-- MapLibre para mapas.
-- TanStack Table para tablas y exploradores.
-- Filtros persistidos en query parameters.
-- Carga diferida por ruta y dataset.
+- React y TypeScript, mantenidos mediante Lovable y este repositorio.
+- **Recharts** para series, composiciones y rankings (con ≫ 5 series).
+- **MapLibre** para el mapa (basemap Esri World Dark Gray Canvas + referencias; gratis, sin API key).
+- Tablas shadcn/HTML simples; `@tanstack/react-table` quedó instalado pero sin uso.
+- Filtros persistidos en query parameters (URL compartibles).
+- Carga diferida por ruta; datos fetch solo en cliente con estados `loading | ready | error | schema-incompatible`.
 
-### Rutas iniciales
+### Rutas implementadas
 
 ```text
-/
-/produccion
-/operadores
-/operadores/:slug
-/pozos-y-cohortes
-/fracturas
-/mapa
-/calidad
-/metodologia
-/descargas
-/periodos/:releaseId
+/                          Resumen mensual (KPIs y evolución)
+/produccion                Explorador con filtros y comparación por dimensión
+/operadores                Ranking de operadores
+/operadores/:slug          Perfil de operador (curvas y cohortes propias)
+/pozos-y-cohortes          Curvas de declinación por cohorte
+/fracturas                 Completación y productividad acumulada
+/mapa                      Pozo + trayectorias (popup, modos de color, tabla alternativa)
+/calidad                   Calidad, frescura y reconciliación
+/metodologia               Definiciones, fuentes y methodology
+/descargas                 Centro de descargas
+/periodos/:releaseId       Archivo de períodos publicados
 ```
 
 ### Reglas de presentación
@@ -365,7 +367,7 @@ operator-production/
 - Mostrar fecha de corte en todas las páginas.
 - Diferenciar períodos completos y parciales.
 - Incluir unidad, fuente y metodología en cada gráfico.
-- Mantener tabla alternativa para visualizaciones relevantes.
+- Mantener tabla alternativa para visualizaciones relevantes (presente en el explorador y pozo/cohorte; pendiente en el home).
 - Evitar promedios sin conteo de muestra.
 - Generar URLs compartibles que preserven filtros.
 - Preparar metadata SEO y tarjetas sociales por release.
@@ -573,4 +575,3 @@ Para el MVP se adopta:
 - Sin Supabase, backend público, ClickHouse Cloud ni cómputo permanente.
 
 Esta solución mantiene la disponibilidad pública desacoplada de la infraestructura local, minimiza costos y conserva una historia técnica clara y demostrable: la aplicación sirve resultados analíticos ya validados, mientras el procesamiento pesado ocurre una vez por mes en un entorno reproducible.
-
