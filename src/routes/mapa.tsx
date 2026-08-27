@@ -11,7 +11,7 @@ import { PageHeader } from "@/components/page-header";
 import { StatesWrapper } from "@/components/states";
 import { ChartCard } from "@/components/chart-card";
 import { formatNumber } from "@/lib/format";
-import { PALETTE, SERIES_COLORS } from "@/lib/palette";
+import { PALETTE_HEX, SERIES_COLORS_HEX } from "@/lib/palette";
 import type {
   GeoJsonFeatureCollection,
   MapViewState,
@@ -264,7 +264,7 @@ function buildMapStyle(
         source: "trajectories",
         layout: { "line-join": "round" as const, "line-cap": "round" as const },
         paint: {
-          "line-color": PALETTE.oil,
+          "line-color": PALETTE_HEX.oil,
           "line-opacity": 0.5,
           "line-width": 1.5,
         },
@@ -276,7 +276,7 @@ function buildMapStyle(
         paint: {
           "circle-radius": 6,
           "circle-color": colorExpr(mode, wells),
-          "circle-stroke-color": "oklch(0.2 0.008 240)",
+          "circle-stroke-color": PALETTE_HEX.stroke,
           "circle-stroke-width": 1,
         },
       },
@@ -291,11 +291,11 @@ function colorExpr(mode: string, wells: GeoJsonFeatureCollection<MapWellProperti
   const step: MapboxExpr[] = [
     "step",
     ["coalesce", ["get", "last_oil_m3"], 0],
-    PALETTE.neutral,
+    PALETTE_HEX.neutral,
     mid,
-    PALETTE.water,
+    PALETTE_HEX.water,
     maxOil * 0.9,
-    PALETTE.oil,
+    PALETTE_HEX.oil,
   ];
   const modeExpr =
     mode === "operator"
@@ -305,9 +305,9 @@ function colorExpr(mode: string, wells: GeoJsonFeatureCollection<MapWellProperti
           ];
           const match: MapboxExpr[] = ["match", ["get", "operator_slug"]];
           operators.forEach((op, i) => {
-            match.push(op, SERIES_COLORS[i % SERIES_COLORS.length]);
+            match.push(op, SERIES_COLORS_HEX[i % SERIES_COLORS_HEX.length]);
           });
-          match.push(PALETTE.neutral);
+          match.push(PALETTE_HEX.neutral);
           return match;
         })()
       : mode === "area"
@@ -315,9 +315,9 @@ function colorExpr(mode: string, wells: GeoJsonFeatureCollection<MapWellProperti
             const areas = [...new Set(features.map((f) => f.properties?.area ?? "unknown"))];
             const match: MapboxExpr[] = ["match", ["get", "area"]];
             for (const area of areas) {
-              match.push(area, PALETTE.oil);
+              match.push(area, PALETTE_HEX.oil);
             }
-            match.push(PALETTE.water);
+            match.push(PALETTE_HEX.water);
             return match;
           })()
         : step;

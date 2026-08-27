@@ -15,3 +15,26 @@ export const SERIES_COLORS: string[] = [
   PALETTE.nonconventional,
   PALETTE.conventional,
 ];
+
+/**
+ * Versión hex de la paleta para consumidores que no interpretan oklch(),
+ * como MapLibre/WebGL (los paint properties del style spec solo aceptan
+ * css-color soportados por el parseador interno).
+ */
+export const PALETTE_HEX = {
+  oil: "#4ee75f",
+  gas: "#00bca2",
+  water: "#2b88c0",
+  conventional: "#d0a92d",
+  nonconventional: "#f14d4c",
+  neutral: "#7b8186",
+  stroke: "#12171a",
+} as const;
+
+export const SERIES_COLORS_HEX: string[] = [
+  PALETTE_HEX.oil,
+  PALETTE_HEX.gas,
+  PALETTE_HEX.water,
+  PALETTE_HEX.nonconventional,
+  PALETTE_HEX.conventional,
+];

@@ -12,9 +12,22 @@ Documentación y muestras para un observatorio abierto de producción y producti
 
 ## Contenido actual
 
-Esta entrega define el producto y el modelo; todavía no implementa ClickHouse, dbt, la ingesta automática ni el sitio público.
+Esta entrega define el producto y el modelo. El **sitio público (frontend "Pulso Vaca Muerta")** está implementado como maqueta sobre el contrato de datos mock (`/data/latest.json` + `app-data.json`); la ingesta automática con ClickHouse/dbt y el pipeline real quedan para la siguiente fase (ver cutover en `docs/lovable.md` §24).
 
 Las muestras provienen de recursos oficiales consultados el 27 de agosto de 2026. Los archivos completos se descargaron temporalmente para perfilar su estructura y no se incorporaron al repositorio.
+
+## Frontend (maqueta)
+
+- App tipo observatorio de producción con rutas: Resumen, Producción (explorador con filtros por URL), Operadores (+ perfil por slug), Pozos y cohortes, Fracturas, Mapa, Calidad, Metodología, Descargas y Archivo de períodos.
+- Los datos se cargan solo en el cliente vía `src/lib/data-client.ts`; el SSR renderiza esqueletos de carga. El provider (`src/lib/observatory-data.tsx`) expone estados `loading | ready | error | schema-incompatible` y `reload()`.
+- El banner de datos sintéticos y el prefijo "Demostración ·" en el título dependen de `release.is_mock`.
+
+### Notas de implementación
+
+- **Recharts**: los primitivos del gráfico (`XAxis`, `YAxis`, `Legend`, `Line`, etc.) deben ir siempre dentro del chart wrapper (`<LineChart>`, `<ComposedChart>`, `<BarChart>`, …). Un fragmento directo bajo `<ResponsiveContainer>` rompe el contexto interno y lanza `Invariant failed` en el cliente (bug detectado y corregido en `/pozos-y-cohortes`).
+- **MapLibre** no interpreta colores `oklch()` en los `paint` del style spec. Para el mapa hay que usar la paleta hex `PALETTE_HEX` / `SERIES_COLORS_HEX` de `src/lib/palette.ts`.
+- El contrato se valida con `schema_version` mayor (`isCompatibleSchemaVersion`); versiones mayores lanzan el estado `schema-incompatible`.
+- Verificación: `npm run typecheck`, `npm test` (vitest), `bun run build`, y smoke test en navegador real (Playwright) contra `wrangler dev` sobre el output del build.
 
 ## Reproducir muestras
 

@@ -1,6 +1,15 @@
 import { useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { CartesianGrid, Legend, Line, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import {
+  CartesianGrid,
+  Legend,
+  Line,
+  LineChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
 import { PageHeader } from "@/components/page-header";
 import { StatesWrapper, StatesEmpty } from "@/components/states";
 import { ChartCard } from "@/components/chart-card";
@@ -91,7 +100,42 @@ function Loaded({ data }: { data: import("@/lib/contract").ObservatoryData }) {
         ) : (
           <div className="h-[360px] w-full">
             <ResponsiveContainer width="100%" height="100%">
-              <LineChartData rows={rows} selected={selected} />
+              <LineChart data={rows} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
+                <CartesianGrid
+                  strokeDasharray="3 3"
+                  vertical={false}
+                  stroke="oklch(0.3 0.008 240)"
+                />
+                <XAxis
+                  dataKey="age"
+                  type="number"
+                  tick={{ fontSize: 11, fill: "oklch(0.68 0.01 240)" }}
+                  tickLine={false}
+                  axisLine={false}
+                  tickFormatter={(v) => `${v} mo`}
+                />
+                <YAxis
+                  tickFormatter={(v) => formatNumber(Number(v))}
+                  tick={{ fontSize: 11, fill: "oklch(0.68 0.01 240)" }}
+                  tickLine={false}
+                  axisLine={false}
+                  width={72}
+                />
+                <Tooltip content={<CohortTooltip selected={selected} />} />
+                <Legend />
+                {selected.map((c, i) => (
+                  <Line
+                    key={c.id}
+                    type="monotone"
+                    dataKey={`median__${c.id}`}
+                    name={c.label}
+                    stroke={SERIES_COLORS[i % SERIES_COLORS.length]}
+                    strokeWidth={2}
+                    dot={false}
+                    connectNulls
+                  />
+                ))}
+              </LineChart>
             </ResponsiveContainer>
           </div>
         )}
@@ -145,49 +189,6 @@ function CohortPicker({
         );
       })}
     </div>
-  );
-}
-
-function LineChartData({
-  rows,
-  selected,
-}: {
-  rows: Record<string, number | null>[];
-  selected: CohortCurve[];
-}) {
-  return (
-    <>
-      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="oklch(0.3 0.008 240)" />
-      <XAxis
-        dataKey="age"
-        type="number"
-        tick={{ fontSize: 11, fill: "oklch(0.68 0.01 240)" }}
-        tickLine={false}
-        axisLine={false}
-        tickFormatter={(v) => `${v} mo`}
-      />
-      <YAxis
-        tickFormatter={(v) => formatNumber(Number(v))}
-        tick={{ fontSize: 11, fill: "oklch(0.68 0.01 240)" }}
-        tickLine={false}
-        axisLine={false}
-        width={72}
-      />
-      <Tooltip content={<CohortTooltip selected={selected} />} />
-      <Legend />
-      {selected.map((c, i) => (
-        <Line
-          key={c.id}
-          type="monotone"
-          dataKey={`median__${c.id}`}
-          name={c.label}
-          stroke={SERIES_COLORS[i % SERIES_COLORS.length]}
-          strokeWidth={2}
-          dot={false}
-          connectNulls
-        />
-      ))}
-    </>
   );
 }
 
