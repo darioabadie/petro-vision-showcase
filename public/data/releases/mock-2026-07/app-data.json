@@ -1,0 +1,255 @@
+{
+  "schema_version": "1.0",
+  "release": {
+    "release_id": "mock-2026-07",
+    "status": "mock",
+    "is_mock": true,
+    "data_cutoff": "2026-07-31",
+    "generated_at": "2026-08-27T12:00:00Z",
+    "last_complete_period": "2026-07-01",
+    "pipeline_commit": "mock-not-applicable",
+    "warning": "Datos sintéticos para diseñar y probar la interfaz. No utilizar como información real."
+  },
+  "site": {
+    "name": "Pulso Vaca Muerta",
+    "tagline": "Datos abiertos sobre producción, pozos y productividad de los hidrocarburos argentinos.",
+    "locale": "es-AR",
+    "default_scope": "Argentina",
+    "methodology_url": "/metodologia",
+    "source_label": "Secretaría de Energía de la Nación — datos abiertos",
+    "repository_url": "https://github.com/example/pulso-vaca-muerta"
+  },
+  "filter_options": {
+    "periods": ["2026-02-01", "2026-03-01", "2026-04-01", "2026-05-01", "2026-06-01", "2026-07-01"],
+    "products": [
+      {"id": "oil", "label": "Petróleo", "unit": "m³"},
+      {"id": "gas", "label": "Gas", "unit": "miles de m³"},
+      {"id": "water", "label": "Agua", "unit": "m³"}
+    ],
+    "resource_types": ["CONVENCIONAL", "NO CONVENCIONAL"],
+    "resource_subtypes": ["CONVENCIONAL", "SHALE", "TIGHT"],
+    "operators": [
+      {"slug": "ypf", "label": "YPF"},
+      {"slug": "vista-energy", "label": "Vista Energy"},
+      {"slug": "tecpetrol", "label": "Tecpetrol"},
+      {"slug": "pan-american-energy", "label": "Pan American Energy"},
+      {"slug": "pluspetrol", "label": "Pluspetrol"}
+    ],
+    "provinces": ["Neuquén", "Chubut", "Santa Cruz"],
+    "basins": ["NEUQUINA", "GOLFO SAN JORGE", "AUSTRAL"],
+    "areas": ["Loma Campana", "Bajada del Palo Oeste", "Fortín de Piedra", "Cerro Dragón", "La Calera"],
+    "fields": ["Loma Campana", "Bajada del Palo", "Fortín de Piedra", "Cerro Dragón", "La Calera"],
+    "formations": ["VACA MUERTA", "MULICHINCO", "GRUPO CHUBUT"]
+  },
+  "home": {
+    "kpis": [
+      {"id": "oil_production", "label": "Producción de petróleo", "value": 6298000, "display_value": "6,30 M", "unit": "m³", "change_mom_pct": 2.8, "change_yoy_pct": 14.2, "status": "positive", "definition_id": "oil_production"},
+      {"id": "gas_production", "label": "Producción de gas", "value": 4521000, "display_value": "4,52 M", "unit": "miles de m³", "change_mom_pct": 1.1, "change_yoy_pct": 5.7, "status": "positive", "definition_id": "gas_production"},
+      {"id": "unconventional_share", "label": "Participación no convencional", "value": 63.4, "display_value": "63,4 %", "unit": "%", "change_mom_pct": 0.9, "change_yoy_pct": 6.3, "status": "positive", "definition_id": "unconventional_share"},
+      {"id": "productive_wells", "label": "Pozos con producción positiva", "value": 17642, "display_value": "17.642", "unit": "pozos", "change_mom_pct": 0.6, "change_yoy_pct": 3.8, "status": "neutral", "definition_id": "productive_well"}
+    ],
+    "production_history": [
+      {"period": "2025-08-01", "oil_m3": 5514000, "gas_thousand_m3": 4275000, "water_m3": 11930000, "oil_conventional_m3": 2440000, "oil_nonconventional_m3": 3074000, "gas_conventional_thousand_m3": 1801000, "gas_nonconventional_thousand_m3": 2474000, "productive_wells": 16990},
+      {"period": "2025-09-01", "oil_m3": 5588000, "gas_thousand_m3": 4190000, "water_m3": 11860000, "oil_conventional_m3": 2410000, "oil_nonconventional_m3": 3178000, "gas_conventional_thousand_m3": 1765000, "gas_nonconventional_thousand_m3": 2425000, "productive_wells": 17044},
+      {"period": "2025-10-01", "oil_m3": 5683000, "gas_thousand_m3": 4256000, "water_m3": 12040000, "oil_conventional_m3": 2388000, "oil_nonconventional_m3": 3295000, "gas_conventional_thousand_m3": 1742000, "gas_nonconventional_thousand_m3": 2514000, "productive_wells": 17120},
+      {"period": "2025-11-01", "oil_m3": 5755000, "gas_thousand_m3": 4301000, "water_m3": 12110000, "oil_conventional_m3": 2369000, "oil_nonconventional_m3": 3386000, "gas_conventional_thousand_m3": 1711000, "gas_nonconventional_thousand_m3": 2590000, "productive_wells": 17186},
+      {"period": "2025-12-01", "oil_m3": 5812000, "gas_thousand_m3": 4328000, "water_m3": 12070000, "oil_conventional_m3": 2341000, "oil_nonconventional_m3": 3471000, "gas_conventional_thousand_m3": 1688000, "gas_nonconventional_thousand_m3": 2640000, "productive_wells": 17240},
+      {"period": "2026-01-01", "oil_m3": 5879000, "gas_thousand_m3": 4350000, "water_m3": 12220000, "oil_conventional_m3": 2320000, "oil_nonconventional_m3": 3559000, "gas_conventional_thousand_m3": 1660000, "gas_nonconventional_thousand_m3": 2690000, "productive_wells": 17301},
+      {"period": "2026-02-01", "oil_m3": 5795000, "gas_thousand_m3": 4195000, "water_m3": 11680000, "oil_conventional_m3": 2265000, "oil_nonconventional_m3": 3530000, "gas_conventional_thousand_m3": 1585000, "gas_nonconventional_thousand_m3": 2610000, "productive_wells": 17348},
+      {"period": "2026-03-01", "oil_m3": 6008000, "gas_thousand_m3": 4415000, "water_m3": 12310000, "oil_conventional_m3": 2290000, "oil_nonconventional_m3": 3718000, "gas_conventional_thousand_m3": 1645000, "gas_nonconventional_thousand_m3": 2770000, "productive_wells": 17422},
+      {"period": "2026-04-01", "oil_m3": 6060000, "gas_thousand_m3": 4388000, "water_m3": 12190000, "oil_conventional_m3": 2266000, "oil_nonconventional_m3": 3794000, "gas_conventional_thousand_m3": 1608000, "gas_nonconventional_thousand_m3": 2780000, "productive_wells": 17488},
+      {"period": "2026-05-01", "oil_m3": 6119000, "gas_thousand_m3": 4433000, "water_m3": 12270000, "oil_conventional_m3": 2245000, "oil_nonconventional_m3": 3874000, "gas_conventional_thousand_m3": 1583000, "gas_nonconventional_thousand_m3": 2850000, "productive_wells": 17541},
+      {"period": "2026-06-01", "oil_m3": 6126000, "gas_thousand_m3": 4472000, "water_m3": 12390000, "oil_conventional_m3": 2203000, "oil_nonconventional_m3": 3923000, "gas_conventional_thousand_m3": 1555000, "gas_nonconventional_thousand_m3": 2917000, "productive_wells": 17538},
+      {"period": "2026-07-01", "oil_m3": 6298000, "gas_thousand_m3": 4521000, "water_m3": 12480000, "oil_conventional_m3": 2180000, "oil_nonconventional_m3": 4118000, "gas_conventional_thousand_m3": 1535000, "gas_nonconventional_thousand_m3": 2986000, "productive_wells": 17642}
+    ],
+    "operator_contributions": [
+      {"operator_slug": "ypf", "operator_name": "YPF", "delta_oil_m3": 78000, "share_of_change_pct": 45.3},
+      {"operator_slug": "vista-energy", "operator_name": "Vista Energy", "delta_oil_m3": 41000, "share_of_change_pct": 23.8},
+      {"operator_slug": "tecpetrol", "operator_name": "Tecpetrol", "delta_oil_m3": 28000, "share_of_change_pct": 16.3},
+      {"operator_slug": "pan-american-energy", "operator_name": "Pan American Energy", "delta_oil_m3": 17000, "share_of_change_pct": 9.9},
+      {"operator_slug": "other", "operator_name": "Otros", "delta_oil_m3": 8000, "share_of_change_pct": 4.7}
+    ],
+    "insights": [
+      {"id": "insight-1", "title": "El no convencional explica el crecimiento", "body": "La producción no convencional aporta la mayor parte de la variación mensual del petróleo.", "tone": "positive"},
+      {"id": "insight-2", "title": "YPF lidera el aporte del mes", "body": "YPF explica 45,3 % del aumento mensual simulado.", "tone": "neutral"},
+      {"id": "insight-3", "title": "Los datos están completos hasta julio", "body": "La maqueta trata julio de 2026 como último período completo.", "tone": "information"}
+    ]
+  },
+  "explorer": {
+    "default_state": {"product": "oil", "metric": "production", "start_period": "2026-02-01", "end_period": "2026-07-01", "compare_by": "operator"},
+    "rows": [
+      {"period": "2026-02-01", "operator_slug": "ypf", "operator_name": "YPF", "province": "Neuquén", "basin": "NEUQUINA", "area": "Loma Campana", "field": "Loma Campana", "formation": "VACA MUERTA", "resource_type": "NO CONVENCIONAL", "resource_subtype": "SHALE", "oil_m3": 1620000, "gas_thousand_m3": 660000, "water_m3": 1510000, "productive_wells": 980, "is_complete": true},
+      {"period": "2026-03-01", "operator_slug": "ypf", "operator_name": "YPF", "province": "Neuquén", "basin": "NEUQUINA", "area": "Loma Campana", "field": "Loma Campana", "formation": "VACA MUERTA", "resource_type": "NO CONVENCIONAL", "resource_subtype": "SHALE", "oil_m3": 1685000, "gas_thousand_m3": 682000, "water_m3": 1545000, "productive_wells": 1002, "is_complete": true},
+      {"period": "2026-04-01", "operator_slug": "ypf", "operator_name": "YPF", "province": "Neuquén", "basin": "NEUQUINA", "area": "Loma Campana", "field": "Loma Campana", "formation": "VACA MUERTA", "resource_type": "NO CONVENCIONAL", "resource_subtype": "SHALE", "oil_m3": 1712000, "gas_thousand_m3": 695000, "water_m3": 1561000, "productive_wells": 1017, "is_complete": true},
+      {"period": "2026-05-01", "operator_slug": "ypf", "operator_name": "YPF", "province": "Neuquén", "basin": "NEUQUINA", "area": "Loma Campana", "field": "Loma Campana", "formation": "VACA MUERTA", "resource_type": "NO CONVENCIONAL", "resource_subtype": "SHALE", "oil_m3": 1748000, "gas_thousand_m3": 709000, "water_m3": 1580000, "productive_wells": 1030, "is_complete": true},
+      {"period": "2026-06-01", "operator_slug": "ypf", "operator_name": "YPF", "province": "Neuquén", "basin": "NEUQUINA", "area": "Loma Campana", "field": "Loma Campana", "formation": "VACA MUERTA", "resource_type": "NO CONVENCIONAL", "resource_subtype": "SHALE", "oil_m3": 1760000, "gas_thousand_m3": 718000, "water_m3": 1594000, "productive_wells": 1042, "is_complete": true},
+      {"period": "2026-07-01", "operator_slug": "ypf", "operator_name": "YPF", "province": "Neuquén", "basin": "NEUQUINA", "area": "Loma Campana", "field": "Loma Campana", "formation": "VACA MUERTA", "resource_type": "NO CONVENCIONAL", "resource_subtype": "SHALE", "oil_m3": 1838000, "gas_thousand_m3": 736000, "water_m3": 1612000, "productive_wells": 1068, "is_complete": true},
+      {"period": "2026-02-01", "operator_slug": "vista-energy", "operator_name": "Vista Energy", "province": "Neuquén", "basin": "NEUQUINA", "area": "Bajada del Palo Oeste", "field": "Bajada del Palo", "formation": "VACA MUERTA", "resource_type": "NO CONVENCIONAL", "resource_subtype": "SHALE", "oil_m3": 610000, "gas_thousand_m3": 118000, "water_m3": 390000, "productive_wells": 270, "is_complete": true},
+      {"period": "2026-03-01", "operator_slug": "vista-energy", "operator_name": "Vista Energy", "province": "Neuquén", "basin": "NEUQUINA", "area": "Bajada del Palo Oeste", "field": "Bajada del Palo", "formation": "VACA MUERTA", "resource_type": "NO CONVENCIONAL", "resource_subtype": "SHALE", "oil_m3": 632000, "gas_thousand_m3": 121000, "water_m3": 401000, "productive_wells": 279, "is_complete": true},
+      {"period": "2026-04-01", "operator_slug": "vista-energy", "operator_name": "Vista Energy", "province": "Neuquén", "basin": "NEUQUINA", "area": "Bajada del Palo Oeste", "field": "Bajada del Palo", "formation": "VACA MUERTA", "resource_type": "NO CONVENCIONAL", "resource_subtype": "SHALE", "oil_m3": 648000, "gas_thousand_m3": 124000, "water_m3": 407000, "productive_wells": 285, "is_complete": true},
+      {"period": "2026-05-01", "operator_slug": "vista-energy", "operator_name": "Vista Energy", "province": "Neuquén", "basin": "NEUQUINA", "area": "Bajada del Palo Oeste", "field": "Bajada del Palo", "formation": "VACA MUERTA", "resource_type": "NO CONVENCIONAL", "resource_subtype": "SHALE", "oil_m3": 674000, "gas_thousand_m3": 127000, "water_m3": 414000, "productive_wells": 292, "is_complete": true},
+      {"period": "2026-06-01", "operator_slug": "vista-energy", "operator_name": "Vista Energy", "province": "Neuquén", "basin": "NEUQUINA", "area": "Bajada del Palo Oeste", "field": "Bajada del Palo", "formation": "VACA MUERTA", "resource_type": "NO CONVENCIONAL", "resource_subtype": "SHALE", "oil_m3": 688000, "gas_thousand_m3": 130000, "water_m3": 421000, "productive_wells": 298, "is_complete": true},
+      {"period": "2026-07-01", "operator_slug": "vista-energy", "operator_name": "Vista Energy", "province": "Neuquén", "basin": "NEUQUINA", "area": "Bajada del Palo Oeste", "field": "Bajada del Palo", "formation": "VACA MUERTA", "resource_type": "NO CONVENCIONAL", "resource_subtype": "SHALE", "oil_m3": 729000, "gas_thousand_m3": 136000, "water_m3": 432000, "productive_wells": 311, "is_complete": true},
+      {"period": "2026-02-01", "operator_slug": "tecpetrol", "operator_name": "Tecpetrol", "province": "Neuquén", "basin": "NEUQUINA", "area": "Fortín de Piedra", "field": "Fortín de Piedra", "formation": "VACA MUERTA", "resource_type": "NO CONVENCIONAL", "resource_subtype": "SHALE", "oil_m3": 148000, "gas_thousand_m3": 690000, "water_m3": 226000, "productive_wells": 214, "is_complete": true},
+      {"period": "2026-03-01", "operator_slug": "tecpetrol", "operator_name": "Tecpetrol", "province": "Neuquén", "basin": "NEUQUINA", "area": "Fortín de Piedra", "field": "Fortín de Piedra", "formation": "VACA MUERTA", "resource_type": "NO CONVENCIONAL", "resource_subtype": "SHALE", "oil_m3": 151000, "gas_thousand_m3": 720000, "water_m3": 231000, "productive_wells": 220, "is_complete": true},
+      {"period": "2026-04-01", "operator_slug": "tecpetrol", "operator_name": "Tecpetrol", "province": "Neuquén", "basin": "NEUQUINA", "area": "Fortín de Piedra", "field": "Fortín de Piedra", "formation": "VACA MUERTA", "resource_type": "NO CONVENCIONAL", "resource_subtype": "SHALE", "oil_m3": 155000, "gas_thousand_m3": 742000, "water_m3": 238000, "productive_wells": 226, "is_complete": true},
+      {"period": "2026-05-01", "operator_slug": "tecpetrol", "operator_name": "Tecpetrol", "province": "Neuquén", "basin": "NEUQUINA", "area": "Fortín de Piedra", "field": "Fortín de Piedra", "formation": "VACA MUERTA", "resource_type": "NO CONVENCIONAL", "resource_subtype": "SHALE", "oil_m3": 158000, "gas_thousand_m3": 758000, "water_m3": 242000, "productive_wells": 229, "is_complete": true},
+      {"period": "2026-06-01", "operator_slug": "tecpetrol", "operator_name": "Tecpetrol", "province": "Neuquén", "basin": "NEUQUINA", "area": "Fortín de Piedra", "field": "Fortín de Piedra", "formation": "VACA MUERTA", "resource_type": "NO CONVENCIONAL", "resource_subtype": "SHALE", "oil_m3": 162000, "gas_thousand_m3": 774000, "water_m3": 247000, "productive_wells": 233, "is_complete": true},
+      {"period": "2026-07-01", "operator_slug": "tecpetrol", "operator_name": "Tecpetrol", "province": "Neuquén", "basin": "NEUQUINA", "area": "Fortín de Piedra", "field": "Fortín de Piedra", "formation": "VACA MUERTA", "resource_type": "NO CONVENCIONAL", "resource_subtype": "SHALE", "oil_m3": 190000, "gas_thousand_m3": 801000, "water_m3": 254000, "productive_wells": 240, "is_complete": true}
+    ]
+  },
+  "operators": {
+    "rankings": [
+      {"rank": 1, "slug": "ypf", "name": "YPF", "oil_m3": 2780000, "gas_thousand_m3": 1510000, "share_oil_pct": 44.1, "change_mom_pct": 2.9, "change_yoy_pct": 15.6, "productive_wells": 6420},
+      {"rank": 2, "slug": "pan-american-energy", "name": "Pan American Energy", "oil_m3": 1010000, "gas_thousand_m3": 498000, "share_oil_pct": 16.0, "change_mom_pct": 1.7, "change_yoy_pct": 4.2, "productive_wells": 3390},
+      {"rank": 3, "slug": "vista-energy", "name": "Vista Energy", "oil_m3": 729000, "gas_thousand_m3": 136000, "share_oil_pct": 11.6, "change_mom_pct": 6.0, "change_yoy_pct": 21.9, "productive_wells": 311},
+      {"rank": 4, "slug": "pluspetrol", "name": "Pluspetrol", "oil_m3": 410000, "gas_thousand_m3": 515000, "share_oil_pct": 6.5, "change_mom_pct": -1.2, "change_yoy_pct": 2.8, "productive_wells": 1280},
+      {"rank": 5, "slug": "tecpetrol", "name": "Tecpetrol", "oil_m3": 190000, "gas_thousand_m3": 801000, "share_oil_pct": 3.0, "change_mom_pct": 17.3, "change_yoy_pct": 9.5, "productive_wells": 240}
+    ],
+    "profiles": [
+      {
+        "slug": "ypf", "name": "YPF", "alias_note": "Nombres normalizados mediante tabla de aliases versionada.",
+        "area_mix": [{"label": "Loma Campana", "oil_m3": 1838000, "share_pct": 66.1}, {"label": "La Amarga Chica", "oil_m3": 522000, "share_pct": 18.8}, {"label": "Otros", "oil_m3": 420000, "share_pct": 15.1}],
+        "resource_mix": [{"label": "No convencional", "value_pct": 82.4}, {"label": "Convencional", "value_pct": 17.6}],
+        "new_productive_wells": [{"period": "2026-02-01", "count": 26}, {"period": "2026-03-01", "count": 31}, {"period": "2026-04-01", "count": 28}, {"period": "2026-05-01", "count": 34}, {"period": "2026-06-01", "count": 29}, {"period": "2026-07-01", "count": 37}],
+        "cohort_ids": ["ypf-2025h2", "ypf-2026h1"]
+      },
+      {
+        "slug": "vista-energy", "name": "Vista Energy", "alias_note": "Nombres normalizados mediante tabla de aliases versionada.",
+        "area_mix": [{"label": "Bajada del Palo Oeste", "oil_m3": 729000, "share_pct": 78.3}, {"label": "Aguada Federal", "oil_m3": 132000, "share_pct": 14.2}, {"label": "Otros", "oil_m3": 70000, "share_pct": 7.5}],
+        "resource_mix": [{"label": "No convencional", "value_pct": 96.8}, {"label": "Convencional", "value_pct": 3.2}],
+        "new_productive_wells": [{"period": "2026-02-01", "count": 7}, {"period": "2026-03-01", "count": 9}, {"period": "2026-04-01", "count": 6}, {"period": "2026-05-01", "count": 8}, {"period": "2026-06-01", "count": 7}, {"period": "2026-07-01", "count": 12}],
+        "cohort_ids": ["vista-2025h2", "vista-2026h1"]
+      },
+      {
+        "slug": "tecpetrol", "name": "Tecpetrol", "alias_note": "Nombres normalizados mediante tabla de aliases versionada.",
+        "area_mix": [{"label": "Fortín de Piedra", "oil_m3": 190000, "share_pct": 71.4}, {"label": "Los Toldos II", "oil_m3": 46000, "share_pct": 17.3}, {"label": "Otros", "oil_m3": 30000, "share_pct": 11.3}],
+        "resource_mix": [{"label": "No convencional", "value_pct": 93.1}, {"label": "Convencional", "value_pct": 6.9}],
+        "new_productive_wells": [{"period": "2026-02-01", "count": 5}, {"period": "2026-03-01", "count": 6}, {"period": "2026-04-01", "count": 6}, {"period": "2026-05-01", "count": 4}, {"period": "2026-06-01", "count": 7}, {"period": "2026-07-01", "count": 8}],
+        "cohort_ids": ["tecpetrol-2026h1"]
+      }
+    ]
+  },
+  "cohorts": {
+    "minimum_sample_size": 10,
+    "default_metric": "oil_monthly_m3",
+    "curves": [
+      {"id": "ypf-2026h1", "label": "YPF · 1º sem. 2026", "operator_slug": "ypf", "area": "Loma Campana", "formation": "VACA MUERTA", "cohort_start": "2026-01-01", "sample_size": 42, "metric": "oil_monthly_m3", "unit": "m³/pozo", "points": [{"well_age_month": 0, "p25": 6400, "median": 8200, "p75": 10300, "mean": 8500, "well_count": 42}, {"well_age_month": 1, "p25": 9800, "median": 12600, "p75": 15100, "mean": 12900, "well_count": 42}, {"well_age_month": 2, "p25": 8600, "median": 11100, "p75": 13700, "mean": 11500, "well_count": 42}, {"well_age_month": 3, "p25": 7600, "median": 9900, "p75": 12100, "mean": 10100, "well_count": 39}, {"well_age_month": 4, "p25": 6900, "median": 8900, "p75": 10900, "mean": 9100, "well_count": 33}, {"well_age_month": 5, "p25": 6200, "median": 8100, "p75": 9900, "mean": 8300, "well_count": 27}, {"well_age_month": 6, "p25": 5700, "median": 7400, "p75": 9100, "mean": 7600, "well_count": 19}]},
+      {"id": "vista-2026h1", "label": "Vista · 1º sem. 2026", "operator_slug": "vista-energy", "area": "Bajada del Palo Oeste", "formation": "VACA MUERTA", "cohort_start": "2026-01-01", "sample_size": 28, "metric": "oil_monthly_m3", "unit": "m³/pozo", "points": [{"well_age_month": 0, "p25": 7200, "median": 9300, "p75": 11800, "mean": 9600, "well_count": 28}, {"well_age_month": 1, "p25": 10800, "median": 13900, "p75": 16600, "mean": 14100, "well_count": 28}, {"well_age_month": 2, "p25": 9400, "median": 12200, "p75": 14900, "mean": 12500, "well_count": 28}, {"well_age_month": 3, "p25": 8300, "median": 10800, "p75": 13200, "mean": 11000, "well_count": 25}, {"well_age_month": 4, "p25": 7400, "median": 9700, "p75": 11900, "mean": 9900, "well_count": 21}, {"well_age_month": 5, "p25": 6700, "median": 8800, "p75": 10700, "mean": 9000, "well_count": 17}, {"well_age_month": 6, "p25": 6100, "median": 8000, "p75": 9800, "mean": 8200, "well_count": 12}]},
+      {"id": "tecpetrol-2026h1", "label": "Tecpetrol · 1º sem. 2026", "operator_slug": "tecpetrol", "area": "Fortín de Piedra", "formation": "VACA MUERTA", "cohort_start": "2026-01-01", "sample_size": 16, "metric": "gas_monthly_thousand_m3", "unit": "miles de m³/pozo", "points": [{"well_age_month": 0, "p25": 4100, "median": 5700, "p75": 7100, "mean": 5900, "well_count": 16}, {"well_age_month": 1, "p25": 7200, "median": 9300, "p75": 11200, "mean": 9500, "well_count": 16}, {"well_age_month": 2, "p25": 6400, "median": 8200, "p75": 10100, "mean": 8400, "well_count": 16}, {"well_age_month": 3, "p25": 5600, "median": 7300, "p75": 9000, "mean": 7500, "well_count": 15}, {"well_age_month": 4, "p25": 5000, "median": 6500, "p75": 8100, "mean": 6700, "well_count": 13}, {"well_age_month": 5, "p25": 4500, "median": 5900, "p75": 7300, "mean": 6100, "well_count": 11}, {"well_age_month": 6, "p25": 4100, "median": 5400, "p75": 6600, "mean": 5500, "well_count": 9}]}
+    ],
+    "cumulative_summary": [
+      {"cohort_id": "ypf-2026h1", "cum_3": 31900, "cum_6": 58700, "cum_12": null, "unit": "m³/pozo", "n_3": 42, "n_6": 27, "n_12": 0},
+      {"cohort_id": "vista-2026h1", "cum_3": 35400, "cum_6": 65400, "cum_12": null, "unit": "m³/pozo", "n_3": 28, "n_6": 17, "n_12": 0},
+      {"cohort_id": "tecpetrol-2026h1", "cum_3": 23200, "cum_6": 42900, "cum_12": null, "unit": "miles de m³/pozo", "n_3": 16, "n_6": 11, "n_12": 0}
+    ]
+  },
+  "completions": {
+    "coverage": {"production_wells": 83358, "wells_with_fracture_record": 4573, "matched_wells": 4527, "match_rate_pct": 99.0, "valid_horizontal_length_pct": 55.2, "valid_stage_count_pct": 96.4, "eligible_for_normalization": 2384},
+    "bucket_stats": [
+      {"dimension": "horizontal_length_m", "bucket": "< 2.000 m", "well_count": 322, "p25_cum_oil_6m_m3": 35000, "median_cum_oil_6m_m3": 46800, "p75_cum_oil_6m_m3": 59200},
+      {"dimension": "horizontal_length_m", "bucket": "2.000–2.499 m", "well_count": 641, "p25_cum_oil_6m_m3": 43800, "median_cum_oil_6m_m3": 57400, "p75_cum_oil_6m_m3": 72100},
+      {"dimension": "horizontal_length_m", "bucket": "2.500–2.999 m", "well_count": 803, "p25_cum_oil_6m_m3": 50100, "median_cum_oil_6m_m3": 64900, "p75_cum_oil_6m_m3": 81400},
+      {"dimension": "horizontal_length_m", "bucket": "≥ 3.000 m", "well_count": 618, "p25_cum_oil_6m_m3": 54700, "median_cum_oil_6m_m3": 70100, "p75_cum_oil_6m_m3": 88500}
+    ],
+    "scatter": [
+      {"well_id": "MOCK-001", "operator_slug": "ypf", "area": "Loma Campana", "horizontal_length_m": 2450, "stage_count": 38, "sand_tonnes": 6100, "water_m3": 31000, "cum_oil_6m_m3": 58100, "oil_per_1000m_m3": 23714},
+      {"well_id": "MOCK-002", "operator_slug": "ypf", "area": "Loma Campana", "horizontal_length_m": 2880, "stage_count": 44, "sand_tonnes": 7200, "water_m3": 36000, "cum_oil_6m_m3": 67200, "oil_per_1000m_m3": 23333},
+      {"well_id": "MOCK-003", "operator_slug": "vista-energy", "area": "Bajada del Palo Oeste", "horizontal_length_m": 3150, "stage_count": 49, "sand_tonnes": 7900, "water_m3": 39500, "cum_oil_6m_m3": 74800, "oil_per_1000m_m3": 23746},
+      {"well_id": "MOCK-004", "operator_slug": "vista-energy", "area": "Bajada del Palo Oeste", "horizontal_length_m": 2600, "stage_count": 41, "sand_tonnes": 6500, "water_m3": 32700, "cum_oil_6m_m3": 63200, "oil_per_1000m_m3": 24308},
+      {"well_id": "MOCK-005", "operator_slug": "tecpetrol", "area": "Fortín de Piedra", "horizontal_length_m": 2050, "stage_count": 34, "sand_tonnes": 5200, "water_m3": 28400, "cum_oil_6m_m3": 44200, "oil_per_1000m_m3": 21561},
+      {"well_id": "MOCK-006", "operator_slug": "ypf", "area": "La Amarga Chica", "horizontal_length_m": 3350, "stage_count": 52, "sand_tonnes": 8400, "water_m3": 41800, "cum_oil_6m_m3": 80300, "oil_per_1000m_m3": 23970}
+    ],
+    "disclaimer": "Asociaciones descriptivas: una correlación entre diseño de completación y producción no demuestra causalidad. Solo se incluyen registros con campos válidos y ventanas completas."
+  },
+  "map": {
+    "initial_view": {"longitude": -69.25, "latitude": -38.35, "zoom": 6},
+    "color_modes": ["resource_type", "operator", "well_status"],
+    "wells_geojson": {
+      "type": "FeatureCollection",
+      "features": [
+        {"type": "Feature", "geometry": {"type": "Point", "coordinates": [-68.986, -38.351]}, "properties": {"well_id": "MOCK-W01", "label": "LC-001", "operator_slug": "ypf", "operator_name": "YPF", "area": "Loma Campana", "formation": "VACA MUERTA", "resource_type": "NO CONVENCIONAL", "well_status": "En producción", "last_oil_m3": 13200, "last_gas_thousand_m3": 3100}},
+        {"type": "Feature", "geometry": {"type": "Point", "coordinates": [-69.162, -38.448]}, "properties": {"well_id": "MOCK-W02", "label": "BPO-014", "operator_slug": "vista-energy", "operator_name": "Vista Energy", "area": "Bajada del Palo Oeste", "formation": "VACA MUERTA", "resource_type": "NO CONVENCIONAL", "well_status": "En producción", "last_oil_m3": 14800, "last_gas_thousand_m3": 2400}},
+        {"type": "Feature", "geometry": {"type": "Point", "coordinates": [-69.018, -38.583]}, "properties": {"well_id": "MOCK-W03", "label": "FDP-022", "operator_slug": "tecpetrol", "operator_name": "Tecpetrol", "area": "Fortín de Piedra", "formation": "VACA MUERTA", "resource_type": "NO CONVENCIONAL", "well_status": "En producción", "last_oil_m3": 3200, "last_gas_thousand_m3": 18400}},
+        {"type": "Feature", "geometry": {"type": "Point", "coordinates": [-68.847, -38.219]}, "properties": {"well_id": "MOCK-W04", "label": "LC-031", "operator_slug": "ypf", "operator_name": "YPF", "area": "Loma Campana", "formation": "VACA MUERTA", "resource_type": "NO CONVENCIONAL", "well_status": "Perforado", "last_oil_m3": 0, "last_gas_thousand_m3": 0}},
+        {"type": "Feature", "geometry": {"type": "Point", "coordinates": [-67.746, -45.742]}, "properties": {"well_id": "MOCK-W05", "label": "CD-288", "operator_slug": "pan-american-energy", "operator_name": "Pan American Energy", "area": "Cerro Dragón", "formation": "GRUPO CHUBUT", "resource_type": "CONVENCIONAL", "well_status": "En producción", "last_oil_m3": 860, "last_gas_thousand_m3": 190}},
+        {"type": "Feature", "geometry": {"type": "Point", "coordinates": [-69.364, -38.668]}, "properties": {"well_id": "MOCK-W06", "label": "CAL-008", "operator_slug": "pluspetrol", "operator_name": "Pluspetrol", "area": "La Calera", "formation": "MULICHINCO", "resource_type": "NO CONVENCIONAL", "well_status": "En producción", "last_oil_m3": 1700, "last_gas_thousand_m3": 12700}}
+      ]
+    },
+    "trajectories_geojson": {
+      "type": "FeatureCollection",
+      "features": [
+        {"type": "Feature", "geometry": {"type": "LineString", "coordinates": [[-68.986, -38.351], [-68.973, -38.345], [-68.958, -38.340]]}, "properties": {"well_id": "MOCK-W01", "operator_name": "YPF", "horizontal_length_m": 2780}},
+        {"type": "Feature", "geometry": {"type": "LineString", "coordinates": [[-69.162, -38.448], [-69.149, -38.441], [-69.134, -38.435]]}, "properties": {"well_id": "MOCK-W02", "operator_name": "Vista Energy", "horizontal_length_m": 3120}}
+      ]
+    }
+  },
+  "quality": {
+    "overall": {"status": "warning", "score_pct": 96.8, "critical_tests_failed": 0, "warnings": 5, "last_successful_run": "2026-08-27T11:42:00Z", "rows_processed": 573180},
+    "sources": [
+      {"source_id": "S01", "name": "Producción mensual por pozo", "status": "fresh", "source_last_modified": "2026-08-25T10:01:34Z", "retrieved_at": "2026-08-27T10:12:04Z", "row_count": 573180, "checksum_short": "a18c9e7f", "revision_detected": true},
+      {"source_id": "S02", "name": "Padrón de pozos", "status": "fresh", "source_last_modified": "2026-07-08T16:48:15Z", "retrieved_at": "2026-08-27T10:14:22Z", "row_count": 85611, "checksum_short": "b72d03aa", "revision_detected": false},
+      {"source_id": "S03", "name": "Fracturas de pozos", "status": "fresh", "source_last_modified": "2026-08-25T04:00:02Z", "retrieved_at": "2026-08-27T10:15:17Z", "row_count": 4863, "checksum_short": "c91e74bd", "revision_detected": true},
+      {"source_id": "S04", "name": "Trayectorias Vaca Muerta", "status": "fresh", "source_last_modified": "2026-08-01T05:00:08Z", "retrieved_at": "2026-08-27T10:16:48Z", "row_count": 2340, "checksum_short": "d20fb3c1", "revision_detected": false},
+      {"source_id": "S05", "name": "Series nacionales de control", "status": "warning", "source_last_modified": "2026-08-20T00:00:00Z", "retrieved_at": "2026-08-27T10:17:30Z", "row_count": 24, "checksum_short": "e07aa412", "revision_detected": false},
+      {"source_id": "S07", "name": "Aliases de operadores", "status": "manual_review", "source_last_modified": "2026-08-27T00:00:00Z", "retrieved_at": "2026-08-27T10:18:05Z", "row_count": 30, "checksum_short": "f65bc202", "revision_detected": false}
+    ],
+    "checks": [
+      {"check_id": "unique_well_month", "label": "Clave pozo-mes única", "severity": "critical", "status": "pass", "affected_rows": 0},
+      {"check_id": "well_registry_match", "label": "Pozos vinculados al padrón", "severity": "warning", "status": "warning", "affected_rows": 159},
+      {"check_id": "fracture_registry_match", "label": "Fracturas vinculadas al padrón", "severity": "warning", "status": "warning", "affected_rows": 46},
+      {"check_id": "future_fracture_dates", "label": "Fechas futuras de fractura", "severity": "warning", "status": "warning", "affected_rows": 4},
+      {"check_id": "valid_horizontal_length", "label": "Longitud horizontal válida", "severity": "warning", "status": "warning", "affected_rows": 2054},
+      {"check_id": "complete_public_period", "label": "Último período público completo", "severity": "critical", "status": "pass", "affected_rows": 0}
+    ],
+    "join_coverage": [
+      {"relationship": "Producción → padrón", "matched": 83199, "total": 83358, "coverage_pct": 99.81},
+      {"relationship": "Fracturas → padrón", "matched": 4573, "total": 4619, "coverage_pct": 99.00},
+      {"relationship": "Trayectorias → padrón", "matched": 1878, "total": 1880, "coverage_pct": 99.89}
+    ],
+    "reconciliation": [
+      {"period": "2026-02-01", "product": "oil", "well_aggregate": 5795, "control_series": 5812, "unit": "miles de m³", "difference_pct": -0.29},
+      {"period": "2026-03-01", "product": "oil", "well_aggregate": 6008, "control_series": 6027, "unit": "miles de m³", "difference_pct": -0.32},
+      {"period": "2026-04-01", "product": "oil", "well_aggregate": 6060, "control_series": 6082, "unit": "miles de m³", "difference_pct": -0.36},
+      {"period": "2026-05-01", "product": "oil", "well_aggregate": 6119, "control_series": 6142, "unit": "miles de m³", "difference_pct": -0.37},
+      {"period": "2026-06-01", "product": "oil", "well_aggregate": 6126, "control_series": 6147, "unit": "miles de m³", "difference_pct": -0.34},
+      {"period": "2026-07-01", "product": "oil", "well_aggregate": 6298, "control_series": 6320, "unit": "miles de m³", "difference_pct": -0.35}
+    ],
+    "revisions": [
+      {"source_id": "S01", "detected_at": "2026-08-27T10:12:10Z", "affected_period_start": "2026-04-01", "affected_period_end": "2026-07-01", "changed_rows": 1842},
+      {"source_id": "S03", "detected_at": "2026-08-27T10:15:21Z", "affected_period_start": "2026-07-01", "affected_period_end": "2026-08-01", "changed_rows": 63}
+    ]
+  },
+  "downloads": [
+    {"id": "monthly-production", "title": "Producción mensual agregada", "description": "Serie por producto, recurso y período.", "format": "CSV", "url": "/data/releases/mock-2026-07/downloads/monthly-production.csv", "size_bytes": 184320, "updated_at": "2026-08-27T12:00:00Z"},
+    {"id": "operator-rankings", "title": "Ranking mensual de operadores", "description": "Producción, participación y variaciones.", "format": "CSV", "url": "/data/releases/mock-2026-07/downloads/operator-rankings.csv", "size_bytes": 96240, "updated_at": "2026-08-27T12:00:00Z"},
+    {"id": "cohort-curves", "title": "Curvas de cohortes", "description": "Mediana, percentiles y tamaño de muestra por edad.", "format": "CSV", "url": "/data/releases/mock-2026-07/downloads/cohort-curves.csv", "size_bytes": 128640, "updated_at": "2026-08-27T12:00:00Z"},
+    {"id": "data-quality", "title": "Estado de calidad", "description": "Tests, cobertura y reconciliaciones de la release.", "format": "JSON", "url": "/data/releases/mock-2026-07/app-data.json", "size_bytes": 0, "updated_at": "2026-08-27T12:00:00Z"}
+  ],
+  "methodology": {
+    "definitions": [
+      {"id": "oil_production", "term": "Producción de petróleo", "definition": "Suma de prod_pet. La unidad canónica es m³."},
+      {"id": "gas_production", "term": "Producción de gas", "definition": "Suma de prod_gas. La fuente expresa miles de m³."},
+      {"id": "productive_well", "term": "Pozo productivo", "definition": "Pozo con producción positiva de petróleo o gas durante el mes."},
+      {"id": "unconventional_share", "term": "Participación no convencional", "definition": "Producción clasificada como no convencional dividida por la producción clasificable."},
+      {"id": "first_production", "term": "Primera producción", "definition": "Primer mes histórico con producción positiva de petróleo o gas."},
+      {"id": "vaca_muerta", "term": "Vaca Muerta", "definition": "En el MVP, registros cuya formación productiva normalizada es VACA MUERTA."}
+    ],
+    "sources": [
+      {"source_id": "S01", "name": "Producción de petróleo y gas por pozo", "publisher": "Secretaría de Energía", "url": "https://datos.gob.ar/dataset/produccion-de-petroleo-y-gas-por-pozo", "license": "CC BY 4.0"},
+      {"source_id": "S03", "name": "Datos de fractura de pozos", "publisher": "Secretaría de Energía", "url": "https://datos.gob.ar/dataset/datos-de-fractura-de-pozos-adjunto-iv", "license": "CC BY 4.0"},
+      {"source_id": "S04", "name": "Trayectorias de Pozo Vaca Muerta", "publisher": "Secretaría de Energía", "url": "https://datos.gob.ar/dataset/trayectoria-de-pozos", "license": "CC BY 4.0"}
+    ],
+    "caveats": [
+      "Los meses parciales no se comparan con meses completos.",
+      "Los nombres de operadores se normalizan mediante aliases revisados.",
+      "Las métricas de completación son descriptivas y no implican causalidad.",
+      "Las comparaciones de cohortes requieren al menos 10 pozos."
+    ]
+  },
+  "release_history": [
+    {"release_id": "mock-2026-07", "data_cutoff": "2026-07-31", "published_at": "2026-08-27T12:00:00Z", "status": "mock", "is_current": true},
+    {"release_id": "mock-2026-06", "data_cutoff": "2026-06-30", "published_at": "2026-07-27T12:00:00Z", "status": "mock", "is_current": false},
+    {"release_id": "mock-2026-05", "data_cutoff": "2026-05-31", "published_at": "2026-06-27T12:00:00Z", "status": "mock", "is_current": false}
+  ]
+}

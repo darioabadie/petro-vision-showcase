@@ -12,26 +12,30 @@ import { useEffect, type ReactNode } from "react";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { AppShell } from "@/components/app-shell";
+import { ObservatoryDataProvider } from "@/lib/observatory-data";
 
 function NotFoundComponent() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background px-4">
-      <div className="max-w-md text-center">
-        <h1 className="text-7xl font-bold text-foreground">404</h1>
-        <h2 className="mt-4 text-xl font-semibold text-foreground">Page not found</h2>
-        <p className="mt-2 text-sm text-muted-foreground">
-          The page you're looking for doesn't exist or has been moved.
-        </p>
-        <div className="mt-6">
-          <Link
-            to="/"
-            className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
-          >
-            Go home
-          </Link>
+    <AppShell>
+      <div className="flex min-h-screen items-center justify-center bg-background px-4">
+        <div className="max-w-md text-center">
+          <h1 className="text-7xl font-bold text-foreground">404</h1>
+          <h2 className="mt-4 text-xl font-semibold text-foreground">Página no encontrada</h2>
+          <p className="mt-2 text-sm text-muted-foreground">
+            La página que buscás no existe o fue movida.
+          </p>
+          <div className="mt-6">
+            <Link
+              to="/"
+              className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+            >
+              Ir al inicio
+            </Link>
+          </div>
         </div>
       </div>
-    </div>
+    </AppShell>
   );
 }
 
@@ -43,33 +47,35 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   }, [error]);
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background px-4">
-      <div className="max-w-md text-center">
-        <h1 className="text-xl font-semibold tracking-tight text-foreground">
-          This page didn't load
-        </h1>
-        <p className="mt-2 text-sm text-muted-foreground">
-          Something went wrong on our end. You can try refreshing or head back home.
-        </p>
-        <div className="mt-6 flex flex-wrap justify-center gap-2">
-          <button
-            onClick={() => {
-              router.invalidate();
-              reset();
-            }}
-            className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
-          >
-            Try again
-          </button>
-          <a
-            href="/"
-            className="inline-flex items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-accent"
-          >
-            Go home
-          </a>
+    <AppShell>
+      <div className="flex min-h-screen items-center justify-center bg-background px-4">
+        <div className="max-w-md text-center">
+          <h1 className="text-xl font-semibold tracking-tight text-foreground">
+            Esta página no pudo cargar
+          </h1>
+          <p className="mt-2 text-sm text-muted-foreground">
+            Algo salió mal de nuestro lado. Puedés intentar recargar o volver al inicio.
+          </p>
+          <div className="mt-6 flex flex-wrap justify-center gap-2">
+            <button
+              onClick={() => {
+                router.invalidate();
+                reset();
+              }}
+              className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+            >
+              Reintentar
+            </button>
+            <a
+              href="/"
+              className="inline-flex items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-accent"
+            >
+              Ir al inicio
+            </a>
+          </div>
         </div>
       </div>
-    </div>
+    </AppShell>
   );
 }
 
@@ -78,25 +84,33 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "PetroData · Monitor de Vaca Muerta" },
+      { title: "Pulso Vaca Muerta · Observatorio de producción de hidrocarburos" },
       {
         name: "description",
         content:
-          "Observatorio de producción no convencional argentina: etapas de fractura, DUCs, curvas por cohorte y ranking de operadoras. 100% datos oficiales de la Secretaría de Energía.",
+          "Producción de petróleo y gas de Vaca Muerta por operador, cuenca y área: resumen mensual, ranking de operadores, curvas de declinación por cohorte, fracturas y calidad de datos.",
       },
-      { name: "author", content: "PetroData" },
-      { property: "og:title", content: "PetroData · Monitor de Vaca Muerta" },
+      { name: "author", content: "Pulso Vaca Muerta" },
+      {
+        property: "og:title",
+        content: "Pulso Vaca Muerta · Observatorio de producción de hidrocarburos",
+      },
       {
         property: "og:description",
         content:
-          "Observatorio de producción no convencional argentina: etapas de fractura, DUCs, curvas por cohorte y ranking de operadoras. 100% datos oficiales de la Secretaría de Energía.",
+          "Producción de petróleo y gas de Vaca Muerta por operador, cuenca y área: resumen mensual, ranking de operadores, curvas de declinación por cohorte, fracturas y calidad de datos.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "PetroData · Monitor de Vaca Muerta" },
-      { name: "twitter:description", content: "Observatorio de producción no convencional argentina: etapas de fractura, DUCs, curvas por cohorte y ranking de operadoras. 100% datos oficiales de la Secretaría de Energía." },
-      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/9af33efa-f786-4c6e-ae48-cc831824203b" },
-      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/9af33efa-f786-4c6e-ae48-cc831824203b" },
+      {
+        name: "twitter:title",
+        content: "Pulso Vaca Muerta · Observatorio de producción de hidrocarburos",
+      },
+      {
+        name: "twitter:description",
+        content:
+          "Producción de petróleo y gas de Vaca Muerta por operador, cuenca y área: resumen mensual, ranking de operadores, curvas de declinación por cohorte, fracturas y calidad de datos.",
+      },
     ],
     links: [
       {
@@ -114,7 +128,6 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
     ],
-
   }),
   shellComponent: RootShell,
   component: RootComponent,
@@ -124,7 +137,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="es">
       <head>
         <HeadContent />
       </head>
@@ -142,7 +155,11 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider delayDuration={400}>
-        <Outlet />
+        <ObservatoryDataProvider>
+          <AppShell>
+            <Outlet />
+          </AppShell>
+        </ObservatoryDataProvider>
       </TooltipProvider>
     </QueryClientProvider>
   );

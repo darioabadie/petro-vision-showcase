@@ -1,122 +1,138 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { AppShell, PageHeader } from "@/components/app-shell";
-import { METHODOLOGY, DATA_SOURCE, kpis } from "@/lib/mock-data";
-import { FlaskConical, Database, Ruler, GitCompareArrows, RefreshCw, ShieldCheck } from "lucide-react";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { ExternalLink, FileText } from "lucide-react";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { PageHeader } from "@/components/page-header";
+import { StatesWrapper, StatesEmpty } from "@/components/states";
 
 export const Route = createFileRoute("/metodologia")({
   head: () => ({
     meta: [
-      { title: "Metodología · PetroData" },
-      { name: "description", content: "Cómo calculamos kbbl/d desde m³/mes, qué es una cohorte, cuándo se considera un pozo conectado, y política ante datos rectificados." },
+      { title: "Pulso Vaca Muerta · Metodología" },
+      {
+        name: "description",
+        content:
+          "Definiciones, fuentes y advertencias metodológicas del observatorio de producción de Vaca Muerta.",
+      },
     ],
   }),
-  component: Page,
+  component: MethodologyPage,
 });
 
-function Page() {
+function MethodologyPage() {
   return (
-    <AppShell>
-      <PageHeader
-        eyebrow="Documentación técnica"
-        title="Metodología"
-        description="Un producto de datos vive o muere por la trazabilidad de sus números. Acá está todo: fuente, conversiones, definiciones y política de rectificaciones."
-      />
-      <div className="p-6 space-y-6 max-w-4xl">
-        <Section
-          icon={Database}
-          title="Fuente de datos"
-        >
-          <p>
-            <strong className="text-foreground">{DATA_SOURCE}</strong>. Publicación pública, licencia CC-BY 4.0.
-            Ingesta directa desde el datastore oficial de la Secretaría de Energía de la Nación
-            (Capítulo IV: producción mensual por pozo · Adjunto IV: variables de completación).
-          </p>
-          <p>
-            Corte actual del dataset: <span className="num text-foreground">{kpis.corte}</span>. El pipeline
-            corre al día siguiente de cada publicación oficial. El último mes parcial se descarta.
-          </p>
-        </Section>
-
-        <Section icon={Ruler} title="Conversiones y unidades">
-          <ul className="space-y-2">
-            <li>
-              <strong className="text-foreground">Petróleo</strong>: <code className="num">m³ × {METHODOLOGY.m3_a_bbl}</code> → barriles.
-              La producción mensual por pozo se divide por los días efectivos del mes → <code>bbl/día</code>. Se agrega y se muestra como <code>kbbl/d</code> (miles de barriles por día).
-            </li>
-            <li>
-              <strong className="text-foreground">Gas</strong>: {METHODOLOGY.gas_unidad}. Se muestra como <code>MMm³/d</code> (millones de m³ por día).
-            </li>
-            <li>
-              <strong className="text-foreground">Equivalencia energética</strong>: cuando se necesita comparar oil + gas usamos ~6,29 kboe / MMm³ (referencial, no se agrega automáticamente en la Overview).
-            </li>
-          </ul>
-        </Section>
-
-        <Section icon={GitCompareArrows} title="Cohortes vs. pozos conectados (importante)">
-          <p>
-            Publicamos dos indicadores relacionados que <strong className="text-foreground">no son comparables entre sí</strong>:
-          </p>
-          <ul className="space-y-2">
-            <li>
-              <strong className="text-foreground">Pozos conectados</strong>: pozo cuyo primer mes con
-              <em> cualquier </em> producción (oil o gas) cae dentro del período reportado.
-              Se usa en KPIs de actividad ("241 pozos YTD").
-            </li>
-            <li>
-              <strong className="text-foreground">Cohortes</strong>: {METHODOLOGY.cohortes}.
-              Se usa solo para curvas de declinación de petróleo. Excluye pozos exclusivamente gasíferos
-              y filtra puntos con menos de 5 pozos por cohorte.
-            </li>
-          </ul>
-          <p className="text-muted-foreground">
-            Consecuencia: el conteo de "pozos" en un ranking de cohortes puede ser menor que
-            "pozos conectados" del mismo año. Siempre citamos el criterio usado.
-          </p>
-        </Section>
-
-        <Section icon={RefreshCw} title="Política ante datos rectificados">
-          <p>
-            La Secretaría de Energía rectifica retroactivamente meses ya publicados
-            (correcciones de declaración, altas atrasadas, etc.). Nuestra política:
-          </p>
-          <ul className="space-y-2">
-            <li>La serie completa se recalcula de cero en cada corrida — no cacheamos meses pasados.</li>
-            <li>Si un mes sufre una rectificación mayor a ±5%, lo marcamos como "revisado" en el gráfico.</li>
-            <li>Un mes con carga incompleta evidente (ej.: arena +200% MoM) se muestra como <em>preliminar</em>.</li>
-          </ul>
-        </Section>
-
-        <Section icon={ShieldCheck} title="Qué no hacemos">
-          <ul className="space-y-2">
-            <li>No mezclamos capa de datos oficial con eventos editoriales — los eventos van en su propia sección con estado explícito.</li>
-            <li>No inventamos rangos de guidance: el <em>Guidance tracker</em> solo publica cruces con fuente citada literal.</li>
-            <li>No proyectamos producción futura sin marcar el modelo usado.</li>
-          </ul>
-        </Section>
-
-        <Section icon={FlaskConical} title="Reproducibilidad">
-          <p>
-            Todos los cálculos derivan del dataset oficial linkeado arriba. Los usuarios Pro y
-            Enterprise reciben el pipeline (código + queries) bajo NDA para reproducción interna.
-          </p>
-        </Section>
-      </div>
-    </AppShell>
+    <div className="mx-auto max-w-[1400px] px-4 py-8 md:px-6">
+      <StatesWrapper ready={(data) => <Loaded data={data} />} />
+    </div>
   );
 }
 
-function Section({ icon: Icon, title, children }: { icon: any; title: string; children: React.ReactNode }) {
+function Loaded({ data }: { data: import("@/lib/contract").ObservatoryData }) {
+  const m = data.methodology;
   return (
-    <section className="panel p-6">
-      <div className="flex items-center gap-2 mb-3">
-        <div className="h-8 w-8 rounded-md bg-primary/15 border border-primary/30 grid place-items-center">
-          <Icon className="h-4 w-4 text-primary" />
-        </div>
-        <h2 className="text-lg font-display font-semibold">{title}</h2>
+    <>
+      <PageHeader
+        title="Metodología"
+        description="Cómo se definen y calculan las métricas del observatorio, de dónde vienen los datos y qué limitaciones tienen."
+        meta={
+          <>
+            <span>Release {data.release.release_id}</span>
+          </>
+        }
+      />
+
+      <div className="grid gap-4 lg:grid-cols-2">
+        <section className="rounded-lg border border-border bg-card p-4 md:p-5">
+          <h2 className="mb-3 font-display text-sm font-semibold tracking-tight">Definiciones</h2>
+          {m.definitions.length === 0 ? (
+            <StatesEmpty>No hay definiciones publicadas en este release.</StatesEmpty>
+          ) : (
+            <Accordion type="single" collapsible className="w-full">
+              {m.definitions.map((def) => (
+                <AccordionItem key={def.id} value={def.id}>
+                  <AccordionTrigger className="text-sm">{def.term}</AccordionTrigger>
+                  <AccordionContent className="text-sm text-muted-foreground">
+                    {def.definition}
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
+          )}
+        </section>
+
+        <section className="space-y-4">
+          <div className="rounded-lg border border-border bg-card p-4 md:p-5">
+            <h2 className="mb-3 font-display text-sm font-semibold tracking-tight">Fuentes</h2>
+            {m.sources.length === 0 ? (
+              <StatesEmpty>No hay fuentes declaradas.</StatesEmpty>
+            ) : (
+              <ul className="space-y-2">
+                {m.sources.map((s) => (
+                  <li key={s.source_id} className="rounded-md border border-border/60 p-3">
+                    <div className="flex items-start justify-between gap-2">
+                      <div>
+                        <div className="text-sm font-medium">{s.name}</div>
+                        <div className="text-xs text-muted-foreground">{s.publisher}</div>
+                      </div>
+                      {s.url ? (
+                        <a
+                          href={s.url}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground"
+                        >
+                          <ExternalLink className="h-3 w-3" />
+                          fuente
+                        </a>
+                      ) : (
+                        <FileText className="h-3.5 w-3.5 text-muted-foreground" />
+                      )}
+                    </div>
+                    <div className="mt-1.5 text-xs text-muted-foreground">
+                      Licencia: {s.license}
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+
+          <div className="rounded-lg border border-border bg-card p-4 md:p-5">
+            <h2 className="mb-3 font-display text-sm font-semibold tracking-tight">Advertencias</h2>
+            {m.caveats.length === 0 ? (
+              <StatesEmpty>Sin advertencias.</StatesEmpty>
+            ) : (
+              <ul className="list-disc pl-5 text-sm text-muted-foreground">
+                {m.caveats.map((caveat, i) => (
+                  <li key={i} className="mb-1.5 last:mb-0">
+                    {caveat}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        </section>
       </div>
-      <div className="text-sm text-muted-foreground space-y-3 leading-relaxed [&_code]:text-foreground [&_code]:bg-muted [&_code]:rounded [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:text-xs">
-        {children}
-      </div>
-    </section>
+
+      <p className="mt-6 text-xs text-muted-foreground">
+        Historial de releases:{" "}
+        <Link
+          to="/periodos/$releaseId"
+          params={{ releaseId: data.release.release_id }}
+          className="underline underline-offset-2 hover:text-foreground"
+        >
+          ver release actual
+        </Link>
+        . Descargas de los archivos en{" "}
+        <Link to="/descargas" className="underline underline-offset-2 hover:text-foreground">
+          /descargas
+        </Link>
+        .
+      </p>
+    </>
   );
 }

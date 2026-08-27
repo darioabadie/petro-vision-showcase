@@ -1,0 +1,9 @@
+{
+  "release_id": "mock-2026-07",
+  "data_cutoff": "2026-07-31",
+  "generated_at": "2026-08-27T12:00:00Z",
+  "schema_version": "1.0",
+  "status": "mock",
+  "base_path": "/data/releases/mock-2026-07/",
+  "app_data_file": "app-data.json"
+}

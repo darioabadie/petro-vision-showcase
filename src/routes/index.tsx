@@ -1,429 +1,277 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { useState } from "react";
+import { createFileRoute } from "@tanstack/react-router";
 import {
-  Area,
-  AreaChart,
   Bar,
-  BarChart,
   CartesianGrid,
-  Cell,
-  Legend,
+  ComposedChart,
   Line,
-  LineChart,
   ResponsiveContainer,
   Tooltip,
   XAxis,
   YAxis,
 } from "recharts";
-import { AppShell, PageHeader, Stat, HelpTooltip } from "@/components/app-shell";
-import {
-  productionSeries,
-  operators,
-  declineByCohort,
-  ducsDemo,
-  CUTOFF,
-  META_GENERADO,
-  kpis,
-  ARENA_PRELIMINAR,
-  cohort2025Peak,
-  cohort2026Peak,
-} from "@/lib/mock-data";
-import { ArrowUpRight, TrendingUp, Mail, Info, Drill } from "lucide-react";
+import { Check, Copy, ExternalLink, FlaskConical, Info } from "lucide-react";
+import { PageHeader } from "@/components/page-header";
+import { KpiCard } from "@/components/kpi-card";
+import { ChartCard } from "@/components/chart-card";
+import { ChartTooltip } from "@/components/chart-tooltip";
+import { StatesWrapper } from "@/components/states";
+import { formatCompact, formatMonth, formatCutoffDate } from "@/lib/format";
+import { PALETTE } from "@/lib/palette";
+import type { HomeKpi, OperatorContribution } from "@/lib/contract";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "PetroData · Overview — Estado de Vaca Muerta" },
+      { title: "Pulso Vaca Muerta · Resumen mensual" },
       {
         name: "description",
         content:
-          "Dashboard mensual: producción no convencional, ranking de operadoras, etapas de fractura y curvas de declinación por cohorte. 100% datos oficiales de la Secretaría de Energía.",
+          "Estado mensual de la producción en Vaca Muerta: petróleo y gas por operador, contribución al cambio y calidad de datos.",
       },
     ],
   }),
-  component: OverviewPage,
+  component: HomePage,
 });
 
-function OverviewPage() {
-  const last = productionSeries[productionSeries.length - 1];
-  const prev = productionSeries[productionSeries.length - 2];
-  const yoy = productionSeries[productionSeries.length - 13];
-  const deltaOilMoM = (((last.oil - prev.oil) / prev.oil) * 100).toFixed(1);
-  const deltaOilYoY = (((last.oil - yoy.oil) / yoy.oil) * 100).toFixed(1);
+function HomePage() {
+  return (
+    <div className="mx-auto max-w-[1400px] px-4 py-8 md:px-6">
+      <StatesWrapper ready={(data) => <Loaded data={data} />} />
+    </div>
+  );
+}
 
-  const ranking = [...operators]
-    .sort((a, b) => b.productionOilKbbld - a.productionOilKbbld)
-    .slice(0, 8)
-    .map((o) => ({ name: o.name, prod: o.productionOilKbbld, slug: o.slug }));
+function Loaded({ data }: { data: import("@/lib/contract").ObservatoryData }) {
+  const [copied, setCopied] = useState(false);
+  const { site, home, release } = data;
+
+  const copyLink = async () => {
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1600);
+    } catch {
+      // sin acceso al portapapeles: no es crítico.
+    }
+  };
+
+  const definitions = data.methodology.definitions;
+  const definitionOf = (id: string | null | undefined) =>
+    id ? definitions.find((d) => d.id === id)?.definition : undefined;
+
+  const history = home.production_history.map((p) => ({
+    period: p.period,
+    oil_m3: p.oil_m3,
+    gas_thousand_m3: p.gas_thousand_m3,
+    water_m3: p.water_m3,
+  }));
+
+  const lastPeriod = history[history.length - 1]?.period;
 
   return (
-    <AppShell>
+    <>
       <PageHeader
-        eyebrow={CUTOFF}
-        title="Estado de Vaca Muerta"
-        description={`Overview mensual generado desde Capítulo IV. Todas las métricas son server-side sobre el datastore público. Última corrida del pipeline: ${META_GENERADO.replace("T", " ")} ART.`}
-        right={
-          <Link
-            to="/newsletter"
-            className="h-9 px-3 rounded-md bg-primary text-primary-foreground text-sm inline-flex items-center gap-1.5 hover:opacity-90"
-          >
-            Newsletter <ArrowUpRight className="h-3.5 w-3.5" />
-          </Link>
+        title={site.name}
+        description={site.tagline}
+        meta={
+          <>
+            <span className="inline-flex items-center gap-1.5">
+              <FlaskConical className="h-3.5 w-3.5 text-muted-foreground" />
+              Corte al {formatCutoffDate(release.data_cutoff)}
+            </span>
+            <a
+              href={site.repository_url}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-1 hover:text-foreground"
+            >
+              Código y datos <ExternalLink className="h-3 w-3" />
+            </a>
+          </>
+        }
+        actions={
+          <span className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={copyLink}
+              className="inline-flex h-9 items-center gap-1.5 rounded-md border border-input px-3 text-sm transition-colors hover:border-primary/50"
+            >
+              {copied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
+              {copied ? "Copiado" : "Compartir"}
+            </button>
+          </span>
         }
       />
 
-      <div className="p-6 space-y-6">
-        {/* Stats — fila 1: producción y actividad */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-          <Stat
-            label="Producción oil (VM)"
-            value={kpis.oil_kbbld.toFixed(1)}
-            unit="kbbl/d"
-            delta={`${kpis.oil_mom_pct >= 0 ? "+" : ""}${kpis.oil_mom_pct}% MoM`}
-            hint={`YoY +${kpis.oil_yoy_pct}%`}
-            tooltip="Producción de petróleo no convencional nacional en kbbl/d, al último mes completo del Capítulo IV."
-          />
-          <Stat
-            label="Producción gas (VM)"
-            value={kpis.gas_mmm3d.toFixed(1)}
-            unit="MMm³/d"
-            delta={`${kpis.gas_mom_pct >= 0 ? "+" : ""}${kpis.gas_mom_pct}% MoM`}
-            hint={`YoY +${kpis.gas_yoy_pct}%`}
-            tooltip="Producción de gas no convencional nacional en MM m³/d, al último mes completo del Capítulo IV."
-          />
-          <Stat
-            label="Pozos conectados YTD"
-            value={kpis.pozos_conectados_ytd.toString()}
-            delta={`+${kpis.pozos_ytd_yoy_pct}% YoY`}
-            hint={`vs. ${kpis.pozos_conectados_ytd_prev} en mismo período 2025`}
-            tooltip="Pozos que registraron su primera producción en lo que va del año, comparado con el mismo período del año anterior."
-          />
-          <Stat
-            label={`Arena bombeada (${kpis.arena_mes})`}
-            value={`${Math.round(kpis.arena_tn / 1000)}k`}
-            unit="tn"
-            delta={ARENA_PRELIMINAR ? "Dato preliminar" : `${kpis.arena_mom_pct >= 0 ? "+" : ""}${kpis.arena_mom_pct}% MoM`}
-            hint="Rezago de carga Adjunto IV"
-            tooltip="Toneladas de arena de fractura bombeadas en el mes, según el Adjunto IV. Dato preliminar con rezago de carga."
-          />
+      {release.warning && (
+        <div className="mb-6 flex items-start gap-2 rounded-lg border border-warning/40 bg-warning/10 px-4 py-3 text-sm">
+          <Info className="mt-0.5 h-4 w-4 shrink-0 text-warning" />
+          <span>{release.warning}</span>
         </div>
-        {/* Stats — fila 2: completación (Adjunto IV) */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-          <Stat
-            label="Etapas prom. por pozo"
-            value={kpis.etapas_promedio.toFixed(1)}
-            unit="etapas"
-            hint="Adjunto IV · promedio nacional"
-            tooltip="Cantidad promedio de etapas de fractura por pozo horizontal terminado en el período."
-          />
-          <Stat
-            label="Rama lateral prom."
-            value={kpis.rama_promedio_m.toLocaleString()}
-            unit="m"
-            hint="Longitud horizontal"
-            tooltip="Longitud horizontal promedio (en metros) de los pozos fracturados en el período."
-          />
-          <Stat
-            label="Arena importada"
-            value={kpis.arena_pct_importada === 0 ? "0%" : `${kpis.arena_pct_importada}%`}
-            hint={kpis.arena_pct_importada === 0 ? "100% arena nacional" : "del total bombeado"}
-            tooltip="Porcentaje de la arena bombeada que es importada. La industria migró a arena 100% nacional."
-          />
-          <Stat
-            label="Ratio completación"
-            value={kpis.pozos_conectados_ytd > 0 ? (Math.round(kpis.arena_tn / kpis.pozos_conectados_ytd / 5)).toLocaleString() : "—"}
-            unit="tn/pozo"
-            hint="Arena por pozo · estimado mensual"
-            tooltip="Arena promedio bombeada por pozo terminado en el mes, en toneladas."
-          />
-        </div>
-        {ARENA_PRELIMINAR && (
-          <div className="flex items-start gap-2 text-[11px] text-muted-foreground border border-border/60 rounded-md px-3 py-2 bg-muted/20">
-            <Info className="h-3.5 w-3.5 mt-0.5 text-primary shrink-0" />
-            El pico de arena de {kpis.arena_mes} refleja rezago de carga del Adjunto IV
-            (abril subreportado). Recomendamos leerlo con 1 mes de rezago.
-          </div>
-        )}
+      )}
 
-        {/* Production chart */}
-        <div className="panel p-5">
-          <div className="flex flex-wrap items-start justify-between gap-3 mb-4">
-            <div>
-              <div className="text-[11px] uppercase tracking-widest text-primary font-medium">
-                Serie mensual
-              </div>
-              <h2 className="text-lg font-display font-semibold mt-1 inline-flex items-center gap-2">
-                Producción no convencional nacional
-                <HelpTooltip text="Evolución de la producción no convencional de petróleo y gas de los últimos 24 meses." />
-              </h2>
-              <p className="text-xs text-muted-foreground mt-1">
-                Últimos 24 meses · fuente: Cap. IV Sec. Energía
-              </p>
-            </div>
-            <div className="flex gap-4 text-xs">
-              <LegendDot color="var(--color-chart-1)" label="Oil (kbbl/d)" />
-              <LegendDot color="var(--color-chart-2)" label="Gas (MMm³/d)" />
-            </div>
-          </div>
-          <div className="h-72">
-            <ResponsiveContainer>
-              <AreaChart data={productionSeries} margin={{ left: -10, right: 12, top: 8 }}>
-                <defs>
-                  <linearGradient id="oil" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="var(--color-chart-1)" stopOpacity={0.5} />
-                    <stop offset="100%" stopColor="var(--color-chart-1)" stopOpacity={0} />
-                  </linearGradient>
-                  <linearGradient id="gas" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="var(--color-chart-2)" stopOpacity={0.35} />
-                    <stop offset="100%" stopColor="var(--color-chart-2)" stopOpacity={0} />
-                  </linearGradient>
-                </defs>
-                <CartesianGrid stroke="var(--color-border)" strokeDasharray="2 4" vertical={false} />
+      {/* KPIs */}
+      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+        {home.kpis.map((kpi: HomeKpi) => (
+          <KpiCard
+            key={kpi.id}
+            label={kpi.label}
+            displayValue={kpi.display_value}
+            unit={kpi.unit}
+            changeMoM={kpi.change_mom_pct}
+            changeYoY={kpi.change_yoy_pct}
+            status={kpi.status}
+            definition={definitionOf(kpi.definition_id)}
+          />
+        ))}
+      </div>
+
+      {/* Producion historica */}
+      <div className="mt-6 grid gap-4 lg:grid-cols-3">
+        <ChartCard
+          title={`Producción · ${lastPeriod ? formatMonth(lastPeriod) : ""}`}
+          subtitle="Series mensuales publicadas por la operación agregada."
+          className="lg:col-span-2"
+        >
+          <div className="h-[280px] w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <ComposedChart data={history} margin={{ top: 8, right: 4, left: 0, bottom: 0 }}>
+                <CartesianGrid
+                  strokeDasharray="3 3"
+                  vertical={false}
+                  stroke="oklch(0.3 0.008 240)"
+                />
                 <XAxis
-                  dataKey="month"
-                  tick={{ fill: "var(--color-muted-foreground)", fontSize: 11 }}
+                  dataKey="period"
+                  tickFormatter={formatMonth}
+                  tick={{ fontSize: 11, fill: "oklch(0.68 0.01 240)" }}
                   tickLine={false}
-                  axisLine={{ stroke: "var(--color-border)" }}
-                  interval={2}
+                  axisLine={false}
+                  minTickGap={24}
                 />
                 <YAxis
-                  tick={{ fill: "var(--color-muted-foreground)", fontSize: 11 }}
+                  yAxisId="oil"
+                  tickFormatter={(v) => formatCompact(Number(v))}
+                  tick={{ fontSize: 11, fill: "oklch(0.68 0.01 240)" }}
                   tickLine={false}
-                  axisLine={{ stroke: "var(--color-border)" }}
+                  axisLine={false}
+                  width={56}
                 />
-                <Tooltip content={<ChartTooltip />} />
-                <Area
+                <YAxis
+                  yAxisId="gas"
+                  orientation="right"
+                  tickFormatter={(v) => formatCompact(Number(v))}
+                  tick={{ fontSize: 11, fill: "oklch(0.68 0.01 240)" }}
+                  tickLine={false}
+                  axisLine={false}
+                  width={48}
+                />
+                <Tooltip
+                  content={<ChartTooltip />}
+                  cursor={{ fill: "oklch(0.24 0.01 240 / 0.4)" }}
+                />
+                <Bar
+                  dataKey="oil_m3"
+                  name="Petróleo (m³)"
+                  yAxisId="oil"
+                  fill={PALETTE.oil}
+                  radius={[3, 3, 0, 0]}
+                  maxBarSize={28}
+                />
+                <Line
                   type="monotone"
-                  dataKey="oil"
-                  stroke="var(--color-chart-1)"
+                  dataKey="gas_thousand_m3"
+                  name="Gas (miles de m³)"
+                  yAxisId="gas"
+                  stroke={PALETTE.gas}
                   strokeWidth={2}
-                  fill="url(#oil)"
+                  dot={false}
                 />
-                <Area
-                  type="monotone"
-                  dataKey="gas"
-                  stroke="var(--color-chart-2)"
-                  strokeWidth={2}
-                  fill="url(#gas)"
-                />
-              </AreaChart>
+              </ComposedChart>
             </ResponsiveContainer>
           </div>
-        </div>
-
-        {/* Row: ranking + decline */}
-        <div className="grid lg:grid-cols-2 gap-6">
-          <div className="panel p-5">
-            <div className="flex items-start justify-between mb-4">
-              <div>
-                <div className="text-[11px] uppercase tracking-widest text-primary font-medium">
-                  Ranking {kpis.corte}
-                </div>
-                <h2 className="text-lg font-display font-semibold mt-1 inline-flex items-center gap-2">
-                  Producción oil por operadora
-                  <HelpTooltip text="Operadoras ordenadas por producción de petróleo no convencional del último mes, con su participación sobre el total." />
-                </h2>
-              </div>
-              <Link to="/operadoras" className="text-xs text-primary hover:underline">
-                Ver todas →
-              </Link>
-            </div>
-            <div className="h-72">
-              <ResponsiveContainer>
-                <BarChart
-                  data={ranking}
-                  layout="vertical"
-                  margin={{ left: 20, right: 30 }}
-                >
-                  <CartesianGrid stroke="var(--color-border)" strokeDasharray="2 4" horizontal={false} />
-                  <XAxis
-                    type="number"
-                    tick={{ fill: "var(--color-muted-foreground)", fontSize: 11 }}
-                    axisLine={{ stroke: "var(--color-border)" }}
-                    tickLine={false}
-                  />
-                  <YAxis
-                    dataKey="name"
-                    type="category"
-                    tick={{ fill: "var(--color-foreground)", fontSize: 12 }}
-                    width={110}
-                    axisLine={false}
-                    tickLine={false}
-                  />
-                  <Tooltip content={<ChartTooltip unit="kbbl/d" />} />
-                  <Bar dataKey="prod" radius={[0, 4, 4, 0]}>
-                    {ranking.map((_, i) => (
-                      <Cell
-                        key={i}
-                        fill={i === 0 ? "var(--color-primary)" : "var(--color-chart-2)"}
-                        opacity={i === 0 ? 1 : 0.6 + 0.05 * (ranking.length - i)}
-                      />
-                    ))}
-                  </Bar>
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
+          <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground">
+            <span className="inline-flex items-center gap-1.5">
+              <span className="h-2 w-2 rounded-full" style={{ backgroundColor: PALETTE.oil }} />
+              Petróleo (m³)
+            </span>
+            <span className="inline-flex items-center gap-1.5">
+              <span className="h-2 w-2 rounded-full" style={{ backgroundColor: PALETTE.gas }} />
+              Gas (miles de m³)
+            </span>
           </div>
+        </ChartCard>
 
-          <div className="panel p-5">
-            <div className="flex items-start justify-between mb-4">
-              <div>
-                <div className="text-[11px] uppercase tracking-widest text-primary font-medium">
-                  Análisis por cohorte
-                </div>
-                <h2 className="text-lg font-display font-semibold mt-1 inline-flex items-center gap-2">
-                  Curva de declinación por año de puesta en marcha
-                  <HelpTooltip text="Producción promedio por pozo según sus meses en producción, agrupando los pozos por año de puesta en marcha." />
-                </h2>
-                <p className="text-xs text-muted-foreground mt-1 flex items-center gap-1">
-                  <TrendingUp className="h-3 w-3 text-primary" /> Cohorte 2026 pica ~{Math.round(cohort2026Peak)} bbl/d — {Math.round(((cohort2026Peak - cohort2025Peak) / cohort2025Peak) * 100)}% arriba de la 2025
-                </p>
-              </div>
-            </div>
-            <div className="h-72">
-              <ResponsiveContainer>
-                <LineChart data={declineByCohort} margin={{ left: -10, right: 12, top: 8 }}>
-                  <CartesianGrid stroke="var(--color-border)" strokeDasharray="2 4" vertical={false} />
-                  <XAxis
-                    dataKey="month"
-                    tick={{ fill: "var(--color-muted-foreground)", fontSize: 11 }}
-                    tickLine={false}
-                    axisLine={{ stroke: "var(--color-border)" }}
-                    label={{ value: "Meses desde IP oil", position: "insideBottom", offset: -2, fill: "var(--color-muted-foreground)", fontSize: 10 }}
-                  />
-                  <YAxis
-                    tick={{ fill: "var(--color-muted-foreground)", fontSize: 11 }}
-                    tickLine={false}
-                    axisLine={{ stroke: "var(--color-border)" }}
-                  />
-                  <Tooltip content={<ChartTooltip unit="bbl/d" />} />
-                  <Legend wrapperStyle={{ fontSize: 11, color: "var(--color-muted-foreground)" }} />
-                  <Line type="monotone" dataKey="2022" stroke="var(--color-chart-4)" dot={false} strokeWidth={1} strokeOpacity={0.6} />
-                  <Line type="monotone" dataKey="2023" stroke="var(--color-chart-3)" dot={false} strokeWidth={1.2} />
-                  <Line type="monotone" dataKey="2024" stroke="var(--color-chart-2)" dot={false} strokeWidth={1.5} />
-                  <Line type="monotone" dataKey="2025" stroke="var(--color-chart-1)" dot={false} strokeWidth={2} />
-                  <Line type="monotone" dataKey="2026" stroke="var(--color-primary)" dot={false} strokeWidth={2.8} />
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
-          </div>
-        </div>
-
-
-        {/* DUCs inventario — módulo Pro */}
-        <DucsPanel />
-
-
-        {/* CTA — newsletter primario, Pro como lista de espera */}
-        <div className="panel p-6 flex flex-wrap items-center justify-between gap-4">
-          <div className="flex items-start gap-3">
-            <div className="h-10 w-10 rounded-md bg-primary/15 border border-primary/30 grid place-items-center">
-              <Mail className="h-5 w-5 text-primary" />
-            </div>
-            <div>
-              <div className="font-display font-semibold text-lg">
-                Un mail al mes con el estado real de Vaca Muerta
-              </div>
-              <div className="text-sm text-muted-foreground">
-                4-5 visualizaciones nuevas y lectura de 3 minutos, disparadas con cada actualización del Capítulo IV.
-              </div>
-            </div>
-          </div>
-          <Link
-            to="/newsletter"
-            className="h-10 px-5 rounded-md bg-primary text-primary-foreground text-sm font-medium inline-flex items-center gap-1.5 hover:opacity-90"
-          >
-            Suscribirme <ArrowUpRight className="h-4 w-4" />
-          </Link>
-        </div>
+        {/* Contribucion al cambio */}
+        <ChartCard
+          title="Contribución al cambio mensual"
+          subtitle={`Variación de petróleo mixto por operador (${formatMonth(release.last_complete_period)}).`}
+        >
+          {home.operator_contributions.length === 0 ? (
+            <p className="py-8 text-center text-sm text-muted-foreground">
+              Sin datos de contribución.
+            </p>
+          ) : (
+            <ul className="space-y-3">
+              {home.operator_contributions.map((op: OperatorContribution) => (
+                <ContributorBar key={op.operator_slug} op={op} />
+              ))}
+            </ul>
+          )}
+        </ChartCard>
       </div>
-    </AppShell>
+
+      {/* Insights */}
+      {home.insights.length > 0 && (
+        <div className="mt-6 grid gap-3 md:grid-cols-3">
+          {home.insights.map((insight) => (
+            <div key={insight.id} className="rounded-lg border border-border/70 bg-card/50 p-4">
+              <div className="text-xs uppercase tracking-widest text-muted-foreground">
+                {insight.tone ? `Nota · ${insight.tone}` : "Nota"}
+              </div>
+              <div className="mt-2 text-sm font-medium">{insight.title}</div>
+              <p className="mt-1 text-sm text-muted-foreground">{insight.body}</p>
+            </div>
+          ))}
+        </div>
+      )}
+
+      <p className="mt-6 text-xs text-muted-foreground">
+        Datos de referencia: {site.source_label}. Consultá la metodología en{" "}
+        <a
+          href={site.methodology_url}
+          className="underline underline-offset-2 hover:text-foreground"
+        >
+          /metodologia
+        </a>
+        .
+      </p>
+    </>
   );
 }
 
-function DucsPanel() {
+function ContributorBar({ op }: { op: OperatorContribution }) {
+  const max = Math.max(...[op.share_of_change_pct, 0]);
+  const width = Math.max(Math.abs(op.share_of_change_pct), 0.5);
+  const negative = op.share_of_change_pct < 0;
   return (
-    <div className="panel p-5">
-      <div className="mb-4">
-        <div className="text-[11px] uppercase tracking-widest text-primary font-medium">
-          Conexión pendiente
-        </div>
-        <h2 className="text-lg font-display font-semibold mt-1 inline-flex items-center gap-2">
-          <Drill className="h-4 w-4 text-primary" /> Fracturados sin conectar
-          <HelpTooltip text="Pozos con fractura terminada que aún no registraron primera producción. Inventario de conexión pendiente por operadora." />
-        </h2>
-        <p className="text-xs text-muted-foreground mt-1">
-          Pozos con fecha_fin_fractura registrada y sin primera producción. YTD 2026 vs. mismo período 2025.
-        </p>
+    <li>
+      <div className="mb-1 flex items-center justify-between gap-2 text-sm">
+        <span className="font-medium">{op.operator_name}</span>
+        <span className="text-xs tabular-nums text-muted-foreground">
+          {negative ? `${op.share_of_change_pct}%` : `+${op.share_of_change_pct}%`}
+          <span className="ml-1">· {formatCompact(op.delta_oil_m3)} m³</span>
+        </span>
       </div>
-
-      <div className="overflow-hidden rounded-md border border-border">
-        <table className="w-full text-sm">
-          <thead className="bg-muted/40 text-[11px] uppercase tracking-wider text-muted-foreground">
-            <tr>
-              <th className="text-left px-4 py-2.5 font-medium">Operadora</th>
-              <th className="text-left px-4 py-2.5 font-medium hidden md:table-cell">Área</th>
-              <th className="text-right px-4 py-2.5 font-medium hidden sm:table-cell">Fract. YTD</th>
-              <th className="text-right px-4 py-2.5 font-medium hidden sm:table-cell">Conect. YTD</th>
-              <th className="text-right px-4 py-2.5 font-medium">F.s.C.</th>
-              <th className="text-right px-4 py-2.5 font-medium hidden md:table-cell">Δ YoY</th>
-              <th className="text-right px-4 py-2.5 font-medium">Buffer</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-border">
-            {ducsDemo.map((r) => (
-              <tr key={r.operatorSlug + r.area} className="hover:bg-muted/30">
-                <td className="px-4 py-2.5">
-                  <Link
-                    to="/operadoras/$slug"
-                    params={{ slug: r.operatorSlug }}
-                    className="font-medium hover:text-primary"
-                  >
-                    {r.operator}
-                  </Link>
-                </td>
-                <td className="px-4 py-2.5 hidden md:table-cell text-muted-foreground">{r.area}</td>
-                <td className="px-4 py-2.5 num text-right hidden sm:table-cell">{r.drilledYtd}</td>
-                <td className="px-4 py-2.5 num text-right hidden sm:table-cell">{r.completedYtd}</td>
-                <td className="px-4 py-2.5 num text-right font-semibold">{r.ducs}</td>
-                <td className={`px-4 py-2.5 num text-right hidden md:table-cell ${r.ducsDeltaYoY < 0 ? "text-primary" : r.ducsDeltaYoY > 0 ? "text-destructive" : "text-muted-foreground"}`}>
-                  {r.ducsDeltaYoY > 0 ? "+" : ""}{r.ducsDeltaYoY}%
-                </td>
-                <td className="px-4 py-2.5 num text-right">{r.invBuffer.toFixed(1)} m</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      <div className="h-1.5 w-full overflow-hidden rounded-full bg-muted">
+        <div
+          className={
+            negative ? "h-full rounded-full bg-destructive/70" : "h-full rounded-full bg-primary"
+          }
+          style={{ width: `${max ? (width / max) * 100 : 0}%` }}
+        />
       </div>
-    </div>
-  );
-}
-
-
-
-function LegendDot({ color, label }: { color: string; label: string }) {
-  return (
-    <span className="inline-flex items-center gap-1.5 text-muted-foreground">
-      <span className="h-2 w-2 rounded-full" style={{ background: color }} />
-      {label}
-    </span>
-  );
-}
-
-function ChartTooltip({ active, payload, label, unit }: any) {
-  if (!active || !payload?.length) return null;
-  return (
-    <div className="rounded-md border border-border bg-popover/95 backdrop-blur px-3 py-2 text-xs shadow-lg">
-      <div className="text-muted-foreground mb-1 font-mono">{label}</div>
-      {payload.map((p: any) => (
-        <div key={p.dataKey} className="flex items-center gap-2">
-          <span className="h-2 w-2 rounded-full" style={{ background: p.color }} />
-          <span className="text-foreground">{p.dataKey}</span>
-          <span className="num ml-auto text-foreground font-medium">
-            {p.value}
-            {unit ? ` ${unit}` : ""}
-          </span>
-        </div>
-      ))}
-    </div>
+    </li>
   );
 }

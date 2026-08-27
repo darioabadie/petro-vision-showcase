@@ -9,33 +9,26 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as WikiRouteImport } from './routes/wiki'
-import { Route as ProRouteImport } from './routes/pro'
-import { Route as NewsletterRouteImport } from './routes/newsletter'
+import { Route as ProduccionRouteImport } from './routes/produccion'
+import { Route as PozosYCohortesRouteImport } from './routes/pozos-y-cohortes'
 import { Route as MetodologiaRouteImport } from './routes/metodologia'
-import { Route as EventosRouteImport } from './routes/eventos'
-import { Route as DocumentacionRouteImport } from './routes/documentacion'
-import { Route as ContradiccionesRouteImport } from './routes/contradicciones'
-import { Route as ActividadRouteImport } from './routes/actividad'
+import { Route as MapaRouteImport } from './routes/mapa'
+import { Route as FracturasRouteImport } from './routes/fracturas'
+import { Route as DescargasRouteImport } from './routes/descargas'
+import { Route as CalidadRouteImport } from './routes/calidad'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as OperadorasIndexRouteImport } from './routes/operadoras.index'
-import { Route as AreasIndexRouteImport } from './routes/areas.index'
-import { Route as OperadorasSlugRouteImport } from './routes/operadoras.$slug'
-import { Route as AreasSlugRouteImport } from './routes/areas.$slug'
+import { Route as OperadoresIndexRouteImport } from './routes/operadores/index'
+import { Route as PeriodosReleaseIdRouteImport } from './routes/periodos/$releaseId'
+import { Route as OperadoresSlugRouteImport } from './routes/operadores/$slug'
 
-const WikiRoute = WikiRouteImport.update({
-  id: '/wiki',
-  path: '/wiki',
+const ProduccionRoute = ProduccionRouteImport.update({
+  id: '/produccion',
+  path: '/produccion',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ProRoute = ProRouteImport.update({
-  id: '/pro',
-  path: '/pro',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const NewsletterRoute = NewsletterRouteImport.update({
-  id: '/newsletter',
-  path: '/newsletter',
+const PozosYCohortesRoute = PozosYCohortesRouteImport.update({
+  id: '/pozos-y-cohortes',
+  path: '/pozos-y-cohortes',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MetodologiaRoute = MetodologiaRouteImport.update({
@@ -43,24 +36,24 @@ const MetodologiaRoute = MetodologiaRouteImport.update({
   path: '/metodologia',
   getParentRoute: () => rootRouteImport,
 } as any)
-const DocumentacionRoute = DocumentacionRouteImport.update({
-  id: '/documentacion',
-  path: '/documentacion',
+const MapaRoute = MapaRouteImport.update({
+  id: '/mapa',
+  path: '/mapa',
   getParentRoute: () => rootRouteImport,
 } as any)
-const EventosRoute = EventosRouteImport.update({
-  id: '/eventos',
-  path: '/eventos',
+const FracturasRoute = FracturasRouteImport.update({
+  id: '/fracturas',
+  path: '/fracturas',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ContradiccionesRoute = ContradiccionesRouteImport.update({
-  id: '/contradicciones',
-  path: '/contradicciones',
+const DescargasRoute = DescargasRouteImport.update({
+  id: '/descargas',
+  path: '/descargas',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ActividadRoute = ActividadRouteImport.update({
-  id: '/actividad',
-  path: '/actividad',
+const CalidadRoute = CalidadRouteImport.update({
+  id: '/calidad',
+  path: '/calidad',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -68,158 +61,132 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const OperadorasIndexRoute = OperadorasIndexRouteImport.update({
-  id: '/operadoras/',
-  path: '/operadoras/',
+const OperadoresIndexRoute = OperadoresIndexRouteImport.update({
+  id: '/operadores/',
+  path: '/operadores/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AreasIndexRoute = AreasIndexRouteImport.update({
-  id: '/areas/',
-  path: '/areas/',
+const PeriodosReleaseIdRoute = PeriodosReleaseIdRouteImport.update({
+  id: '/periodos/$releaseId',
+  path: '/periodos/$releaseId',
   getParentRoute: () => rootRouteImport,
 } as any)
-const OperadorasSlugRoute = OperadorasSlugRouteImport.update({
-  id: '/operadoras/$slug',
-  path: '/operadoras/$slug',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AreasSlugRoute = AreasSlugRouteImport.update({
-  id: '/areas/$slug',
-  path: '/areas/$slug',
+const OperadoresSlugRoute = OperadoresSlugRouteImport.update({
+  id: '/operadores/$slug',
+  path: '/operadores/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/actividad': typeof ActividadRoute
-  '/contradicciones': typeof ContradiccionesRoute
-  '/documentacion': typeof DocumentacionRoute
-  '/eventos': typeof EventosRoute
+  '/calidad': typeof CalidadRoute
+  '/descargas': typeof DescargasRoute
+  '/fracturas': typeof FracturasRoute
+  '/mapa': typeof MapaRoute
   '/metodologia': typeof MetodologiaRoute
-  '/newsletter': typeof NewsletterRoute
-  '/pro': typeof ProRoute
-  '/wiki': typeof WikiRoute
-  '/areas/$slug': typeof AreasSlugRoute
-  '/operadoras/$slug': typeof OperadorasSlugRoute
-  '/areas/': typeof AreasIndexRoute
-  '/operadoras/': typeof OperadorasIndexRoute
+  '/pozos-y-cohortes': typeof PozosYCohortesRoute
+  '/produccion': typeof ProduccionRoute
+  '/operadores/$slug': typeof OperadoresSlugRoute
+  '/periodos/$releaseId': typeof PeriodosReleaseIdRoute
+  '/operadores/': typeof OperadoresIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/actividad': typeof ActividadRoute
-  '/contradicciones': typeof ContradiccionesRoute
-  '/documentacion': typeof DocumentacionRoute
-  '/eventos': typeof EventosRoute
+  '/calidad': typeof CalidadRoute
+  '/descargas': typeof DescargasRoute
+  '/fracturas': typeof FracturasRoute
+  '/mapa': typeof MapaRoute
   '/metodologia': typeof MetodologiaRoute
-  '/newsletter': typeof NewsletterRoute
-  '/pro': typeof ProRoute
-  '/wiki': typeof WikiRoute
-  '/areas/$slug': typeof AreasSlugRoute
-  '/operadoras/$slug': typeof OperadorasSlugRoute
-  '/areas': typeof AreasIndexRoute
-  '/operadoras': typeof OperadorasIndexRoute
+  '/pozos-y-cohortes': typeof PozosYCohortesRoute
+  '/produccion': typeof ProduccionRoute
+  '/operadores/$slug': typeof OperadoresSlugRoute
+  '/periodos/$releaseId': typeof PeriodosReleaseIdRoute
+  '/operadores': typeof OperadoresIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/actividad': typeof ActividadRoute
-  '/contradicciones': typeof ContradiccionesRoute
-  '/documentacion': typeof DocumentacionRoute
-  '/eventos': typeof EventosRoute
+  '/calidad': typeof CalidadRoute
+  '/descargas': typeof DescargasRoute
+  '/fracturas': typeof FracturasRoute
+  '/mapa': typeof MapaRoute
   '/metodologia': typeof MetodologiaRoute
-  '/newsletter': typeof NewsletterRoute
-  '/pro': typeof ProRoute
-  '/wiki': typeof WikiRoute
-  '/areas/$slug': typeof AreasSlugRoute
-  '/operadoras/$slug': typeof OperadorasSlugRoute
-  '/areas/': typeof AreasIndexRoute
-  '/operadoras/': typeof OperadorasIndexRoute
+  '/pozos-y-cohortes': typeof PozosYCohortesRoute
+  '/produccion': typeof ProduccionRoute
+  '/operadores/$slug': typeof OperadoresSlugRoute
+  '/periodos/$releaseId': typeof PeriodosReleaseIdRoute
+  '/operadores/': typeof OperadoresIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/actividad'
-    | '/contradicciones'
-    | '/documentacion'
-    | '/eventos'
+    | '/calidad'
+    | '/descargas'
+    | '/fracturas'
+    | '/mapa'
     | '/metodologia'
-    | '/newsletter'
-    | '/pro'
-    | '/wiki'
-    | '/areas/$slug'
-    | '/operadoras/$slug'
-    | '/areas/'
-    | '/operadoras/'
+    | '/pozos-y-cohortes'
+    | '/produccion'
+    | '/operadores/$slug'
+    | '/periodos/$releaseId'
+    | '/operadores/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/actividad'
-    | '/contradicciones'
-    | '/documentacion'
-    | '/eventos'
+    | '/calidad'
+    | '/descargas'
+    | '/fracturas'
+    | '/mapa'
     | '/metodologia'
-    | '/newsletter'
-    | '/pro'
-    | '/wiki'
-    | '/areas/$slug'
-    | '/operadoras/$slug'
-    | '/areas'
-    | '/operadoras'
+    | '/pozos-y-cohortes'
+    | '/produccion'
+    | '/operadores/$slug'
+    | '/periodos/$releaseId'
+    | '/operadores'
   id:
     | '__root__'
     | '/'
-    | '/actividad'
-    | '/contradicciones'
-    | '/documentacion'
-    | '/eventos'
+    | '/calidad'
+    | '/descargas'
+    | '/fracturas'
+    | '/mapa'
     | '/metodologia'
-    | '/newsletter'
-    | '/pro'
-    | '/wiki'
-    | '/areas/$slug'
-    | '/operadoras/$slug'
-    | '/areas/'
-    | '/operadoras/'
+    | '/pozos-y-cohortes'
+    | '/produccion'
+    | '/operadores/$slug'
+    | '/periodos/$releaseId'
+    | '/operadores/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  ActividadRoute: typeof ActividadRoute
-  ContradiccionesRoute: typeof ContradiccionesRoute
-  DocumentacionRoute: typeof DocumentacionRoute
-  EventosRoute: typeof EventosRoute
+  CalidadRoute: typeof CalidadRoute
+  DescargasRoute: typeof DescargasRoute
+  FracturasRoute: typeof FracturasRoute
+  MapaRoute: typeof MapaRoute
   MetodologiaRoute: typeof MetodologiaRoute
-  NewsletterRoute: typeof NewsletterRoute
-  ProRoute: typeof ProRoute
-  WikiRoute: typeof WikiRoute
-  AreasSlugRoute: typeof AreasSlugRoute
-  OperadorasSlugRoute: typeof OperadorasSlugRoute
-  AreasIndexRoute: typeof AreasIndexRoute
-  OperadorasIndexRoute: typeof OperadorasIndexRoute
+  PozosYCohortesRoute: typeof PozosYCohortesRoute
+  ProduccionRoute: typeof ProduccionRoute
+  OperadoresSlugRoute: typeof OperadoresSlugRoute
+  PeriodosReleaseIdRoute: typeof PeriodosReleaseIdRoute
+  OperadoresIndexRoute: typeof OperadoresIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/wiki': {
-      id: '/wiki'
-      path: '/wiki'
-      fullPath: '/wiki'
-      preLoaderRoute: typeof WikiRouteImport
+    '/produccion': {
+      id: '/produccion'
+      path: '/produccion'
+      fullPath: '/produccion'
+      preLoaderRoute: typeof ProduccionRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/pro': {
-      id: '/pro'
-      path: '/pro'
-      fullPath: '/pro'
-      preLoaderRoute: typeof ProRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/newsletter': {
-      id: '/newsletter'
-      path: '/newsletter'
-      fullPath: '/newsletter'
-      preLoaderRoute: typeof NewsletterRouteImport
+    '/pozos-y-cohortes': {
+      id: '/pozos-y-cohortes'
+      path: '/pozos-y-cohortes'
+      fullPath: '/pozos-y-cohortes'
+      preLoaderRoute: typeof PozosYCohortesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/metodologia': {
@@ -229,32 +196,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MetodologiaRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/documentacion': {
-      id: '/documentacion'
-      path: '/documentacion'
-      fullPath: '/documentacion'
-      preLoaderRoute: typeof DocumentacionRouteImport
+    '/mapa': {
+      id: '/mapa'
+      path: '/mapa'
+      fullPath: '/mapa'
+      preLoaderRoute: typeof MapaRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/eventos': {
-      id: '/eventos'
-      path: '/eventos'
-      fullPath: '/eventos'
-      preLoaderRoute: typeof EventosRouteImport
+    '/fracturas': {
+      id: '/fracturas'
+      path: '/fracturas'
+      fullPath: '/fracturas'
+      preLoaderRoute: typeof FracturasRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/contradicciones': {
-      id: '/contradicciones'
-      path: '/contradicciones'
-      fullPath: '/contradicciones'
-      preLoaderRoute: typeof ContradiccionesRouteImport
+    '/descargas': {
+      id: '/descargas'
+      path: '/descargas'
+      fullPath: '/descargas'
+      preLoaderRoute: typeof DescargasRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/actividad': {
-      id: '/actividad'
-      path: '/actividad'
-      fullPath: '/actividad'
-      preLoaderRoute: typeof ActividadRouteImport
+    '/calidad': {
+      id: '/calidad'
+      path: '/calidad'
+      fullPath: '/calidad'
+      preLoaderRoute: typeof CalidadRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -264,32 +231,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/operadoras/': {
-      id: '/operadoras/'
-      path: '/operadoras'
-      fullPath: '/operadoras/'
-      preLoaderRoute: typeof OperadorasIndexRouteImport
+    '/operadores/': {
+      id: '/operadores/'
+      path: '/operadores'
+      fullPath: '/operadores/'
+      preLoaderRoute: typeof OperadoresIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/areas/': {
-      id: '/areas/'
-      path: '/areas'
-      fullPath: '/areas/'
-      preLoaderRoute: typeof AreasIndexRouteImport
+    '/periodos/$releaseId': {
+      id: '/periodos/$releaseId'
+      path: '/periodos/$releaseId'
+      fullPath: '/periodos/$releaseId'
+      preLoaderRoute: typeof PeriodosReleaseIdRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/operadoras/$slug': {
-      id: '/operadoras/$slug'
-      path: '/operadoras/$slug'
-      fullPath: '/operadoras/$slug'
-      preLoaderRoute: typeof OperadorasSlugRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/areas/$slug': {
-      id: '/areas/$slug'
-      path: '/areas/$slug'
-      fullPath: '/areas/$slug'
-      preLoaderRoute: typeof AreasSlugRouteImport
+    '/operadores/$slug': {
+      id: '/operadores/$slug'
+      path: '/operadores/$slug'
+      fullPath: '/operadores/$slug'
+      preLoaderRoute: typeof OperadoresSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -297,19 +257,27 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  ActividadRoute: ActividadRoute,
-  ContradiccionesRoute: ContradiccionesRoute,
-  DocumentacionRoute: DocumentacionRoute,
-  EventosRoute: EventosRoute,
+  CalidadRoute: CalidadRoute,
+  DescargasRoute: DescargasRoute,
+  FracturasRoute: FracturasRoute,
+  MapaRoute: MapaRoute,
   MetodologiaRoute: MetodologiaRoute,
-  NewsletterRoute: NewsletterRoute,
-  ProRoute: ProRoute,
-  WikiRoute: WikiRoute,
-  AreasSlugRoute: AreasSlugRoute,
-  OperadorasSlugRoute: OperadorasSlugRoute,
-  AreasIndexRoute: AreasIndexRoute,
-  OperadorasIndexRoute: OperadorasIndexRoute,
+  PozosYCohortesRoute: PozosYCohortesRoute,
+  ProduccionRoute: ProduccionRoute,
+  OperadoresSlugRoute: OperadoresSlugRoute,
+  PeriodosReleaseIdRoute: PeriodosReleaseIdRoute,
+  OperadoresIndexRoute: OperadoresIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
