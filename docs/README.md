@@ -6,36 +6,41 @@ Observatorio abierto de producción, pozos y productividad de hidrocarburos arge
 
 - [PRD](PRD.md) — Requerimientos, alcance y criterios de aceptación
 - [Arquitectura](architecture.md) — Diseño del pipeline, contratos y publicación
-- [Especificación para Lovable](lovable.md) — Contrato JSON, rutas y criterios visuales
 - [Modelo de datos](MODELO_DE_DATOS.md) — Fuentes, esquemas, capas y tests
+- [dbt](dbt.md) — Cómo está modelado y testeado el pipeline de transformación
+- [ClickHouse](clickhouse.md) — Bases, motores de tabla y cómo explorar los datos
+- [Docker](docker.md) — Qué está containerizado hoy y por qué
+- [Actualización de datos](actualizacion-datos.md) — Ciclo completo de un release, de la fuente al frontend
+- [Especificación para Lovable](lovable.md) — Contrato JSON, rutas y criterios visuales
 - [Muestras](../data/samples/README.md) — Metodología de muestreo
 
-## Estado del proyecto — 27 de agosto de 2026
+## Estado del proyecto — 2 de septiembre de 2026
 
-### Pipeline de datos (Fase 1 — operativo parcial)
+### Pipeline de datos (Fase 1 completa, Fase 2 en curso)
 
 | Componente | Estado | Detalle |
 |---|---|---|
 | ClickHouse | **Operativo** | v24.8, Docker Compose, 18.2M filas raw |
 | Ingesta S01 (producción por pozo) | **Completa** | CKAN, checksums, carga idempotente, metadatos técnicos |
-| Ingesta S02 (pozos) | Pendiente | Necesaria para padrón completo y join coverage |
+| Ingesta S02 (pozos) | **Completa** | `raw_energy.wells`, `stg_energy__wells`, `dim_well` — padrón + coordenadas disponibles |
 | Ingesta S03 (fracturas) | Pendiente | Fase 2 |
 | Ingesta S04 (trayectorias) | Pendiente | Fase 2 |
-| dbt: staging | **Completo** | `stg_energy__well_production` (view), 18.2M filas |
-| dbt: core | **Completo** | `dim_date_month`, `dim_operator`, `fact_well_monthly_production` |
+| dbt: staging | **Completo** | `stg_energy__well_production`, `stg_energy__wells` (views) |
+| dbt: core | **Completo** | `dim_date_month`, `dim_operator`, `dim_well`, `fact_well_monthly_production` |
 | dbt: marts | **Completo** | `mart_argentina_monthly_production` (serie nacional) |
-| dbt: tests | **Completo** | 17 tests: unique, not_null, plausible — todos verde |
-| Export | **Completo** | app-data.json (66.6 MB), CSV, latest.json, validación jsonschema |
-| Aliases de operadores | **Pendiente** | Seed vacía — todos los operadores en `pending_review` |
+| dbt: tests | **Completo** | tests declarativos + 3 singulares — todos verde |
+| Export | **Completo** | app-data.json, CSV, latest.json, validación jsonschema |
+| Aliases de operadores | **Parcial** | Seed con ~30 operadores agrupados (`approved`); el resto (101) queda en `pending_review` por diseño — ver [`dbt.md`](dbt.md) |
+| Quality checks reales | **Completo** | 6 checks dinámicos vía queries a ClickHouse (duplicados, nulos, negativos, fechas futuras, pendientes de alias) |
+| Join coverage (producción ↔ padrón) | **Pendiente** | `quality.join_coverage` sigue devolviendo `[]`; falta el query de cobertura contra `dim_well` |
 | Cohortes | Pendiente | Fase 2 |
 | Completaciones | Pendiente | Fase 2 |
-| Quality checks reales | Pendiente | Actualmente hardcodeados |
-| Dockerfiles | Pendiente | Pipeline corre con `uv run` directamente |
+| Dockerfiles de ingesta/dbt/exporter | Pendiente, y con alcance definido | Solo ClickHouse está containerizado; ingesta/dbt/export corren con `uv run` — ver [`docker.md`](docker.md) |
 
 ### Bugs arreglados (27-ago-2026)
 
 - **dim_operator.sql**: ClickHouse devuelve strings vacíos en lugar de NULL en LEFT JOIN con tabla seed vacía. Solución: `nullIf(a.operator_canonical, '')` + `coalesce` para que `operator_canonical` caiga correctamente a `operator_raw` y `review_status` sea `pending_review`.
-- Verificado: `dbt run` ✅ (5/5), `dbt test` ✅ (17/17), `export` ✅ (app-data + CSV + latest.json).
+- Verificado: `dbt run` ✅, `dbt test` ✅, `export` ✅ (app-data + CSV + latest.json).
 
 ### Frontend (maqueta → datos reales)
 
@@ -45,16 +50,16 @@ Observatorio abierto de producción, pozos y productividad de hidrocarburos arge
 | Tests (vitest) | **OK** | 24/24 tests pasan (5 archivos) |
 | Build (Bun + Vite + Nitro) | **OK** | Build completo sin errores |
 | Consumo de datos reales | **OK** | `is_mock=false`, banner desaparece, KPIs y rankings con datos reales |
-| Mapa (MapLibre) | **OK** | 3,525 pozos, 2,222 trayectorias con popups |
+| Mapa (MapLibre) | **OK** | ~3.520 pozos, leídos desde `dim_well` (ya no parsea CSVs raw en cada export) |
 | Tablas alternativas en home | Pendiente | Solo en explorador y cohortes |
 | Clustering del mapa | Pendiente | Carga todos los features de una vez |
 | Lighthouse / accesibilidad | Pendiente | Sin auditoría formal |
 
 ### Próximos pasos priorizados
 
-1. **Seed de aliases de operadores** — Poblar con ~70 nombres canónicos para normalizar rankings.
-2. **Ingesta S02 (pozos)** — Padrón completo para join coverage y coordenadas.
-3. **Quality checks reales** — Validación dinámica contra la base.
+1. **Join coverage en `/calidad`** — completar el query de cobertura producción↔padrón en `build_quality()` (`pipeline/src/pvm/export.py`).
+2. **Ingesta S03/S04 (fracturas y trayectorias)** — habilita completaciones y trayectorias en el mapa.
+3. **Cohortes y completaciones** — marts de Fase 2 (`mart_well_cohort_curve`, `mart_completion_productivity`).
 4. **Pulido frontend** — Tablas alternativas en home, clustering del mapa, Lighthouse.
 
 ## Frontend
