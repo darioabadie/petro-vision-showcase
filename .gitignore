@@ -41,3 +41,8 @@ pipeline/landing/
 pipeline/history/
 pipeline/.env
 pipeline/.venv/
+__pycache__/
+*.pyc
+dbt/target/
+dbt/logs/
+dbt/.user.yml
