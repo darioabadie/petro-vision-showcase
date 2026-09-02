@@ -1,0 +1,75 @@
+version: 2
+
+models:
+  - name: stg_energy__well_production
+    description: Normalización de la producción mensual por pozo (S01).
+    columns:
+      - name: month_date
+        tests:
+          - not_null
+      - name: well_id
+        tests:
+          - not_null
+      - name: operator_raw
+        tests:
+          - not_null
+
+  - name: dim_operator
+    columns:
+      - name: operator_slug
+        tests:
+          - unique
+          - not_null
+      - name: operator_canonical
+        tests:
+          - not_null
+
+  - name: fact_well_monthly_production
+    description: Hecho mensual de producción por pozo-formación.
+    columns:
+      - name: well_id
+        tests:
+          - not_null
+      - name: month_date
+        tests:
+          - not_null
+      - name: operator_slug
+        tests:
+          - not_null
+
+  - name: stg_energy__wells
+    description: Normalización del padrón de pozos (S02 - Capítulo IV).
+    columns:
+      - name: well_id
+        tests:
+          - not_null
+
+  - name: dim_well
+    description: Dimensión de pozo con atributos del padrón, coordenadas y primera producción.
+    columns:
+      - name: well_id
+        tests:
+          - unique
+          - not_null
+
+  - name: mart_argentina_monthly_production
+    description: Serie mensual nacional para el home.
+    columns:
+      - name: month_date
+        tests:
+          - unique
+          - not_null
+      - name: productive_wells
+        tests:
+          - not_null
+
+seeds:
+  - name: seed_operator_aliases
+    columns:
+      - name: operator_raw
+        tests:
+          - not_null
+      - name: review_status
+        tests:
+          - accepted_values:
+              values: ['approved', 'pending_review']

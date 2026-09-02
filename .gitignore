@@ -35,3 +35,9 @@ dist-ssr
 *.csv
 *.xlsx
 !data/samples/*.csv
+
+# ETL pipeline
+pipeline/landing/
+pipeline/history/
+pipeline/.env
+pipeline/.venv/

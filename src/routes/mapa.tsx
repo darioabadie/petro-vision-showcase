@@ -306,6 +306,9 @@ function buildMapStyle(
 function colorExpr(mode: string, wells: GeoJsonFeatureCollection<MapWellProperties>) {
   const features = wells.features;
   const maxOil = Math.max(0, ...features.map((f) => f.properties?.last_oil_m3 ?? 0));
+  if (maxOil <= 0) {
+    return PALETTE_HEX.neutral;
+  }
   const mid = maxOil * 0.45;
   const step: MapboxExpr[] = [
     "step",

@@ -1,0 +1,13 @@
+pvm:
+  outputs:
+    local:
+      type: clickhouse
+      schema: analytics
+      host: 127.0.0.1
+      port: 9000
+      user: default
+      password: pvm_dev
+      protocol: native
+      threads: 4
+      cluster_mode: false
+  target: local

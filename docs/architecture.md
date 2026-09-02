@@ -1,24 +1,26 @@
 # Arquitectura — Pulso Vaca Muerta
 
-**Versión:** 0.2  
-**Fecha:** 27 de agosto de 2026  
-**Estado:** Frontend implementado como maqueta (fase cerrada); pipeline propuesto (pendiente)
+*[English version](architecture.en.md)*
+
+**Versión:** 0.4  
+**Fecha:** 2 de septiembre de 2026  
+**Estado:** Pipeline operativo (S01 + S02 completas, datos reales generados); frontend consume datos reales.
 
 ## 1. Resumen
 
-Pulso Vaca Muerta separará completamente el procesamiento de datos de la aplicación pública:
+Pulso Vaca Muerta separa completamente el procesamiento de datos de la aplicación pública:
 
-- El pipeline se ejecutará localmente una vez por mes mediante containers.
-- ClickHouse y dbt procesarán y validarán los datos en la computadora del proyecto.
-- Un exporter convertirá los marts aprobados en JSON, CSV y GeoJSON estáticos.
-- La aplicación creada en Lovable consumirá exclusivamente esos artefactos.
-- Lovable mantendrá el frontend disponible en un dominio propio con HTTPS, aunque la computadora local esté apagada.
+- El pipeline se ejecuta localmente una vez por mes (actualmente con `uv run` desde el host; containers pendientes para ingestion/dbt/exporter).
+- ClickHouse y dbt procesan y validan los datos en la computadora del proyecto.
+- Un exporter convierte los marts aprobados en JSON, CSV y GeoJSON estáticos.
+- La aplicación creada en Lovable consume exclusivamente esos artefactos.
+- Lovable mantiene el frontend disponible en un dominio propio con HTTPS, aunque la computadora local esté apagada.
 
-No habrá conexión pública con ClickHouse, backend de consultas, base de datos cloud ni procesamiento en tiempo real.
+No hay conexión pública con ClickHouse, backend de consultas, base de datos cloud ni procesamiento en tiempo real.
 
-La frontera entre ambos mundos será un **release mensual de datos estáticos, versionado, validado e inmutable**.
+La frontera entre ambos mundos es un **release mensual de datos estáticos, versionado, validado e inmutable**.
 
-> **Estado actual (27-08-2026):** la capa de frontend está implementada como **maqueta** sobre el contrato mock (`/data/latest.json` + `app-data.json`) y publicada en Lovable. El pipeline, ClickHouse, dbt y el exporter siguen pendientes (ver `./README.md` y `lovable.md` §24 para el cutover).
+> **Estado actual (02-09-2026):** el pipeline está operativo para S01 (producción por pozo) y S02 (padrón de pozos). ClickHouse tiene 18.2M filas raw. Los modelos dbt (`stg_energy__well_production`, `stg_energy__wells`, `dim_date_month`, `dim_operator`, `dim_well`, `fact_well_monthly_production`, `mart_argentina_monthly_production`) compilan y pasan todos sus tests. El exporter genera `app-data.json` con KPIs reales, rankings, mapa (poblado desde `dim_well`, ya no parsea CSVs raw) y descargas; los quality checks corren como queries reales contra ClickHouse (6 checks), incluida la cobertura de join producción↔padrón (`quality.join_coverage`). Pendiente: la ingesta S03/S04, las cohortes y las completaciones. Ver [`docs/README.md`](README.md) para la tabla de estado completa y [`docs/dbt.md`](dbt.md) / [`docs/clickhouse.md`](clickhouse.md) / [`docs/docker.md`](docker.md) / [`docs/actualizacion-datos.md`](actualizacion-datos.md) para el detalle de cada componente.
 
 ## 2. Diagrama general
 
@@ -93,7 +95,9 @@ El volumen se conservará en un Docker volume local para permitir actualizacione
 
 ### 4.2 Ingestion
 
-Container basado en Python y Polars.
+Diseño objetivo: container basado en Python y Polars. **Estado real:** corre local vía `uv run` (`pipeline/`), no containerizado — ver [`docker.md`](docker.md) para el porqué de esta diferencia entre diseño y estado actual.
+
+Implementado hoy: ingesta S01 (producción) y S02 (padrón de pozos, con `dim_well` derivado). S03/S04 quedan para Fase 2.
 
 Responsabilidades:
 
@@ -107,7 +111,7 @@ Responsabilidades:
 
 ### 4.3 dbt
 
-Container efímero con dbt Core y `dbt-clickhouse`.
+Diseño objetivo: container efímero con dbt Core y `dbt-clickhouse`. **Estado real:** corre local (`uv run dbt ...`) contra el ClickHouse containerizado — ver [`dbt.md`](dbt.md) para el detalle de modelos, capas y tests implementados.
 
 Responsabilidades:
 
@@ -152,7 +156,7 @@ Metabase puede agregarse como herramienta opcional de exploración local. No for
 
 ## 5. Docker Compose
 
-Estructura conceptual:
+Estructura conceptual (diseño objetivo). **El `docker-compose.yml` real del repo hoy solo define el servicio `clickhouse`** — ver [`docker.md`](docker.md) para el archivo real, el porqué de no containerizar todavía ingestion/dbt/exporter, y cómo operar el entorno actual:
 
 ```yaml
 services:

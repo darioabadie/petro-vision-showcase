@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://pulsovacamuerta.ar/contracts/release-pointer.schema.json",
+  "title": "ReleasePointer",
+  "description": "Contrato del puntero public/data/latest.json. Debe reflejar ReleasePointer en src/lib/contract.ts.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "release_id",
+    "data_cutoff",
+    "generated_at",
+    "schema_version",
+    "status",
+    "base_path",
+    "app_data_file"
+  ],
+  "properties": {
+    "release_id": { "type": "string", "minLength": 1 },
+    "data_cutoff": { "type": "string", "format": "date" },
+    "generated_at": { "type": "string", "format": "date-time" },
+    "schema_version": { "type": "string", "pattern": "^1\\.\\d+$" },
+    "status": { "enum": ["mock", "complete", "warning"] },
+    "base_path": { "type": "string", "pattern": "^/data/releases/.*/$" },
+    "app_data_file": { "const": "app-data.json" }
+  }
+}
