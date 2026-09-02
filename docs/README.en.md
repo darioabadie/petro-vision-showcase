@@ -34,7 +34,7 @@ An open observatory of Argentine oil, gas, well, and productivity data, with an 
 | Export | **Complete** | app-data.json, CSV, latest.json, jsonschema validation |
 | Operator aliases | **Partial** | Seed with ~30 grouped operators (`approved`); the rest (101) stay `pending_review` by design — see [`dbt.md`](dbt.md) |
 | Real quality checks | **Complete** | 6 dynamic checks via ClickHouse queries (duplicates, nulls, negatives, future dates, pending aliases) |
-| Join coverage (production ↔ registry) | **Pending** | `quality.join_coverage` still returns `[]`; the coverage query against `dim_well` is missing |
+| Join coverage (production ↔ registry) | **Complete** | `quality.join_coverage` reports the match against `dim_well` (`build_quality()`) |
 | Cohorts | Pending | Phase 2 |
 | Completions | Pending | Phase 2 |
 | Ingestion/dbt/exporter Dockerfiles | Pending, scope already defined | Only ClickHouse is containerized; ingestion/dbt/export run via `uv run` — see [`docker.md`](docker.md) |
@@ -59,10 +59,9 @@ An open observatory of Argentine oil, gas, well, and productivity data, with an 
 
 ### Prioritized next steps
 
-1. **Join coverage on `/calidad`** — finish the production↔registry coverage query in `build_quality()` (`pipeline/src/pvm/export.py`).
-2. **S03/S04 ingestion (fractures and trajectories)** — enables completions and trajectories on the map.
-3. **Cohorts and completions** — Phase 2 marts (`mart_well_cohort_curve`, `mart_completion_productivity`).
-4. **Frontend polish** — alternative tables on home, map clustering, Lighthouse.
+1. **S03/S04 ingestion (fractures and trajectories)** — enables completions and trajectories on the map.
+2. **Cohorts and completions** — Phase 2 marts (`mart_well_cohort_curve`, `mart_completion_productivity`).
+3. **Frontend polish** — alternative tables on home, map clustering, Lighthouse.
 
 ## Frontend
 

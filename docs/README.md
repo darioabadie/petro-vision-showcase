@@ -34,7 +34,7 @@ Observatorio abierto de producción, pozos y productividad de hidrocarburos arge
 | Export | **Completo** | app-data.json, CSV, latest.json, validación jsonschema |
 | Aliases de operadores | **Parcial** | Seed con ~30 operadores agrupados (`approved`); el resto (101) queda en `pending_review` por diseño — ver [`dbt.md`](dbt.md) |
 | Quality checks reales | **Completo** | 6 checks dinámicos vía queries a ClickHouse (duplicados, nulos, negativos, fechas futuras, pendientes de alias) |
-| Join coverage (producción ↔ padrón) | **Pendiente** | `quality.join_coverage` sigue devolviendo `[]`; falta el query de cobertura contra `dim_well` |
+| Join coverage (producción ↔ padrón) | **Completo** | `quality.join_coverage` reporta match contra `dim_well` (`build_quality()`) |
 | Cohortes | Pendiente | Fase 2 |
 | Completaciones | Pendiente | Fase 2 |
 | Dockerfiles de ingesta/dbt/exporter | Pendiente, y con alcance definido | Solo ClickHouse está containerizado; ingesta/dbt/export corren con `uv run` — ver [`docker.md`](docker.md) |
@@ -59,10 +59,9 @@ Observatorio abierto de producción, pozos y productividad de hidrocarburos arge
 
 ### Próximos pasos priorizados
 
-1. **Join coverage en `/calidad`** — completar el query de cobertura producción↔padrón en `build_quality()` (`pipeline/src/pvm/export.py`).
-2. **Ingesta S03/S04 (fracturas y trayectorias)** — habilita completaciones y trayectorias en el mapa.
-3. **Cohortes y completaciones** — marts de Fase 2 (`mart_well_cohort_curve`, `mart_completion_productivity`).
-4. **Pulido frontend** — Tablas alternativas en home, clustering del mapa, Lighthouse.
+1. **Ingesta S03/S04 (fracturas y trayectorias)** — habilita completaciones y trayectorias en el mapa.
+2. **Cohortes y completaciones** — marts de Fase 2 (`mart_well_cohort_curve`, `mart_completion_productivity`).
+3. **Pulido frontend** — Tablas alternativas en home, clustering del mapa, Lighthouse.
 
 ## Frontend
 

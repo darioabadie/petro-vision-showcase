@@ -529,6 +529,13 @@ def build_quality(sources: list[dict], total_rows: int, series: list[dict], cuto
 
     future_dates = _query(client, "SELECT count() FROM analytics.stg_energy__well_production WHERE month_date > toDate('2026-09-01')")[0][0]
 
+    total_production_wells, matched_wells = _query(client, """
+        WITH prod AS (SELECT DISTINCT well_id FROM analytics.fact_well_monthly_production)
+        SELECT
+            (SELECT count() FROM prod) AS total_production_wells,
+            (SELECT count() FROM prod p INNER JOIN analytics.dim_well w ON p.well_id = w.well_id) AS matched
+    """)[0]
+
     checks = [
         {
             "check_id": "unique_well_monthly",
@@ -590,7 +597,16 @@ def build_quality(sources: list[dict], total_rows: int, series: list[dict], cuto
         },
         "sources": sources,
         "checks": checks,
-        "join_coverage": [],
+        "join_coverage": [
+            {
+                "relationship": "Pozos de producción con match en padrón (dim_well)",
+                "matched": int(matched_wells),
+                "total": int(total_production_wells),
+                "coverage_pct": round(matched_wells / total_production_wells * 100, 2)
+                if total_production_wells
+                else 0.0,
+            }
+        ],
         "reconciliation": [],
         "revisions": [],
     }
