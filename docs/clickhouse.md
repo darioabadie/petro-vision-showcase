@@ -1,5 +1,7 @@
 # ClickHouse — motor analítico
 
+*[English version](clickhouse.en.md)*
+
 **Alcance:** por qué ClickHouse, cómo están organizadas las bases y tablas, motores de tabla usados y cómo conectarse para explorar los datos a mano.
 
 ClickHouse es la única base de datos del proyecto. Corre en un solo container Docker, en local, y nunca se expone fuera de `127.0.0.1` — el sitio público no le habla directamente (ver [`docker.md`](docker.md) y [`architecture.md`](architecture.md)).

@@ -2,6 +2,8 @@
 
 # Pulso Vaca Muerta
 
+*[English version](README.en.md)*
+
 **Observatorio abierto de producción de hidrocarburos argentinos**, con foco editorial en Vaca Muerta. Pipeline de datos completo — ingesta con procedencia, ClickHouse, dbt, tests, releases estáticos versionados — sirviendo un frontend público que nunca consulta una base de datos en producción.
 
 Este repo es mi proyecto de portfolio como **Data Engineer**: no es una maqueta con datos inventados, es un pipeline real corriendo sobre ~18M filas de datos públicos de la Secretaría de Energía de Argentina.

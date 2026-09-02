@@ -1,5 +1,7 @@
 # Pulso Vaca Muerta — Documentación del proyecto
 
+*[English version](README.en.md)*
+
 Observatorio abierto de producción, pozos y productividad de hidrocarburos argentinos con foco editorial en Vaca Muerta.
 
 ## Documentos

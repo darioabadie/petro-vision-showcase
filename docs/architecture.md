@@ -1,5 +1,7 @@
 # Arquitectura — Pulso Vaca Muerta
 
+*[English version](architecture.en.md)*
+
 **Versión:** 0.4  
 **Fecha:** 2 de septiembre de 2026  
 **Estado:** Pipeline operativo (S01 + S02 completas, datos reales generados); frontend consume datos reales.

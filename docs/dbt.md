@@ -1,5 +1,7 @@
 # dbt — transformación de datos
 
+*[English version](dbt.en.md)*
+
 **Alcance:** cómo está organizado el proyecto dbt (`dbt/`), qué hace cada capa, cómo se testea y cómo se ejecuta.
 
 dbt (`dbt-core` + adaptador `dbt-clickhouse`) toma las tablas raw cargadas por el pipeline de ingesta y las convierte, con SQL versionado y testeado, en las tablas que consume el exporter. No hay lógica de negocio en Python más allá de la carga: todo el modelado vive en `dbt/models/`.

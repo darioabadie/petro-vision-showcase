@@ -1,5 +1,7 @@
 # Infraestructura Docker
 
+*[English version](docker.en.md)*
+
 **Alcance:** qué corre containerizado hoy, qué corre local y por qué, y cómo operar el entorno.
 
 ## Estado real (no el aspiracional)

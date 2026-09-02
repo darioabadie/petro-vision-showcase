@@ -1,5 +1,7 @@
 # Cómo se actualizan los datos en la app
 
+*[English version](actualizacion-datos.en.md)*
+
 **Alcance:** el ciclo completo desde que se dispara un release hasta que el frontend muestra números nuevos. Para el detalle de cada paso, ver [`docker.md`](docker.md), [`clickhouse.md`](clickhouse.md) y [`dbt.md`](dbt.md).
 
 ## Principio central: el frontend nunca calcula nada
