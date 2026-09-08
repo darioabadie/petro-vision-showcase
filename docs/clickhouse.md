@@ -9,7 +9,7 @@ ClickHouse es la única base de datos del proyecto. Corre en un solo container D
 ## Por qué ClickHouse
 
 - **Motor columnar**: agregar 18M+ filas por mes/operador/provincia corre en segundos, sin necesidad de pre-agregar en Python.
-- **Open source y liviano**: un solo binario, un solo container, sin licencia ni servicio gestionado — coherente con el alcance de portfolio (correr todo en una laptop).
+- **Open source y liviano**: un solo binario, un solo container, sin licencia ni servicio gestionado — permite correr todo en una laptop sin infraestructura administrada.
 - **`dbt-clickhouse` maduro**: permite modelar en dbt igual que con Postgres/Snowflake/BigQuery, pero sobre un motor pensado para este volumen.
 - **`ReplacingMergeTree`**: resuelve nativamente el problema de "la fuente publicó una revisión del mismo mes" sin lógica de upsert manual en Python.
 
