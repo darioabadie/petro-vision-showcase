@@ -12,10 +12,10 @@ Pulso Vaca Muerta será un observatorio público, gratuito y reproducible que tr
 
 El producto combinará un pipeline de datos open source —Python/Polars, ClickHouse y dbt Core— con un sitio público rápido y fácil de compartir. La propuesta de valor no es replicar planillas oficiales: es preservar su trazabilidad, resolver problemas de calidad y nomenclatura, relacionar producción con pozos y fracturas, y explicar qué cambió y por qué importa.
 
-El proyecto cumplirá una doble función:
+El proyecto se construye con foco en dos frentes:
 
 1. Producto de información útil para profesionales, periodistas, analistas y público interesado en energía.
-2. Portfolio técnico verificable de Analytics Engineering y Data Engineering.
+2. Base técnica sólida, documentada y reproducible, construida con prácticas modernas de Analytics Engineering y Data Engineering.
 
 ## 2. Problema
 
@@ -67,9 +67,9 @@ Convertirse en la referencia abierta y metodológicamente transparente para resp
 - Automatizar actualización, validación y publicación.
 - Mantener un entorno local reproducible con Docker.
 
-### 5.3 Objetivo de portfolio
+### 5.3 Estándares de ingeniería
 
-Demostrar mediante código y artefactos públicos:
+El proyecto aplica y expone, mediante código y artefactos públicos:
 
 - Modelado dimensional.
 - SQL y dbt.
@@ -106,9 +106,9 @@ Necesita encontrar rápidamente una cifra reciente, entender su definición y de
 
 Necesita explicaciones claras sobre la diferencia entre producción convencional y no convencional, petróleo y gas, producción total y productividad por pozo.
 
-### 7.4 Recruiter o hiring manager de datos
+### 7.4 Colega técnico / comunidad de datos
 
-Necesita comprobar que el autor puede construir y documentar un pipeline moderno, no solamente diseñar un dashboard.
+Necesita entender cómo está construido y documentado el pipeline —modelado, calidad de datos, arquitectura— para evaluarlo como referencia o reutilizar partes del enfoque.
 
 ## 8. Jobs to be done
 

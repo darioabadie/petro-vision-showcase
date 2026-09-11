@@ -9,7 +9,7 @@ ClickHouse is the project's only database. It runs in a single Docker container,
 ## Why ClickHouse
 
 - **Columnar engine**: aggregating 18M+ rows by month/operator/province runs in seconds, with no need to pre-aggregate in Python.
-- **Open source and lightweight**: a single binary, a single container, no license or managed service — consistent with the portfolio scope (run everything on a laptop).
+- **Open source and lightweight**: a single binary, a single container, no license or managed service — lets everything run on a laptop with no managed infrastructure.
 - **Mature `dbt-clickhouse`**: lets you model in dbt just like you would with Postgres/Snowflake/BigQuery, but on an engine built for this volume.
 - **`ReplacingMergeTree`**: natively solves "the source published a revision of the same month" without manual upsert logic in Python.
 

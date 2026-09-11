@@ -6,7 +6,7 @@
 
 **An open observatory of Argentine oil & gas production**, with an editorial focus on Vaca Muerta. A complete data pipeline — provenance-tracked ingestion, ClickHouse, dbt, tests, versioned static releases — serving a public frontend that never queries a production database.
 
-This repo is my portfolio project as a **Data Engineer**: it's not a mockup with made-up data, it's a real pipeline running over ~18M rows of public production data from Argentina's Secretaría de Energía.
+It's not a mockup with made-up data: it's a real pipeline running over ~18M rows of public production data from Argentina's Secretaría de Energía.
 
 ## The problem it solves
 
