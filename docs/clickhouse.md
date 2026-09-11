@@ -4,7 +4,7 @@
 
 **Alcance:** por qué ClickHouse, cómo están organizadas las bases y tablas, motores de tabla usados y cómo conectarse para explorar los datos a mano.
 
-ClickHouse es la única base de datos del proyecto. Corre en un solo container Docker, en local, y nunca se expone fuera de `127.0.0.1` — el sitio público no le habla directamente (ver [`docker.md`](docker.md) y [`architecture.md`](architecture.md)).
+ClickHouse es la única base de datos del proyecto. El pipeline operativo usa un nodo en Docker local, ligado a `127.0.0.1`; el sitio público nunca le habla directamente. Además existe un laboratorio distribuido y autogestionado sobre VMs de Azure, aislado del runtime habitual (ver [`../infra/terraform-azure/README.md`](../infra/terraform-azure/README.md)).
 
 ## Por qué ClickHouse
 
@@ -12,6 +12,15 @@ ClickHouse es la única base de datos del proyecto. Corre en un solo container D
 - **Open source y liviano**: un solo binario, un solo container, sin licencia ni servicio gestionado — permite correr todo en una laptop sin infraestructura administrada.
 - **`dbt-clickhouse` maduro**: permite modelar en dbt igual que con Postgres/Snowflake/BigQuery, pero sobre un motor pensado para este volumen.
 - **`ReplacingMergeTree`**: resuelve nativamente el problema de "la fuente publicó una revisión del mismo mes" sin lógica de upsert manual en Python.
+
+## Dos topologías, dos objetivos
+
+| Entorno | Topología | Uso |
+|---|---|---|
+| Pipeline operativo | 1 nodo ClickHouse 24.8 en Docker, volumen persistente | Ingesta, dbt, tests y export mensual |
+| Laboratorio Azure | 2 shards × 2 réplicas + 1 Keeper, VMs creadas con Terraform | Demostrar sharding, replicación, failover y reconciliación |
+
+El laboratorio no es ClickHouse administrado ni HA estricta: los nodos son operados por el proyecto y un único Keeper sigue siendo un punto de fallo.
 
 ## Bases de datos
 

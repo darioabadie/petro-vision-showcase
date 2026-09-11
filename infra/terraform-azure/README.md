@@ -1,8 +1,8 @@
-# Cluster ClickHouse en Azure — replicación y sharding vía Terraform
+# Laboratorio ClickHouse distribuido en Azure — Terraform, replicación y sharding
 
 *[English version](README.en.md)*
 
-**Alcance:** módulo de infraestructura aislado que explora operación de ClickHouse en alta disponibilidad. Provisiona con Terraform, sobre Azure real, un cluster de ClickHouse de 2 shards × 2 réplicas coordinado por ClickHouse Keeper, cargado con los datos reales del pipeline principal (`analytics.fact_well_monthly_production`), para poder ejercitar sharding, replicación y failover más allá del ClickHouse single-node que usa el pipeline día a día. **No modifica ni depende de** `docker-compose.yml`, `dbt/`, `pipeline/` o el `Makefile` raíz — vive completamente aislado en `infra/`.
+**Alcance:** módulo de infraestructura aislado que explora operación distribuida y failover de réplicas en ClickHouse. Provisiona con Terraform, sobre Azure real, un clúster **autogestionado** de 2 shards × 2 réplicas coordinado por un ClickHouse Keeper y cargado con datos reales del pipeline principal (`analytics.fact_well_monthly_production`). **No modifica ni depende de** `docker-compose.yml`, `dbt/`, `pipeline/` o el `Makefile` raíz: vive completamente aislado en `infra/`. No se presenta como servicio administrado ni como alta disponibilidad estricta, porque el Keeper único continúa siendo un punto de fallo.
 
 ⚠️ **Esto crea recursos de Azure reales con costo real** (VMs, IPs públicas, red) hasta que se corra `terraform destroy`. Ver [Costo](#costo) abajo.
 
@@ -32,7 +32,7 @@ Cada nodo tiene sus `macros` (`{shard}`, `{replica}`) generadas por Terraform v�
 ## Por qué así
 
 - **Keeper, no Zookeeper de Java**: es el estándar actual de ClickHouse, más liviano, y el mecanismo de coordinación que usaría cualquier cluster nuevo hoy.
-- **`ReplicatedReplacingMergeTree` + `Distributed`**: mismo patrón que usaría un cluster de 100PB en producción, a escala de laptop/VMs chicas.
+- **`ReplicatedReplacingMergeTree` + `Distributed`**: patrón real de tablas locales replicadas detrás de una interfaz distribuida, reducido a VMs pequeñas para aprendizaje.
 - **Mismo esquema que el pipeline real**: `well_production_local` replica columna por columna, `ORDER BY` y `ver_column` (`_record_version`) de `analytics.fact_well_monthly_production` (`dbt/models/core/fact_well_monthly_production.sql`) — no es un dataset de juguete inventado para el módulo.
 
 ## Requisitos

@@ -4,9 +4,9 @@
 
 **Alcance:** qué corre containerizado hoy, qué corre local y por qué, y cómo operar el entorno.
 
-## Estado real (no el aspiracional)
+## Estado actual
 
-`architecture.md` describe un diseño objetivo con containers separados para ingesta, dbt y exporter. **Eso todavía no está construido.** Lo que existe hoy en `docker-compose.yml` es un único servicio:
+`docker-compose.yml` define un único servicio persistente: ClickHouse. La ingesta, dbt y el exporter son procesos efímeros ejecutados desde el host con `uv`:
 
 ```yaml
 services:

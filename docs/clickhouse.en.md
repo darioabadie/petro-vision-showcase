@@ -4,7 +4,7 @@
 
 **Scope:** why ClickHouse, how databases and tables are organized, which table engines are used, and how to connect and explore the data by hand.
 
-ClickHouse is the project's only database. It runs in a single Docker container, locally, and is never exposed outside `127.0.0.1` — the public site never talks to it directly (see [`docker.en.md`](docker.en.md) and [`architecture.en.md`](architecture.en.md)).
+ClickHouse is the project's only database. The operational pipeline uses one local Docker node bound to `127.0.0.1`; the public site never talks to it directly. A separate distributed, self-managed lab also runs on Azure VMs (see [`../infra/terraform-azure/README.en.md`](../infra/terraform-azure/README.en.md)).
 
 ## Why ClickHouse
 
@@ -12,6 +12,15 @@ ClickHouse is the project's only database. It runs in a single Docker container,
 - **Open source and lightweight**: a single binary, a single container, no license or managed service — lets everything run on a laptop with no managed infrastructure.
 - **Mature `dbt-clickhouse`**: lets you model in dbt just like you would with Postgres/Snowflake/BigQuery, but on an engine built for this volume.
 - **`ReplacingMergeTree`**: natively solves "the source published a revision of the same month" without manual upsert logic in Python.
+
+## Two topologies, two goals
+
+| Environment | Topology | Purpose |
+|---|---|---|
+| Operational pipeline | One ClickHouse 24.8 Docker node with a persistent volume | Monthly ingestion, dbt, tests, and export |
+| Azure lab | 2 shards × 2 replicas + 1 Keeper, VMs provisioned by Terraform | Demonstrate sharding, replication, failover, and reconciliation |
+
+The lab is neither managed ClickHouse nor strict HA: the project operates the nodes and a single Keeper remains a failure point.
 
 ## Databases
 

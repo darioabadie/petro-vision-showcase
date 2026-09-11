@@ -1,7 +1,7 @@
 SHELL := /bin/bash
 .DEFAULT_GOAL := help
 
-.PHONY: help up down ps ingest dbt export release test lint sample qa ls-release
+.PHONY: help up down ps ingest ingest-s01 ingest-s02 dbt export release test lint sample qa ls-release
 
 help: ## Muestra los targets disponibles
 	@grep -E '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  %-14s %s\n", $$1, $$2}'
@@ -16,11 +16,13 @@ down: ## Detiene ClickHouse (mantiene el volumen)
 ps: ## Estado de los servicios
 	docker compose ps
 
-ingest: ## Descarga y carga fuentes a raw
-	cd pipeline && uv run python -m pvm.pipelines ingest
+ingest: ingest-s01 ingest-s02 ## Descarga y carga todas las fuentes implementadas a raw
 
 ingest-s01: ## Solo S01 (producción por pozo)
-	cd pipeline && uv run python -m pvm.pipelines ingest --only s01
+	cd pipeline && uv run python -m pvm.pipelines ingest --source s01
+
+ingest-s02: ## Solo S02 (padrón de pozos)
+	cd pipeline && uv run python -m pvm.pipelines ingest --source s02
 
 DBT_ENV := CLICKHOUSE_URL=http://127.0.0.1:8123 CLICKHOUSE_USER=default CLICKHOUSE_PASSWORD=pvm_dev
 
@@ -33,7 +35,7 @@ dbt-test: ## Ejecuta los tests de dbt
 export: ## Genera el release (app-data.json + artefactos) en public/data/releases/<id>
 	cd pipeline && uv run python -m pvm.pipelines export
 
-release: ## Corrida mensual completa: up? (asume ClickHouse arriba) + ingest + dbt + dbt-test + export
+release: ## Corrida mensual completa (asume ClickHouse arriba): S01/S02 + dbt + tests + export
 	$(MAKE) ingest
 	$(MAKE) dbt ARGS="--models stg_ core. marts."
 	$(MAKE) dbt-test ARGS="--models stg_ core. marts."

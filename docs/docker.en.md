@@ -4,9 +4,9 @@
 
 **Scope:** what runs containerized today, what runs locally and why, and how to operate the environment.
 
-## Real state (not the aspirational one)
+## Current state
 
-`architecture.md` describes a target design with separate containers for ingestion, dbt, and the exporter. **That hasn't been built yet.** What exists today in `docker-compose.yml` is a single service:
+`docker-compose.yml` defines one persistent service: ClickHouse. Ingestion, dbt, and the exporter are ephemeral host processes executed through `uv`:
 
 ```yaml
 services:

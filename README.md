@@ -14,7 +14,12 @@ Argentina publica datos abiertos y valiosos de producción de petróleo y gas, p
 
 Alcance funcional completo, audiencias y criterios de aceptación → [`docs/PRD.md`](docs/PRD.md).
 
-## Cómo funciona (arquitectura en una imagen)
+## Cómo funciona
+
+El repositorio demuestra dos entornos deliberadamente separados:
+
+- **Pipeline operativo:** Python y dbt corren como procesos locales contra un ClickHouse single-node en Docker. El resultado es un release estático que consume el frontend.
+- **Laboratorio distribuido en Azure:** Terraform provisiona un clúster ClickHouse **autogestionado** de 2 shards × 2 réplicas y un Keeper. Sirve para ejercitar sharding, replicación y failover; no es el runtime de la web ni un servicio administrado.
 
 ```mermaid
 flowchart LR
@@ -58,6 +63,7 @@ No hay backend público, ni base de datos gestionada, ni consultas en tiempo rea
 | Contratos | JSON Schema + `ajv` (frontend) + `jsonschema` (exporter) | El exporter no puede publicar un payload que no cumple el contrato |
 | Frontend | TanStack Start, React, Recharts, MapLibre, Tailwind/shadcn | SSR + solo-cliente para datos; sin servidor de datos propio |
 | Infra | Docker Compose (solo ClickHouse) | Único componente con estado persistente — ver [`docs/docker.md`](docs/docker.md) |
+| Infra cloud | Terraform + Azure VMs | Laboratorio distribuido reproducible — ver [`infra/terraform-azure/README.md`](infra/terraform-azure/README.md) |
 
 ## Estructura del repo
 
@@ -67,6 +73,7 @@ dbt/               # Transformación: staging → core → marts, seeds, tests, 
 contracts/         # JSON Schema — fuente de verdad del contrato pipeline↔frontend
 docker-compose.yml # ClickHouse (único servicio containerizado hoy)
 Makefile           # up · ingest · dbt · dbt-test · export · release
+infra/             # Laboratorio ClickHouse distribuido en Azure con Terraform
 public/data/       # Releases versionados en Git: app-data.json + latest.json
 src/               # Frontend: rutas TanStack Router, componentes, data-client
 docs/              # Toda la documentación (ver abajo)
@@ -80,7 +87,7 @@ cd petro-vision-showcase
 
 # Pipeline de datos
 make up              # levanta ClickHouse (Docker)
-make ingest          # descarga y carga S01 (producción) a raw
+make ingest          # descarga y carga S01 (producción) y S02 (pozos) a raw
 make dbt             # staging → core → marts
 make dbt-test        # tests bloqueantes
 make export          # genera public/data/releases/<id>/app-data.json + latest.json
@@ -111,6 +118,16 @@ Tabla de estado detallada, componente por componente → [`docs/README.md`](docs
 | [`docs/docker.md`](docs/docker.md) | Qué está containerizado hoy, qué no, y por qué |
 | [`docs/actualizacion-datos.md`](docs/actualizacion-datos.md) | Ciclo completo de un release, de la fuente al frontend |
 | [`docs/lovable.md`](docs/lovable.md) | Contrato JSON consumido por el frontend, rutas y criterios visuales |
+| [`infra/terraform-azure/README.md`](infra/terraform-azure/README.md) | Clúster autogestionado en Azure: topología, operación, pruebas y límites |
+
+## Hoja de ruta de ingeniería
+
+1. **Airflow:** orquestar ingestas por fuente, backfills, dbt, controles y promoción del release.
+2. **Observabilidad:** Prometheus y Grafana para merges, memoria, disco, latencia y estado de réplicas.
+3. **Landing durable:** conservar raw y manifiestos en ADLS/Blob Storage para reconstruir ClickHouse sin depender del disco local.
+4. **CI/CD:** validar Python, dbt y Terraform en pull requests y automatizar releases aprobadas.
+
+Estas capacidades son próximos pasos; no se presentan como implementadas.
 
 ## Datos y licencia
 

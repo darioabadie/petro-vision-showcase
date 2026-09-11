@@ -58,7 +58,7 @@ make export
 4. Compares it against the saved state (`StateStore`): if the checksum hasn't changed, **skips the load** (the file is identical to what's already loaded).
 5. If it changed, loads into `raw_energy.*` with full provenance metadata (`_load_id`, `_source_url`, `_resource_id`, `_retrieved_at`, `_source_sha256`...).
 
-`make ingest` only runs S01 by default. S02 is triggered separately (`cd pipeline && uv run python -m pvm.pipelines ingest --source s02` — it doesn't have its own Makefile target yet).
+`make ingest` runs both implemented sources: `make ingest-s01` for production and `make ingest-s02` for the well registry. Either target can be run independently for diagnostics or backfills.
 
 ### 2. Transformation (`make dbt` + `make dbt-test`)
 

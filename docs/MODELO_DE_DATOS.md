@@ -32,7 +32,7 @@ Los metadatos de S01–S04 se consultaron en la API CKAN de Datos Argentina. Los
 
 ## 3. Muestras descargadas
 
-Las muestras están en [`data/samples`](../data/samples/). El archivo [`manifest.json`](../data/samples/manifest.json) registra URL, fecha declarada del recurso, cantidad de filas del archivo descargado, tamaño, checksum del original y checksum de la muestra.
+Las muestras se generan localmente en `data/samples/` mediante `make sample` y no se versionan. El catálogo y la metodología están en [`data/README.md`](../data/README.md); el `manifest.json` generado registra URL, fecha declarada, filas, tamaño y checksums.
 
 | Fuente | Archivo completo relevado | Filas completas | Muestra incluida |
 |---|---:|---:|---:|
@@ -55,7 +55,7 @@ La muestra de producción 2026 cubre enero–julio. El histórico completo tiene
 - **Recurso relevado:** Producción de Pozos de Gas y Petróleo – 2026.
 - **Última modificación declarada:** 2026-08-25 10:01:34 UTC aproximado.
 - **Formato:** CSV UTF-8 con BOM, separado por comas.
-- **Muestra:** [`01_well_production_2026_sample.csv`](../data/samples/01_well_production_2026_sample.csv).
+- **Muestra local generada:** `data/samples/01_well_production_2026_sample.csv`.
 
 ### Grano y clave
 
@@ -116,7 +116,7 @@ En las 573.180 filas relevadas no se encontraron duplicados para esa clave. La r
 - **Recurso:** Capítulo IV - Pozos.
 - **Última modificación declarada:** 2026-07-08 16:48:15.
 - **Formato:** CSV UTF-8 con BOM.
-- **Muestra:** [`02_wells_sample.csv`](../data/samples/02_wells_sample.csv).
+- **Muestra local generada:** `data/samples/02_wells_sample.csv`.
 
 ### Grano y clave
 
@@ -149,7 +149,7 @@ El padrón se tratará como estado actual. Para análisis histórico, el operado
 - **Catálogo:** [Datos de fractura de pozos de hidrocarburos (Adjunto IV)](https://datos.gob.ar/dataset/datos-de-fractura-de-pozos-adjunto-iv).
 - **Última modificación declarada:** 2026-08-25 04:00:02.
 - **Formato:** CSV UTF-8 con BOM.
-- **Muestra:** [`03_fractures_sample.csv`](../data/samples/03_fractures_sample.csv).
+- **Muestra local generada:** `data/samples/03_fractures_sample.csv`.
 
 ### Grano y clave
 
@@ -185,7 +185,7 @@ Una fila por registro de fractura identificado por `id_base_fractura_adjiv`. Un 
 - **Catálogo:** [Trayectorias de Pozo Vaca Muerta](https://datos.gob.ar/dataset/trayectoria-de-pozos).
 - **Última modificación declarada:** 2026-08-01 05:00:08.
 - **Formato:** CSV UTF-8 con BOM; geometrías de gran tamaño.
-- **Muestra:** [`04_trajectories_sample.csv`](../data/samples/04_trajectories_sample.csv).
+- **Muestra local generada:** `data/samples/04_trajectories_sample.csv`.
 
 ### Grano y clave
 
@@ -214,7 +214,7 @@ Las geometrías raw se conservarán como texto. Para publicación se generará G
 
 - **API:** [API de Series de Tiempo de Datos Argentina](https://datosgobar.github.io/series-tiempo-ar-api/reference/api-reference/).
 - **Consulta de muestra:** petróleo crudo y gas natural, últimos 24 períodos.
-- **Muestra:** [`05_national_production_series_sample.csv`](../data/samples/05_national_production_series_sample.csv).
+- **Muestra local generada:** `data/samples/05_national_production_series_sample.csv`.
 
 Series seleccionadas:
 
@@ -240,7 +240,7 @@ La comparación solo se ejecutará donde ambas fuentes tengan datos. En la muest
 
 - **API:** [Servicio de Normalización de Datos Geográficos](https://datosgobar.github.io/georef-ar-api/).
 - **Endpoint:** `/ubicacion` para georreferenciación inversa.
-- **Muestra:** [`06_georef_location_sample.json`](../data/samples/06_georef_location_sample.json).
+- **Muestra local generada:** `data/samples/06_georef_location_sample.json`.
 
 ### Grano
 
@@ -261,7 +261,7 @@ La consulta de muestra corresponde a un pozo de Chubut y devuelve departamento E
 
 - **Origen:** nombres distintos observados en `empresa`.
 - **Administración:** seed CSV versionado y revisado mediante pull request.
-- **Muestra inicial:** [`07_operator_aliases_seed.csv`](../data/samples/07_operator_aliases_seed.csv).
+- **Muestra inicial local:** `data/samples/07_operator_aliases_seed.csv`.
 
 ### Grano y esquema
 

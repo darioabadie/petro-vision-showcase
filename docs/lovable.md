@@ -10,8 +10,8 @@ Lovable debe construir la interfaz completa de **Pulso Vaca Muerta** contra un c
 
 Archivos de prueba:
 
-- Puntero que la aplicación debe cargar primero: [`../web/public/data/latest.json`](../web/public/data/latest.json).
-- Payload completo con datos sintéticos: [`../web/public/data/releases/mock-2026-07/app-data.json`](../web/public/data/releases/mock-2026-07/app-data.json).
+- Puntero que la aplicación debe cargar primero: [`../public/data/latest.json`](../public/data/latest.json).
+- Payload completo con datos sintéticos: [`../public/data/releases/mock-2026-07/app-data.json`](../public/data/releases/mock-2026-07/app-data.json).
 
 El mock contiene todas las secciones necesarias para construir las visualizaciones especificadas en este documento. Los valores son sintéticos y deben mostrarse con un banner inequívoco mientras `release.is_mock` sea `true`.
 
@@ -587,7 +587,7 @@ Los títulos de visualizaciones deben expresar el hallazgo visible, pero no exag
 
 ## 20. Modelo canónico del JSON
 
-El archivo completo de referencia es [`app-data.json`](../web/public/data/releases/mock-2026-07/app-data.json). Su estructura de primer nivel es:
+El archivo completo de referencia es [`app-data.json`](../public/data/releases/mock-2026-07/app-data.json). Su estructura de primer nivel es:
 
 ```json
 {

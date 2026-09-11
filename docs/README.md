@@ -13,8 +13,9 @@ Observatorio abierto de producción, pozos y productividad de hidrocarburos arge
 - [ClickHouse](clickhouse.md) — Bases, motores de tabla y cómo explorar los datos
 - [Docker](docker.md) — Qué está containerizado hoy y por qué
 - [Actualización de datos](actualizacion-datos.md) — Ciclo completo de un release, de la fuente al frontend
+- [Clúster ClickHouse en Azure](../infra/terraform-azure/README.md) — Laboratorio autogestionado de sharding, replicación y failover
 - [Especificación para Lovable](lovable.md) — Contrato JSON, rutas y criterios visuales
-- [Muestras](../data/samples/README.md) — Metodología de muestreo
+- [Muestras](../data/README.md) — Metodología y catálogo de muestras reproducibles
 
 ## Estado del proyecto — 2 de septiembre de 2026
 
@@ -38,6 +39,10 @@ Observatorio abierto de producción, pozos y productividad de hidrocarburos arge
 | Cohortes | Pendiente | Fase 2 |
 | Completaciones | Pendiente | Fase 2 |
 | Dockerfiles de ingesta/dbt/exporter | Pendiente, y con alcance definido | Solo ClickHouse está containerizado; ingesta/dbt/export corren con `uv run` — ver [`docker.md`](docker.md) |
+| Clúster distribuido Azure | **Laboratorio reproducible** | Terraform: 2 shards × 2 réplicas + 1 Keeper; no es el runtime habitual ni HA estricta |
+| Orquestación Airflow | Pendiente | Próximo paso: DAG mensual, backfills, reintentos y quality gates |
+| Observabilidad | Pendiente | Prometheus + Grafana para ClickHouse y métricas de calidad del pipeline |
+| Landing durable en Azure | Pendiente | ADLS/Blob para raw y manifiestos reconstruibles |
 
 ### Bugs arreglados (27-ago-2026)
 
@@ -59,9 +64,12 @@ Observatorio abierto de producción, pozos y productividad de hidrocarburos arge
 
 ### Próximos pasos priorizados
 
-1. **Ingesta S03/S04 (fracturas y trayectorias)** — habilita completaciones y trayectorias en el mapa.
-2. **Cohortes y completaciones** — marts de Fase 2 (`mart_well_cohort_curve`, `mart_completion_productivity`).
-3. **Pulido frontend** — Tablas alternativas en home, clustering del mapa, Lighthouse.
+1. **Airflow** — orquestar ingestas S01/S02, dbt, tests, export y backfills.
+2. **Observabilidad** — Prometheus + Grafana para el clúster y checks de frescura/calidad.
+3. **Landing durable** — ADLS/Blob Storage para raw y manifiestos fuera del disco local.
+4. **CI/CD** — tests Python/dbt y validación/plan de Terraform en pull requests.
+5. **Ingesta S03/S04** — fracturas y trayectorias; después cohortes y completaciones.
+6. **Pulido frontend** — tablas alternativas, clustering del mapa y Lighthouse.
 
 ## Frontend
 
@@ -87,7 +95,9 @@ make up
 make release    # ingest → dbt run → dbt test → export
 
 # O por pasos
-make ingest     # Descarga y carga S01
+make ingest     # Descarga y carga S01 y S02
+make ingest-s01 # Solo producción por pozo
+make ingest-s02 # Solo padrón de pozos
 make dbt        # Transformaciones
 make dbt-test   # Tests de calidad
 make export     # Genera release en public/data/
@@ -99,4 +109,4 @@ make export     # Genera release en public/data/
 python3 -m pvm.pipelines sample
 ```
 
-Las URLs, checksums y cantidades observadas en [`data/samples/manifest.json`](../data/samples/manifest.json).
+Las muestras se generan localmente y no se versionan. Su catálogo y metodología están en [`data/README.md`](../data/README.md); `make sample` crea `data/samples/manifest.json`.

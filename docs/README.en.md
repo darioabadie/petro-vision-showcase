@@ -13,8 +13,9 @@ An open observatory of Argentine oil, gas, well, and productivity data, with an 
 - [ClickHouse](clickhouse.md) / [English](clickhouse.en.md) — Databases, table engines, and how to explore the data
 - [Docker](docker.md) / [English](docker.en.md) — What's containerized today and why
 - [Data updates](actualizacion-datos.md) / [English](actualizacion-datos.en.md) — Full release cycle, from source to frontend
+- [ClickHouse cluster on Azure](../infra/terraform-azure/README.en.md) — Self-managed sharding, replication, and failover lab
 - [Lovable spec](lovable.md) *(Spanish)* — JSON contract, routes, and visual criteria
-- [Samples](../data/samples/README.md) *(Spanish)* — Sampling methodology
+- [Samples](../data/README.md) *(Spanish)* — Reproducible sample catalog and methodology
 
 ## Project status — September 2, 2026
 
@@ -38,6 +39,10 @@ An open observatory of Argentine oil, gas, well, and productivity data, with an 
 | Cohorts | Pending | Phase 2 |
 | Completions | Pending | Phase 2 |
 | Ingestion/dbt/exporter Dockerfiles | Pending, scope already defined | Only ClickHouse is containerized; ingestion/dbt/export run via `uv run` — see [`docker.md`](docker.md) |
+| Distributed Azure cluster | **Reproducible lab** | Terraform: 2 shards × 2 replicas + 1 Keeper; neither the regular runtime nor strict HA |
+| Airflow orchestration | Pending | Next step: monthly DAG, backfills, retries, and quality gates |
+| Observability | Pending | Prometheus + Grafana for ClickHouse and pipeline data-quality metrics |
+| Durable Azure landing | Pending | ADLS/Blob for rebuildable raw files and manifests |
 
 ### Bugs fixed (2026-08-27)
 
@@ -59,9 +64,12 @@ An open observatory of Argentine oil, gas, well, and productivity data, with an 
 
 ### Prioritized next steps
 
-1. **S03/S04 ingestion (fractures and trajectories)** — enables completions and trajectories on the map.
-2. **Cohorts and completions** — Phase 2 marts (`mart_well_cohort_curve`, `mart_completion_productivity`).
-3. **Frontend polish** — alternative tables on home, map clustering, Lighthouse.
+1. **Airflow** — orchestrate S01/S02 ingestion, dbt, tests, export, and backfills.
+2. **Observability** — Prometheus + Grafana for the cluster and freshness/quality checks.
+3. **Durable landing** — ADLS/Blob Storage for raw files and manifests outside local disk.
+4. **CI/CD** — Python/dbt tests and Terraform validation/plan on pull requests.
+5. **S03/S04 ingestion** — fractures and trajectories, followed by cohorts and completions.
+6. **Frontend polish** — alternative tables, map clustering, and Lighthouse.
 
 ## Frontend
 
@@ -87,7 +95,9 @@ make up
 make release    # ingest → dbt run → dbt test → export
 
 # Or step by step
-make ingest     # Download and load S01
+make ingest     # Download and load S01 and S02
+make ingest-s01 # Well production only
+make ingest-s02 # Well registry only
 make dbt        # Transformations
 make dbt-test   # Quality tests
 make export     # Generate the release in public/data/
@@ -99,4 +109,4 @@ make export     # Generate the release in public/data/
 python3 -m pvm.pipelines sample
 ```
 
-URLs, checksums, and observed row counts are in [`data/samples/manifest.json`](../data/samples/manifest.json).
+Samples are generated locally and are not committed. Their catalog and methodology live in [`data/README.md`](../data/README.md); `make sample` creates `data/samples/manifest.json`.

@@ -33,11 +33,11 @@ flowchart LR
         MANUAL[Manual seeds]
     end
 
-    subgraph Local[Local pipeline in containers]
-        INGEST[Python / Polars]
-        CH[(ClickHouse)]
-        DBT[dbt Core]
-        EXPORT[Exporter]
+    subgraph Local[Local pipeline]
+        INGEST[Python / Polars<br/>uv process]
+        CH[(ClickHouse<br/>Docker container)]
+        DBT[dbt Core<br/>uv process]
+        EXPORT[Exporter<br/>uv process]
         QA[Validation & preview]
     end
 
@@ -123,7 +123,7 @@ Responsibilities:
 - Documentation and lineage.
 - Reconciliation against national series.
 
-The container starts, runs `dbt build`, and exits. It isn't a permanent service.
+dbt currently runs as an ephemeral host process: it starts, transforms or tests, and exits. It is not a permanent service.
 
 ### 4.4 Exporter
 
@@ -154,60 +154,31 @@ Checks:
 
 Metabase can be added as an optional local exploration tool. It won't be part of the production site.
 
+### 4.6 Distributed Azure lab
+
+`infra/terraform-azure/` independently provisions a **self-managed** ClickHouse cluster with 2 shards × 2 replicas and one Keeper on Azure VMs. It mirrors the real fact schema and includes tests for replication, replica failure, resynchronization, and aggregate reconciliation. This is a reproducible distributed-operations lab: it does not replace local ClickHouse, serve frontend traffic, or claim to be a managed service or strict HA because Keeper is a single node. See [`../infra/terraform-azure/README.en.md`](../infra/terraform-azure/README.en.md).
+
 ## 5. Docker Compose
 
-Conceptual structure (target design). **The repo's real `docker-compose.yml` today only defines the `clickhouse` service** — see [`docker.en.md`](docker.en.md) for the real file, why ingestion/dbt/exporter aren't containerized yet, and how to operate the current environment:
-
-```yaml
-services:
-  clickhouse:
-    image: clickhouse/clickhouse-server
-    volumes:
-      - clickhouse_data:/var/lib/clickhouse
-
-  ingestion:
-    build: ./pipeline
-    depends_on:
-      - clickhouse
-
-  dbt:
-    build: ./dbt
-    depends_on:
-      - clickhouse
-
-  exporter:
-    build: ./pipeline
-    depends_on:
-      - clickhouse
-
-  metabase:
-    image: metabase/metabase
-    profiles:
-      - qa
-```
-
-ClickHouse will be the only container normally persistent across a run. Ingestion, dbt, and exporter run a command and exit.
+The real `docker-compose.yml` defines ClickHouse 24.8 only, with a persistent volume, healthcheck, and ports bound to `127.0.0.1`. Python, dbt, and the exporter run as ephemeral host processes through `uv`. See [`docker.en.md`](docker.en.md) for exact operation.
 
 ## 6. Monthly run
 
-The operating interface will be a single command:
+The operating interface is a single command:
 
 ```bash
 make release
 ```
 
-Proposed internal flow:
+Current flow:
 
 ```bash
-docker compose up -d clickhouse
-docker compose run --rm ingestion
-docker compose run --rm dbt dbt deps
-docker compose run --rm dbt dbt build
-docker compose run --rm exporter
-docker compose down
+make up
+make release
+make down
 ```
 
-The real target will add:
+Future Airflow orchestration will add:
 
 - ClickHouse healthcheck.
 - Error handling.
@@ -217,7 +188,7 @@ The real target will add:
 - Quality report generation.
 - Local preview.
 
-Airflow won't be included in the MVP. A monthly, linear run operated by a single person doesn't initially justify its complexity. It can be added if sources, frequency, backfills, or dependencies grow.
+Airflow is the next orchestration step once the portfolio adds more sources, schedules, backfills, retries, and operational visibility. Until then, Make remains the implemented orchestration layer.
 
 ## 7. The data release
 

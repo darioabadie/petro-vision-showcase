@@ -58,7 +58,7 @@ make export
 4. Compara contra el estado guardado (`StateStore`): si el checksum no cambió, **omite la carga** (el archivo es idéntico al ya cargado).
 5. Si cambió, carga a `raw_energy.*` con la metadata de procedencia completa (`_load_id`, `_source_url`, `_resource_id`, `_retrieved_at`, `_source_sha256`...).
 
-`make ingest` por defecto solo corre S01. S02 se dispara aparte (`cd pipeline && uv run python -m pvm.pipelines ingest --source s02` — todavía no tiene su propio target en el Makefile).
+`make ingest` ejecuta las dos fuentes implementadas: `make ingest-s01` para producción y `make ingest-s02` para el padrón. Ambas pueden correrse por separado para diagnóstico o backfill.
 
 ### 2. Transformación (`make dbt` + `make dbt-test`)
 
